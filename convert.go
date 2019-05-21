@@ -3,7 +3,7 @@
 //  * DateTime：2019/5/17 13:10
 //  * Desc：
 //==================================
-package go_util
+package goutil
 
 import (
 	"math"

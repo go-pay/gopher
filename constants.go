@@ -3,7 +3,7 @@
 //  * DateTime：2019/5/17 13:24
 //  * Desc：
 //==================================
-package go_util
+package goutil
 
 const (
 	null         = ""

@@ -3,7 +3,7 @@
 //  * DateTime：2019/5/17 13:11
 //  * Desc：
 //==================================
-package go_util
+package goutil
 
 import (
 	"errors"
