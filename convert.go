@@ -5,7 +5,11 @@
 //==================================
 package go_util
 
-import "strconv"
+import (
+	"math"
+	"strconv"
+	"strings"
+)
 
 //字符串转Int
 //    intStr：数字的字符串
@@ -73,5 +77,18 @@ func Float32ToString(floatNum float32, prec ...int) (floatStr string) {
 		return
 	}
 	floatStr = strconv.FormatFloat(float64(floatNum), 'f', -1, 32)
+	return
+}
+
+//二进制转10进制
+func BinaryToDecimal(bit string) (num int) {
+	fields := strings.Split(bit, "")
+	lens := len(fields)
+	var tempF float64 = 0
+	for i := 0; i < lens; i++ {
+		floatNum := String2Float64(fields[i])
+		tempF += floatNum * math.Pow(2, float64(lens-i-1))
+	}
+	num = int(tempF)
 	return
 }
