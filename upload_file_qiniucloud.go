@@ -21,7 +21,7 @@ import (
 //    limitSize：文件大小限制（单位Byte）
 //    path：文件路径
 //    err：error
-func SaveFileToQiniuCloud(pathType, hostName string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
+func UploadFileToQiniuCloud(pathType, hostName string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
 	fileSize := formFile.Size
 	//限制图片上传大小
 	if fileSize > limitSize {
