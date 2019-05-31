@@ -15,13 +15,16 @@ import (
 )
 
 //文件上传
+//    bucket:七牛云存储空间名
 //    pathType：文件存储路径的名称，例如：photo,video
 //    hostName：七牛云的自定义域名
+//    accessKey:
+//    secretKey:
 //    formFile：接收到的文件
 //    limitSize：文件大小限制（单位Byte）
 //    path：文件路径
 //    err：error
-func UploadFileToQiniuCloud(pathType, hostName string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
+func UploadFileToQiniuCloud(bucket, pathType, hostName,accessKey, secretKey string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
 	fileSize := formFile.Size
 	//限制图片上传大小
 	if fileSize > limitSize {
@@ -39,10 +42,6 @@ func UploadFileToQiniuCloud(pathType, hostName string, formFile *multipart.FileH
 	split := strings.Split(fileName, ".")
 	fileType := split[len(split)-1]
 	fileKey := pathType + "/" + GetRandomString(32) + "." + fileType
-
-	accessKey := "XrXr23jDxMOsQdMtQOobulyGdceCqvxGCI5aGP_Q"
-	secretKey := "v3k2sfSSxerm7jKYrNa8C2A_tj3x7fQJvqnLYVJj"
-	bucket := "iguiyu-image"
 
 	putPolicy := storage.PutPolicy{
 		Scope: bucket,
