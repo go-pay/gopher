@@ -1,4 +1,4 @@
-package bm
+package goutil
 
 import (
 	"encoding/json"
@@ -8,8 +8,6 @@ import (
 	"sort"
 	"strings"
 	"sync"
-
-	"github.com/iGoogle-ink/goutil"
 )
 
 type BodyMap map[string]interface{}
@@ -26,13 +24,13 @@ func (bm BodyMap) Set(key string, value interface{}) {
 // 获取参数
 func (bm BodyMap) Get(key string) string {
 	if bm == nil {
-		return goutil.NULL
+		return NULL
 	}
 	mu.RLock()
 	defer mu.RUnlock()
 	value, ok := bm[key]
 	if !ok {
-		return goutil.NULL
+		return NULL
 	}
 	v, ok := value.(string)
 	if !ok {
@@ -43,14 +41,14 @@ func (bm BodyMap) Get(key string) string {
 
 func convertToString(v interface{}) (str string) {
 	if v == nil {
-		return goutil.NULL
+		return NULL
 	}
 	var (
 		bs  []byte
 		err error
 	)
 	if bs, err = json.Marshal(v); err != nil {
-		return goutil.NULL
+		return NULL
 	}
 	str = string(bs)
 	return
@@ -77,12 +75,12 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	if len(bm) == 0 {
 		return nil
 	}
-	start.Name = xml.Name{goutil.NULL, "xml"}
+	start.Name = xml.Name{NULL, "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
 	for k := range bm {
-		if v := bm.Get(k); v != goutil.NULL {
+		if v := bm.Get(k); v != NULL {
 			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
 		}
 	}
@@ -116,7 +114,7 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != goutil.NULL {
+		if v := bm.Get(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -142,7 +140,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	sort.Strings(keyList)
 	mu.RUnlock()
 	for _, k := range keyList {
-		if v := bm.Get(k); v != goutil.NULL {
+		if v := bm.Get(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -150,7 +148,7 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 		}
 	}
 	if buf.Len() <= 0 {
-		return goutil.NULL
+		return NULL
 	}
 	return buf.String()[:buf.Len()-1]
 }
@@ -160,7 +158,7 @@ func (bm BodyMap) EncodeGetParams() string {
 		buf strings.Builder
 	)
 	for k, _ := range bm {
-		if v := bm.Get(k); v != goutil.NULL {
+		if v := bm.Get(k); v != NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
 			buf.WriteString(v)
@@ -168,7 +166,7 @@ func (bm BodyMap) EncodeGetParams() string {
 		}
 	}
 	if buf.Len() <= 0 {
-		return goutil.NULL
+		return NULL
 	}
 	return buf.String()[:buf.Len()-1]
 }
@@ -176,7 +174,7 @@ func (bm BodyMap) EncodeGetParams() string {
 func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	var emptyKeys []string
 	for _, k := range keys {
-		if v := bm.Get(k); v == goutil.NULL {
+		if v := bm.Get(k); v == NULL {
 			emptyKeys = append(emptyKeys, k)
 		}
 	}
