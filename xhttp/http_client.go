@@ -1,4 +1,4 @@
-package gopay
+package xhttp
 
 import (
 	"crypto/tls"
