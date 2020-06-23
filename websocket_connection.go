@@ -1,14 +1,10 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/5/17 13:11
-//  * Desc：
-//==================================
 package goutil
 
 import (
 	"errors"
-	"github.com/gorilla/websocket"
 	"sync"
+
+	"github.com/gorilla/websocket"
 )
 
 type Connection struct {

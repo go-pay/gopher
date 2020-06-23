@@ -3,101 +3,183 @@ package goutil
 import (
 	"encoding/json"
 	"encoding/xml"
+	"errors"
 	"io"
+	"sort"
+	"strings"
 	"sync"
 )
 
-type BodyMap struct {
-	sm sync.Map
-}
+type BodyMap map[string]interface{}
+
+var mu sync.RWMutex
 
 // 设置参数
-func (bm *BodyMap) Set(key string, value interface{}) {
-	bm.sm.Store(key, value)
+func (bm BodyMap) Set(key string, value interface{}) {
+	mu.Lock()
+	bm[key] = value
+	mu.Unlock()
 }
 
 // 获取参数
-func (bm *BodyMap) Get(key string) string {
+func (bm BodyMap) Get(key string) string {
 	if bm == nil {
-		return null
+		return NULL
 	}
-	var (
-		value interface{}
-		ok    bool
-		v     string
-	)
-	if value, ok = bm.sm.Load(key); !ok {
-		return null
+	mu.RLock()
+	defer mu.RUnlock()
+	value, ok := bm[key]
+	if !ok {
+		return NULL
 	}
-	if v, ok = value.(string); ok {
-		return v
+	v, ok := value.(string)
+	if !ok {
+		return convertToString(value)
 	}
-	return convertToString(value)
+	return v
 }
 
 func convertToString(v interface{}) (str string) {
 	if v == nil {
-		return null
+		return NULL
 	}
 	var (
 		bs  []byte
 		err error
 	)
 	if bs, err = json.Marshal(v); err != nil {
-		return null
+		return NULL
 	}
 	str = string(bs)
 	return
 }
 
 // 删除参数
-func (bm *BodyMap) Remove(key string) {
-	bm.sm.Delete(key)
+func (bm BodyMap) Remove(key string) {
+	mu.Lock()
+	delete(bm, key)
+	mu.Unlock()
 }
 
-// Map长度
-func (bm *BodyMap) Len() (len int) {
-	bm.sm.Range(func(key, value interface{}) bool {
-		len++
-		return true
-	})
-	return
-}
-
-// 遍历Map
-func (bm *BodyMap) Range(f func(key, value interface{}) bool) {
-	bm.sm.Range(f)
-}
-
-type xmlMapEntry struct {
+type xmlMapMarshal struct {
 	XMLName xml.Name
-	Value   interface{} `xml:",chardata"`
+	Value   interface{} `xml:",cdata"`
 }
 
-func (bm *BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
-	if bm.Len() == 0 {
+type xmlMapUnmarshal struct {
+	XMLName xml.Name
+	Value   string `xml:",cdata"`
+}
+
+func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error) {
+	if len(bm) == 0 {
 		return nil
 	}
+	start.Name = xml.Name{NULL, "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
-	bm.sm.Range(func(key, value interface{}) bool {
-		e.Encode(xmlMapEntry{XMLName: xml.Name{Local: key.(string)}, Value: value})
-		return true
-	})
+	for k := range bm {
+		if v := bm.Get(k); v != NULL {
+			e.Encode(xmlMapMarshal{XMLName: xml.Name{Local: k}, Value: v})
+		}
+	}
 	return e.EncodeToken(start.End())
 }
 
 func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err error) {
 	for {
-		var e xmlMapEntry
+		var e xmlMapUnmarshal
 		err = d.Decode(&e)
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			return
+		if err != nil {
+			if err == io.EOF {
+				return nil
+			}
+			return err
 		}
 		bm.Set(e.XMLName.Local, e.Value)
 	}
-	return
+}
+
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
+	var (
+		buf     strings.Builder
+		keyList []string
+	)
+	mu.RLock()
+	for k := range bm {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+	mu.RUnlock()
+	for _, k := range keyList {
+		if v := bm.Get(k); v != NULL {
+			buf.WriteString(k)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+			buf.WriteByte('&')
+		}
+	}
+	buf.WriteString("key")
+	buf.WriteByte('=')
+	buf.WriteString(apiKey)
+	return buf.String()
+}
+
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeAliPaySignParams() string {
+	var (
+		buf     strings.Builder
+		keyList []string
+	)
+	mu.RLock()
+	for k := range bm {
+		keyList = append(keyList, k)
+	}
+	sort.Strings(keyList)
+	mu.RUnlock()
+	for _, k := range keyList {
+		if v := bm.Get(k); v != NULL {
+			buf.WriteString(k)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+			buf.WriteByte('&')
+		}
+	}
+	if buf.Len() <= 0 {
+		return NULL
+	}
+	return buf.String()[:buf.Len()-1]
+}
+
+func (bm BodyMap) EncodeGetParams() string {
+	var (
+		buf strings.Builder
+	)
+	for k, _ := range bm {
+		if v := bm.Get(k); v != NULL {
+			buf.WriteString(k)
+			buf.WriteByte('=')
+			buf.WriteString(v)
+			buf.WriteByte('&')
+		}
+	}
+	if buf.Len() <= 0 {
+		return NULL
+	}
+	return buf.String()[:buf.Len()-1]
+}
+
+func (bm BodyMap) CheckEmptyError(keys ...string) error {
+	var emptyKeys []string
+	for _, k := range keys {
+		if v := bm.Get(k); v == NULL {
+			emptyKeys = append(emptyKeys, k)
+		}
+	}
+	if len(emptyKeys) > 0 {
+		return errors.New(strings.Join(emptyKeys, ", ") + " : cannot be empty")
+	}
+	return nil
 }

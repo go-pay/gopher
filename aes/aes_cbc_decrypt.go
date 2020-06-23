@@ -1,9 +1,4 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/5/17 13:08
-//  * Desc：
-//==================================
-package goutil
+package aes
 
 import (
 	"crypto/aes"

@@ -1,17 +1,13 @@
-//==================================
-//  * Name：Jerry
-//  * DateTime：2019/5/17 13:13
-//  * Desc：
-//==================================
 package goutil
 
 import (
 	"context"
 	"errors"
-	"github.com/qiniu/api.v7/auth/qbox"
-	"github.com/qiniu/api.v7/storage"
 	"mime/multipart"
 	"strings"
+
+	"github.com/qiniu/api.v7/v7/auth/qbox"
+	"github.com/qiniu/api.v7/v7/storage"
 )
 
 //文件上传
@@ -24,7 +20,7 @@ import (
 //    limitSize：文件大小限制（单位Byte）
 //    path：文件路径
 //    err：error
-func UploadFileToQiniuCloud(bucket, pathType, hostName,accessKey, secretKey string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
+func UploadFileToQiniuCloud(bucket, pathType, hostName, accessKey, secretKey string, formFile *multipart.FileHeader, limitSize int64) (urlPath string, err error) {
 	fileSize := formFile.Size
 	//限制图片上传大小
 	if fileSize > limitSize {
