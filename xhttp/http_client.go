@@ -13,7 +13,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/iGoogle-ink/goutil"
+	"github.com/iGoogle-ink/gotil"
 )
 
 const (
@@ -164,7 +164,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	if len(c.Errors) > 0 {
 		return nil, nil, c.Errors
 	}
-	var reader = strings.NewReader(goutil.NULL)
+	var reader = strings.NewReader(gotil.NULL)
 
 	req, err := func() (*http.Request, error) {
 		c.mu.RLock()

@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/goutil/ecode"
+	"github.com/iGoogle-ink/gotil/ecode"
 )
 
 const (

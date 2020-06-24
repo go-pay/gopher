@@ -1,4 +1,4 @@
-package goutil
+package gotil
 
 // int数组合并，去重复
 func MergeSliceRemoveDuplicate(slice1, slice2 []int) (merged []int) {

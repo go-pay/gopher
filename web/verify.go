@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/goutil"
-	"github.com/iGoogle-ink/goutil/ecode"
+	"github.com/iGoogle-ink/gotil"
+	"github.com/iGoogle-ink/gotil/ecode"
 )
 
 const (
@@ -20,7 +20,7 @@ const (
 // VerifySign 验证Sign，签名规则，base64(md5(appid+path+ts))
 func VerifySign(c *gin.Context) {
 	ts := c.GetHeader(ts)
-	tsTime := time.Unix(goutil.String2Int64(ts), 0)
+	tsTime := time.Unix(gotil.String2Int64(ts), 0)
 	if time.Now().Sub(tsTime).Seconds() > 60 {
 		JSON(c, nil, eno.InvalidSignErr)
 		c.Abort()

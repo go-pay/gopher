@@ -1,4 +1,4 @@
-package goutil
+package ws
 
 import (
 	"errors"
@@ -14,9 +14,8 @@ type Connection struct {
 	outJsonChan    chan interface{}
 	outMessageChan chan []byte
 	closeChan      chan byte
-
-	mutex    sync.Mutex
-	isClosed bool
+	mutex          sync.Mutex
+	isClosed       bool
 }
 
 func InitConnection(wsConn *websocket.Conn) (conn *Connection, err error) {
