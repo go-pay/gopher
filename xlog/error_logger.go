@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
 	"sync"
 )
 
@@ -13,25 +12,25 @@ type ErrorLogger struct {
 	once   sync.Once
 }
 
-func (i *ErrorLogger) logOut(format *string, v ...interface{}) {
-	i.once.Do(func() {
-		i.init()
+func (e *ErrorLogger) logOut(format *string, v ...interface{}) {
+	e.once.Do(func() {
+		e.init()
 	})
 	if format != nil {
-		i.logger.Output(3, fmt.Sprintf(*format, v...))
+		e.logger.Output(3, fmt.Sprintf(*format, v...))
 		//i.logger.Writer().Write(stack())
 		return
 	}
-	i.logger.Output(3, fmt.Sprintln(v...))
+	e.logger.Output(3, fmt.Sprintln(v...))
 	//i.logger.Writer().Write(stack())
 }
 
-func (i *ErrorLogger) init() {
-	i.logger = log.New(os.Stderr, "[ERROR] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+func (e *ErrorLogger) init() {
+	e.logger = log.New(os.Stderr, "[ERROR] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }
 
-func stack() (bs []byte) {
-	var buf [2 << 10]byte
-	runtime.Stack(buf[:], false)
-	return buf[:]
-}
+//func stack() (bs []byte) {
+//	var buf [2 << 10]byte
+//	runtime.Stack(buf[:], false)
+//	return buf[:]
+//}

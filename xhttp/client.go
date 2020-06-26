@@ -51,8 +51,8 @@ type Client struct {
 	mu            sync.RWMutex
 }
 
-// NewHttpClient , default tls.Config{InsecureSkipVerify: true}
-func NewHttpClient() (client *Client) {
+// NewClient , default tls.Config{InsecureSkipVerify: true}
+func NewClient() (client *Client) {
 	client = &Client{
 		HttpClient: &http.Client{
 			Timeout: 60 * time.Second,
