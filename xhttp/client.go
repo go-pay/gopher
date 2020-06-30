@@ -40,6 +40,7 @@ type Client struct {
 	Header        http.Header
 	Timeout       time.Duration
 	Url           string
+	Host          string
 	Method        string
 	RequestType   string
 	FormString    string
@@ -80,6 +81,13 @@ func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 	c.mu.Lock()
 	c.Timeout = timeout
+	c.mu.Unlock()
+	return c
+}
+
+func (c *Client) SetHost(host string) (client *Client) {
+	c.mu.Lock()
+	c.Host = host
 	c.mu.Unlock()
 	return c
 }
@@ -209,6 +217,9 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 	}
 	if c.Timeout != time.Duration(0) {
 		c.HttpClient.Timeout = c.Timeout
+	}
+	if c.Host != "" {
+		req.Host = c.Host
 	}
 	res, err = c.HttpClient.Do(req)
 	if err != nil {
