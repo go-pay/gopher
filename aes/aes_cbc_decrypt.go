@@ -9,7 +9,7 @@ import (
 	"reflect"
 )
 
-//解密数据的Bytes数组
+// 解密数据的Bytes数组
 func AesDecryptToBytes(data, secretKey string) ([]byte, error) {
 	secretData, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
@@ -28,7 +28,7 @@ func AesDecryptToBytes(data, secretKey string) ([]byte, error) {
 	return originData, nil
 }
 
-//解密数据到结构体
+// 解密数据到结构体
 func AesDecryptToStruct(data, secretKey string, beanPtr interface{}) (err error) {
 	//验证参数类型
 	beanValue := reflect.ValueOf(beanPtr)
@@ -61,7 +61,7 @@ func AesDecryptToStruct(data, secretKey string, beanPtr interface{}) (err error)
 	return nil
 }
 
-//解密数据到Map集合
+// 解密数据到Map集合
 func AesDecryptToMap(data, secretKey string) (mapData map[string]interface{}, err error) {
 	secretData, err := base64.StdEncoding.DecodeString(data)
 	if err != nil {
