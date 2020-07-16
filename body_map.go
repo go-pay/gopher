@@ -102,6 +102,11 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err err
 }
 
 // ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeSortParams() string {
+	return bm.EncodeAliPaySignParams()
+}
+
+// ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	var (
 		buf     strings.Builder
