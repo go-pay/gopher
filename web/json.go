@@ -20,7 +20,7 @@ const (
 func JSON(c *gin.Context, data interface{}, err error) {
 	e := eno.AnalyseError(err)
 
-	rsp := &struct {
+	rsp := struct {
 		Code    int         `json:"code"`
 		Message string      `json:"message"`
 		Data    interface{} `json:"data,omitempty"`
