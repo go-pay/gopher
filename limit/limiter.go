@@ -11,14 +11,17 @@ import (
 
 var (
 	defaultConfig = &Config{
-		Rate:       100,
-		BucketSize: 900,
+		Rate:       1000,
+		BucketSize: 1000,
 	}
 )
 
 type Config struct {
-	Rate       int // per second
-	BucketSize int // max size
+	// per second request，0 不限流
+	Rate int
+
+	// max size，桶内最大量
+	BucketSize int
 }
 
 // 速率限制器

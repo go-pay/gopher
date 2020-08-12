@@ -3,8 +3,10 @@ package web
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iGoogle-ink/gotil/limit"
 )
 
 type Engine struct {
@@ -12,13 +14,24 @@ type Engine struct {
 	port string
 }
 
-func InitServer(port string) *Engine {
+type Config struct {
+	// http export port. :8080
+	Port string
+
+	// interface limit
+	Limit *limit.Config
+}
+
+func InitServer(c *Config) *Engine {
 	g := gin.Default()
 	g.Use(cors())
 	g.Use(gin.Recovery())
-	engine := &Engine{
-		Gin:  g,
-		port: port,
+	if c.Limit != nil && c.Limit.Rate != 0 {
+		g.Use(limit.NewLimiter(c.Limit).Limit())
+	}
+	engine := &Engine{Gin: g, port: c.Port}
+	if !strings.Contains(strings.TrimSpace(c.Port), ":") {
+		engine.port = ":" + c.Port
 	}
 	return engine
 }

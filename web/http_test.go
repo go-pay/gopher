@@ -7,16 +7,20 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iGoogle-ink/gotil/limit"
 	"github.com/iGoogle-ink/gotil/xlog"
 )
 
 func TestInitServer(t *testing.T) {
-	g := InitServer(":2233")
-	//c := &limit.Config{
-	//	Rate:       1,
-	//	BucketSize: 1,
-	//}
-	//g.Gin.Use(limit.NewLimiter(c).Limit())
+	c := &Config{
+		Port: ":2233",
+		Limit: &limit.Config{
+			Rate:       0, // 0 速率不限流
+			BucketSize: 100,
+		},
+	}
+
+	g := InitServer(c)
 	initRoute(g.Gin)
 	g.Start()
 
