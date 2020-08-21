@@ -17,16 +17,47 @@ type Config struct {
 	Redis  *orm.RedisConfig
 }
 
-func TestParse(t *testing.T) {
+func TestParseYaml(t *testing.T) {
 	c := &Config{}
 	flag.Set("conf", "config.yaml")
-	if err := Parse(c); err != nil {
+	if err := ParseYaml(c); err != nil {
 		xlog.Error(err)
 		return
 	}
 	xlog.Debug(c.Name)
 	xlog.Debug(c.Number)
 	xlog.Debug(c.Web)
+	xlog.Debug(c.Web.Limit)
+	xlog.Debug(c.MySQL)
+	xlog.Debug(c.Redis)
+}
+
+func TestParseJson(t *testing.T) {
+	c := &Config{}
+	flag.Set("conf", "config.json")
+	if err := ParseJson(c); err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug(c.Name)
+	xlog.Debug(c.Number)
+	xlog.Debug(c.Web)
+	xlog.Debug(c.Web.Limit)
+	xlog.Debug(c.MySQL)
+	xlog.Debug(c.Redis)
+}
+
+func TestParseToml(t *testing.T) {
+	c := &Config{}
+	flag.Set("conf", "config.toml")
+	if err := ParseToml(c); err != nil {
+		xlog.Error(err)
+		return
+	}
+	xlog.Debug(c.Name)
+	xlog.Debug(c.Number)
+	xlog.Debug(c.Web)
+	xlog.Debug(c.Web.Limit)
 	xlog.Debug(c.MySQL)
 	xlog.Debug(c.Redis)
 }

@@ -1,0 +1,20 @@
+Name = "gotil"
+Number = 1024
+
+[Web]
+Port = ":2233"
+[Web.Limit]
+Rate = 100
+BucketSize = 100
+
+[Redis]
+Addrs = ["127.0.0.1:6379"]
+Password = "abc"
+DB = 10
+
+[MySQL]
+DSN = "uname:password@tcp(127.0.0.1:3306)/test?timeout=10s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4,utf8"
+Active = 1200
+Idle = 200
+IdleTimeout = 10
+ShowSQL = true
