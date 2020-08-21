@@ -52,7 +52,7 @@ func parse(cType int, c interface{}) error {
 	}
 	flag.Parse()
 	if confPath == "" {
-		return errors.New("load config file path failed")
+		return errors.New("load config file path failed, add arguments -conf ")
 	}
 	viper.SetConfigFile(confPath)
 	switch cType {
