@@ -1,4 +1,4 @@
-package eno
+package ecode
 
 import "sync"
 
