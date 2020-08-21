@@ -12,12 +12,11 @@ import (
 )
 
 func TestInitServer(t *testing.T) {
-	g := web.InitServer(":2233")
-	c := &Config{
-		Rate:       1,
-		BucketSize: 1,
+	c := &web.Config{
+		Port:  ":2233",
+		Limit: nil,
 	}
-	g.Gin.Use(NewLimiter(c).Limit())
+	g := web.InitServer(c)
 	initRoute(g.Gin)
 	g.Start()
 
