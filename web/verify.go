@@ -22,7 +22,7 @@ func VerifySign(c *gin.Context) {
 	ts := c.GetHeader(ts)
 	tsTime := time.Unix(gotil.String2Int64(ts), 0)
 	if time.Now().Sub(tsTime).Seconds() > 60 {
-		JSON(c, nil, eno.InvalidSignErr)
+		JSON(c, nil, ecode.InvalidSignErr)
 		c.Abort()
 		return
 	}
@@ -31,7 +31,7 @@ func VerifySign(c *gin.Context) {
 	path := c.Request.RequestURI
 	split := strings.Split(path, "?")
 	if !CheckSign(sign, appid, split[0], ts) {
-		JSON(c, nil, eno.InvalidSignErr)
+		JSON(c, nil, ecode.InvalidSignErr)
 		c.Abort()
 		return
 	}

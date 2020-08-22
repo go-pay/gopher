@@ -18,7 +18,7 @@ const (
 )
 
 func JSON(c *gin.Context, data interface{}, err error) {
-	e := eno.AnalyseError(err)
+	e := ecode.AnalyseError(err)
 
 	rsp := struct {
 		Code    int         `json:"code"`
