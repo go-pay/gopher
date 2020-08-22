@@ -41,8 +41,14 @@ func TestInitServer(t *testing.T) {
 }
 
 func initRoute(g *gin.Engine) {
-	g.GET("/a", func(c *gin.Context) {
-		JSON(c, "a", nil)
+	g.GET("/a/:abc", func(c *gin.Context) {
+		xlog.Debug(c.Param("abc"))
+		xlog.Debug(c.Request.RequestURI)
+		rsp := &struct {
+			Param string `json:"param"`
+			Path  string `json:"path"`
+		}{Param: c.Param("abc"), Path: c.Request.RequestURI}
+		JSON(c, rsp, nil)
 	})
 	g.GET("/b", func(c *gin.Context) {
 		JSON(c, "b", nil)
