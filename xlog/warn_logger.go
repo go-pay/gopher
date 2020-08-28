@@ -7,12 +7,12 @@ import (
 	"sync"
 )
 
-type WarningLogger struct {
+type WarnLogger struct {
 	logger *log.Logger
 	once   sync.Once
 }
 
-func (i *WarningLogger) logOut(format *string, v ...interface{}) {
+func (i *WarnLogger) logOut(format *string, v ...interface{}) {
 	i.once.Do(func() {
 		i.init()
 	})
@@ -23,6 +23,6 @@ func (i *WarningLogger) logOut(format *string, v ...interface{}) {
 	i.logger.Output(3, fmt.Sprintln(v...))
 }
 
-func (i *WarningLogger) init() {
-	i.logger = log.New(os.Stderr, "[WARNING] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
+func (i *WarnLogger) init() {
+	i.logger = log.New(os.Stderr, "[WARN] >> ", log.Lmsgprefix|log.Lshortfile|log.Lmicroseconds|log.Ldate)
 }
