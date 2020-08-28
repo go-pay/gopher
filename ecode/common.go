@@ -3,7 +3,7 @@ package ecode
 import "sync"
 
 var (
-	ErrorMap = new(sync.Map)
+	errorMap = new(sync.Map)
 	// base error
 	OK              = New(0, "SUCCESS")
 	RequestErr      = New(10400, "Request Error")

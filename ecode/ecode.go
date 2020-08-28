@@ -15,20 +15,22 @@ type Codes interface {
 	Message() string
 }
 
+// Add only add error code
 func Add(code int) Error {
 	return Int(code)
 }
 
+// New new error code and msg
 func New(code int, msg string) Error {
-	ErrorMap.Store(code, msg)
-	return Error(code)
+	errorMap.Store(code, msg)
+	return Int(code)
 }
 
 // A Code is an int error code spec.
 type Error int
 
 func (e Error) Error() string {
-	if msg, ok := ErrorMap.Load(e.Code()); ok {
+	if msg, ok := errorMap.Load(e.Code()); ok {
 		return msg.(string)
 	}
 	return strconv.Itoa(int(e))
@@ -39,7 +41,7 @@ func (e Error) Code() int { return int(e) }
 
 // Message return error message
 func (e Error) Message() string {
-	if msg, ok := ErrorMap.Load(e.Code()); ok {
+	if msg, ok := errorMap.Load(e.Code()); ok {
 		return msg.(string)
 	}
 	return e.Error()
@@ -67,5 +69,5 @@ func errStringToError(e string) Error {
 	if err != nil {
 		return New(-1, e)
 	}
-	return Error(i)
+	return Int(i)
 }
