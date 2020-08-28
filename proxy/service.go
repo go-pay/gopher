@@ -3,21 +3,25 @@ package proxy
 import (
 	"context"
 	"crypto/tls"
-	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
+	"net"
 	"net/http"
-	"net/url"
+	"os"
 	"strings"
+	"time"
 )
 
 type Service struct {
 	httpCli *http.Client
 	Schema  SchemaType // SchemaHTTP or SchemaHTTPS
+	r       *http.Request
 	Host    string
 	Port    string
 	Key     string
+	log     *log.Logger
 }
 
 func New(c *Config) {
@@ -27,70 +31,118 @@ func New(c *Config) {
 		Host:    c.ProxyHost,
 		Port:    c.ProxyPort,
 		Key:     c.Key,
+		log:     log.New(os.Stdout, "[PROXY] ", log.Lmsgprefix),
 	}
 }
 
-func (s *Service) Proxy(c context.Context, method string, header http.Header, path string, params url.Values, body io.ReadCloser) (res []byte, err error) {
+// Proxy
+func (s *Service) Proxy(c context.Context, w http.ResponseWriter, r *http.Request) {
 	var (
-		req    *http.Request
-		reader *strings.Reader
+		req     *http.Request
+		reader  *strings.Reader
+		err     error
+		rMethod = r.Method
+		rHeader = r.Header
+		rUri    = r.RequestURI
+		pa      = r.Form.Encode()
+		rBody   = r.Body
 	)
+	s.r = r
 	// 验证 Key
-	key := header.Get(HEADER_CONTENT_KEY)
+	key := rHeader.Get(HEADER_CONTENT_KEY)
 	if s.Key != key {
-		return nil, fmt.Errorf("[%s] invalid key", key)
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, fmt.Sprintf("[%s] invalid key", key))
+		return
 	}
-	uri := fmt.Sprintf("%s", s.Schema) + s.Host + s.Port + path
+	uri := fmt.Sprintf("%s", s.Schema) + s.Host + s.Port + rUri
 	// Request
-	m := strings.ToUpper(method)
-	ct := header.Get(HEADER_CONTENT_TYPE)
+	m := strings.ToUpper(r.Method)
+	ct := rHeader.Get(HEADER_CONTENT_TYPE)
 	switch m {
 	case HTTP_METHOD_POST:
 		switch ct {
 		case CONTENT_TYPE_JSON:
-			jsbs, err := ioutil.ReadAll(io.LimitReader(body, int64(4<<20))) // default 4MB, change the size you want;
+			jsbs, err := ioutil.ReadAll(io.LimitReader(rBody, int64(4<<20))) // default 4MB, change the size you want;
 			if err != nil {
-				return nil, err
+				w.WriteHeader(http.StatusInternalServerError)
+				io.WriteString(w, err.Error())
+				return
 			}
 			reader = strings.NewReader(string(jsbs))
 		case CONTENT_TYPE_FORM:
-			reader = strings.NewReader(params.Encode())
+			reader = strings.NewReader(pa)
 		case CONTENT_TYPE_XML:
-			xmlbs, err := ioutil.ReadAll(io.LimitReader(body, int64(4<<20)))
+			xmlbs, err := ioutil.ReadAll(io.LimitReader(rBody, int64(4<<20)))
 			if err != nil {
-				return nil, err
+				w.WriteHeader(http.StatusInternalServerError)
+				io.WriteString(w, err.Error())
+				return
 			}
 			reader = strings.NewReader(string(xmlbs))
 		default:
-			return nil, errors.New("request type error")
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, "request type error")
+			return
 		}
 		req, err = http.NewRequest(HTTP_METHOD_POST, uri, reader)
 		if err != nil {
-			return nil, err
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, err.Error())
+			return
 		}
 	case HTTP_METHOD_GET:
-		pa := params.Encode()
-		uri = uri + "?" + pa
 		req, err = http.NewRequest(HTTP_METHOD_GET, uri, nil)
 		if err != nil {
-			return nil, err
+			w.WriteHeader(http.StatusInternalServerError)
+			io.WriteString(w, err.Error())
+			return
 		}
 	default:
-		return nil, errors.New("only support GET and POST")
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, "only support GET and POST")
+		return
 	}
 
 	// Request Content
-	req.Header = header
+	req.Header = rHeader
 	s.httpCli.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, DisableKeepAlives: true}
 
 	resp, err := s.httpCli.Do(req)
 	if err != nil {
-		return nil, err
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, err.Error())
+		return
 	}
 	defer resp.Body.Close()
-	res, err = ioutil.ReadAll(resp.Body)
+	s.log.Println(fmt.Sprintf("%v | %d | %s | %s      %s", time.Now().Format("2006/01/02 - 15:04:05"), resp.StatusCode, s.clientIP(), rMethod, r.RequestURI))
+	rsp, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		w.WriteHeader(http.StatusInternalServerError)
+		io.WriteString(w, err.Error())
+		return
 	}
-	return res, nil
+	for k, _ := range resp.Header {
+		w.Header().Set(k, resp.Header.Get(k))
+	}
+	w.WriteHeader(http.StatusOK)
+	w.Write(rsp)
+}
+
+func (s *Service) clientIP() string {
+	rHeader := s.r.Header
+	clientIP := rHeader.Get("X-Forwarded-For")
+	clientIP = strings.TrimSpace(strings.Split(clientIP, ",")[0])
+	if clientIP == "" {
+		clientIP = strings.TrimSpace(rHeader.Get("X-Real-Ip"))
+	}
+	if clientIP != "" {
+		return clientIP
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(s.r.RemoteAddr)); err == nil {
+		return ip
+	}
+
+	return ""
 }
