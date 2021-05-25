@@ -3,7 +3,7 @@ package retry
 import (
 	"time"
 
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 // Retry 重试 func 最大次数，间隔

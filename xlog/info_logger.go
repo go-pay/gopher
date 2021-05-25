@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 type InfoLogger struct {

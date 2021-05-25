@@ -1,6 +1,6 @@
 kind: pipeline
 type: docker
-name: gotil
+name: gopher
 
 clone:
   depth: 1

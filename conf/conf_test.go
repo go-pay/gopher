@@ -4,9 +4,9 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/iGoogle-ink/gotil/orm"
-	"github.com/iGoogle-ink/gotil/web"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopher/orm"
+	"github.com/iGoogle-ink/gopher/web"
+	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 type Config struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/iGoogle-ink/gotil/limit"
+	"github.com/iGoogle-ink/gopher/limit"
 	"github.com/labstack/echo/v4"
 )
 

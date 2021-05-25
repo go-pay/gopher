@@ -3,7 +3,7 @@ package des
 import (
 	"testing"
 
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 var (

@@ -5,7 +5,7 @@ import (
 
 	"github.com/asim/go-micro/v3/client"
 	"github.com/asim/go-micro/v3/server"
-	"github.com/iGoogle-ink/gotil/xlog"
+	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 func LogWrapper(fn server.HandlerFunc) server.HandlerFunc {

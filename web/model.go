@@ -1,6 +1,6 @@
 package web
 
-import "github.com/iGoogle-ink/gotil/limit"
+import "github.com/iGoogle-ink/gopher/limit"
 
 type Config struct {
 	// http host

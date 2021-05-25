@@ -15,7 +15,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 type Client struct {

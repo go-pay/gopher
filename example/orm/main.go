@@ -3,13 +3,13 @@ package main
 import (
 	"time"
 
-	"github.com/iGoogle-ink/gotil/orm"
-	"github.com/iGoogle-ink/gotil/xlog"
-	"github.com/iGoogle-ink/gotil/xtime"
+	"github.com/iGoogle-ink/gopher/orm/gormv2"
+	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/iGoogle-ink/gopher/xtime"
 )
 
 type MxCity struct {
-	Id    int        `gorm:"column:id;primary_key"`
+	Id    int        `gorm:"column:id;primaryKey"`
 	Ctime xtime.Time `gorm:"column:ctime"`
 	Mtime xtime.Time `gorm:"column:mtime"`
 }
@@ -21,9 +21,10 @@ func main() {
 		MaxOpenConn:    10,
 		MaxIdleConn:    10,
 		MaxConnTimeout: xtime.Duration(10 * time.Second),
-		ShowSQL:        true,
+		//LogLevel:       logger.Error,
+		SlowThreshold: xtime.Duration(200 * time.Millisecond),
 	}
-	db := orm.InitGorm(c)
+	db := orm.InitGormV2(c)
 
 	var mcs []*MxCity
 

@@ -3,7 +3,7 @@ package orm
 import (
 	"database/sql"
 
-	"github.com/iGoogle-ink/gotil/xtime"
+	"github.com/iGoogle-ink/gopher/xtime"
 	"github.com/jinzhu/gorm"
 )
 

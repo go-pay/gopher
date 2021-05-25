@@ -5,7 +5,7 @@ import (
 	"crypto/cipher"
 	"fmt"
 
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 func GCMEncrypt(originText, additional, key []byte) (nonce []byte, cipherText []byte, err error) {

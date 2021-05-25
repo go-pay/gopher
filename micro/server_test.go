@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/iGoogle-ink/gotil/micro/proto"
+	"github.com/iGoogle-ink/gopher/micro/proto"
 )
 
 type Greeter struct{}

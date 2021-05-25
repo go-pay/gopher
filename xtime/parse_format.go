@@ -4,7 +4,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 //解析时间

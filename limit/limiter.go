@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	xrate "github.com/iGoogle-ink/gotil/rate"
+	xrate "github.com/iGoogle-ink/gopher/rate"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/time/rate"
 )

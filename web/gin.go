@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gotil/limit"
+	"github.com/iGoogle-ink/gopher/limit"
 )
 
 type GinEngine struct {

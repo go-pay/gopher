@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gotil/ecode"
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/ecode"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 const (

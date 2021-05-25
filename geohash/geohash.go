@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/iGoogle-ink/gotil/util"
+	"github.com/iGoogle-ink/gopher/util"
 )
 
 // geohash精度的设定参考 http://en.wikipedia.org/wiki/Geohash
