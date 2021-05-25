@@ -1,0 +1,63 @@
+kind: pipeline
+type: docker
+name: gotil
+
+clone:
+  depth: 1
+
+platform:
+  os: linux
+  arch: amd64
+
+steps:
+  - name: mysql
+    pull: if-not-exists
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "school"
+    detach: true # 后台运行
+
+  - name: ci_1.14
+    pull: if-not-exists
+    image: golang:1.14
+    environment:
+      GO111MODULE: "on"
+      GOPROXY: "https://goproxy.cn,direct"
+      GOSUMDB: "off"
+      CGO_ENABLED: "0"
+      GOOS: "linux"
+    depends_on:
+      - mysql
+    commands:
+      - sleep 15  # wait mysql server turn on
+      - go version
+      - go env
+      - go mod tidy
+      - go test ./...
+
+  - name: ci_1.15
+    pull: if-not-exists
+    image: golang:1.15
+    environment:
+      GO111MODULE: "on"
+      GOPROXY: "https://goproxy.cn,direct"
+      GOSUMDB: "off"
+      CGO_ENABLED: "0"
+      GOOS: "linux"
+    depends_on:
+      - mysql
+    commands:
+      - sleep 15  # wait mysql server turn on
+      - go version
+      - go env
+      - go mod tidy
+      - go test ./...
+
+trigger:
+  branch:
+    - main
+  event:
+    - push
+    - pull_request
+    - tag

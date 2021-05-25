@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package payment;
+option go_package = ".;proto";
+
+service Greeter {
+  rpc Hello (Request) returns (Response) {
+  }
+}
+
+message Request {
+  string name = 1;
+}
+
+message Response {
+  string msg = 1;
+}
+
+// cd 到当前目录
+// protoc --proto_path=. --micro_out=. --go_out=. greeter.proto
