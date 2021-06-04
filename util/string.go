@@ -1,6 +1,7 @@
 package util
 
 import (
+	"net/url"
 	"strconv"
 	"strings"
 	"sync"
@@ -55,4 +56,12 @@ func SplitInts(s string) ([]int64, error) {
 		res = append(res, i)
 	}
 	return res, nil
+}
+
+func FormatURLParam(body map[string]interface{}) (urlParam string) {
+	v := url.Values{}
+	for key, value := range body {
+		v.Add(key, value.(string))
+	}
+	return v.Encode()
 }
