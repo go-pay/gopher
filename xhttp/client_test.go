@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iGoogle-ink/gopay/pkg/xlog"
 	"github.com/iGoogle-ink/gopher/bm"
+	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 type HttpGet struct {
