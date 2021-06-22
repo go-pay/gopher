@@ -190,6 +190,12 @@ func (c *Client) Delete(url string) (client *Client) {
 	return c
 }
 
+func (c *Client) Patch(url string) (client *Client) {
+	c.method = PATCH
+	c.url = url
+	return c
+}
+
 func (c *Client) SendStruct(v interface{}) (client *Client) {
 	if v == nil {
 		return c
@@ -236,16 +242,17 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 	if bm == nil {
 		return c
 	}
-	bs, err := json.Marshal(bm)
-	if err != nil {
-		c.Errors = append(c.Errors, err)
-		return c
-	}
+
 	switch c.requestType {
 	case TypeJSON:
+		bs, err := json.Marshal(bm)
+		if err != nil {
+			c.Errors = append(c.Errors, err)
+			return c
+		}
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = string(bs)
+		c.FormString = util.FormatURLParam(bm)
 	case TypeMultipartFormData:
 		c.multipartBodyMap = bm
 	}
@@ -325,7 +332,7 @@ func (c *Client) EndBytes() (res *http.Response, bs []byte, errs []error) {
 			default:
 				return nil, errors.New("Request type Error ")
 			}
-		case POST, PUT, DELETE:
+		case POST, PUT, DELETE, PATCH:
 			switch c.requestType {
 			case TypeJSON:
 				if c.jsonByte != nil {
