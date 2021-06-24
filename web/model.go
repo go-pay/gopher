@@ -1,6 +1,9 @@
 package web
 
-import "github.com/iGoogle-ink/gopher/limit"
+import (
+	"github.com/iGoogle-ink/gopher/limit"
+	"github.com/iGoogle-ink/gopher/trace"
+)
 
 type Config struct {
 	// http host
@@ -11,6 +14,9 @@ type Config struct {
 
 	// interface limit
 	Limit *limit.Config
+
+	// jaeger trace config
+	Trace *trace.Config
 }
 
 type RecoverInfo struct {

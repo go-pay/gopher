@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"runtime"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/iGoogle-ink/gopher/ecode"
+	"github.com/iGoogle-ink/gopher/xlog"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -46,28 +48,16 @@ func (g *GinEngine) CORS() gin.HandlerFunc {
 func (g *GinEngine) Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
+			var rawReq []byte
 			if err := recover(); err != nil {
-				r, ok := err.(error)
-				if !ok {
-					r = fmt.Errorf("%v", err)
+				const size = 64 << 10
+				stack := make([]byte, size)
+				stack = stack[:runtime.Stack(stack, false)]
+				if c.Request != nil {
+					rawReq, _ = httputil.DumpRequest(c.Request, false)
 				}
-				stack := make([]byte, 4<<10)
-				length := runtime.Stack(stack, false)
-				stackStr := string(stack[:length])
-
-				param := &RecoverInfo{
-					Time:  time.Now().Format("2006-01-02 15:04:05"),
-					Url:   c.Request.URL.Path,
-					Err:   r.Error(),
-					Query: c.Request.URL.Query(),
-					Stack: stackStr,
-				}
-				data, _ := json.Marshal(param)
-				log.Println("[GinPanic] >> ", string(data))
-
-				c.Error(r) // nolint: errcheck
-				c.Abort()
-				JSON(c, nil, ecode.ServerErr)
+				xlog.Errorf("[GinPanic] %s \n[Error] %v \n[Stack] %s", string(rawReq), err, string(stack))
+				c.AbortWithError(http.StatusInternalServerError, ecode.ServerErr)
 			}
 		}()
 		c.Next()
