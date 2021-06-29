@@ -11,7 +11,7 @@ require (
 	github.com/go-redis/redis/v8 v8.10.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
-	github.com/google/uuid v1.1.2
+	github.com/google/uuid v1.2.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.16
 	github.com/labstack/echo/v4 v4.3.0
@@ -21,7 +21,6 @@ require (
 	github.com/uber/jaeger-client-go v2.29.1+incompatible
 	github.com/uber/jaeger-lib v2.4.1+incompatible // indirect
 	go.uber.org/zap v1.17.0
-	golang.org/x/time v0.0.0-20210611083556-38a9dc6acbc6
 	google.golang.org/grpc v1.38.0
 	google.golang.org/protobuf v1.26.0
 	gorm.io/driver/mysql v1.1.1
