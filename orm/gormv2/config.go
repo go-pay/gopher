@@ -18,7 +18,7 @@ type MySQLConfig struct {
 	DSN            string          // data source name.
 	MaxOpenConn    int             // pool, e.g:10
 	MaxIdleConn    int             // pool, e.g:100
-	MaxConnTimeout xtime.Duration  // connect max life time. e.g:10s、2m、1m10s
+	MaxConnTimeout xtime.Duration  // connect max life time. Unmarshal config file e.g: 10s、2m、1m10s
 	LogLevel       logger.LogLevel // Silent、Info、Warn、Error, default Warn
-	SlowThreshold  xtime.Duration  // slow sql log. e.g:100ms、200ms、300ms、1s, default 200ms
+	SlowThreshold  xtime.Duration  // slow sql log. Unmarshal config file e.g: 100ms、200ms、300ms、1s, default 200ms
 }

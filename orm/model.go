@@ -21,6 +21,6 @@ type MySQLConfig struct {
 	DSN            string         // data source name.
 	MaxOpenConn    int            // pool, e.g:10
 	MaxIdleConn    int            // pool, e.g:100
-	MaxConnTimeout xtime.Duration // connect max life time. e.g:10s、2m、1m10s
+	MaxConnTimeout xtime.Duration // connect max life time. Unmarshal config file e.g:10s、2m、1m10s
 	ShowSQL        bool
 }
