@@ -8,13 +8,12 @@ require (
 	github.com/asim/go-micro/plugins/registry/etcd/v3 v3.0.0-20210630091305-70ed9bf15486
 	github.com/asim/go-micro/v3 v3.5.2-0.20210630062103-c13bb07171bc
 	github.com/gin-gonic/gin v1.7.2
-	github.com/go-redis/redis/v8 v8.10.0
+	github.com/go-redis/redis/v8 v8.11.0
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.2.0
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/gorm v1.9.16
-	github.com/labstack/echo/v4 v4.3.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/viper v1.8.0

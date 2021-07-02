@@ -5,11 +5,11 @@ import "sync"
 var (
 	errorMap = new(sync.Map)
 	// base error
-	OK              = New(0, "Success")
-	RequestErr      = New(10400, "Request Error")
-	InvalidSignErr  = New(10401, "Invalid Sign")
-	InvalidAppidErr = New(10402, "Invalid Appid")
-	InvalidTokenErr = New(10403, "Invalid Token")
-	NothingFound    = New(10404, "Nothing Found")
-	ServerErr       = New(10500, "Server Error")
+	OK              = New(0, "success")
+	RequestErr      = New(10400, "request error")
+	InvalidSignErr  = New(10401, "invalid sign")
+	InvalidAppidErr = New(10402, "invalid appid")
+	InvalidTokenErr = New(10403, "invalid token")
+	NothingFound    = New(10404, "nothing found")
+	ServerErr       = New(10500, "server error")
 )

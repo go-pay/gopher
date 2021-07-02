@@ -15,10 +15,12 @@ func InitGormV2(c *MySQLConfig) (db *gorm.DB) {
 	lc := logger.Config{
 		SlowThreshold: 200 * time.Millisecond, // 慢 SQL 阈值
 		LogLevel:      logger.Warn,            // Log level
-		Colorful:      false,                  // 禁用彩色打印，日志平台会打印出颜色码，影响日志观察
+		Colorful:      c.Colorful,             // 日志颜色
 	}
-	if c.LogLevel != 0 {
-		lc.LogLevel = c.LogLevel
+	if c.LogLevel != "" {
+		if ll, ok := LogLevelMap[c.LogLevel]; ok {
+			lc.LogLevel = ll
+		}
 	}
 	if c.SlowThreshold != 0 {
 		lc.SlowThreshold = time.Duration(c.SlowThreshold)
