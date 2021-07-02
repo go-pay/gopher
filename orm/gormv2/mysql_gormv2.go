@@ -27,7 +27,7 @@ func InitGormV2(c *MySQLConfig) (db *gorm.DB) {
 	}
 
 	newLogger := logger.New(
-		log.New(os.Stdout, "[GORM] >> ", 64|log.Ldate|log.Lmicroseconds), // io writer
+		log.New(os.Stdout, "[GORM] >> ", log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds), // io writer
 		lc,
 	)
 	db, err := gorm.Open(mysql.Open(c.DSN), &gorm.Config{Logger: newLogger})

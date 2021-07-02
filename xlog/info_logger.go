@@ -4,11 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
-	"strings"
 	"sync"
-
-	"github.com/iGoogle-ink/gopher/util"
 )
 
 type InfoLogger struct {
@@ -36,9 +32,5 @@ func (i *InfoLogger) logOut(col *ColorType, format *string, v ...interface{}) {
 }
 
 func (i *InfoLogger) init() {
-	if util.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
-		i.logger = log.New(os.Stdout, "[INFO] >> ", 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
-		return
-	}
-	i.logger = log.New(os.Stdout, "[INFO] ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	i.logger = log.New(os.Stdout, "[INFO] >> ", log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }

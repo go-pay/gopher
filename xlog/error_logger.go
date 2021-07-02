@@ -4,11 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime"
-	"strings"
 	"sync"
-
-	"github.com/iGoogle-ink/gopher/util"
 )
 
 type ErrorLogger struct {
@@ -36,9 +32,5 @@ func (e *ErrorLogger) logOut(col *ColorType, format *string, v ...interface{}) {
 }
 
 func (e *ErrorLogger) init() {
-	if util.String2Int(strings.Split(runtime.Version(), ".")[1]) >= 14 {
-		e.logger = log.New(os.Stdout, "[ERROR] >> ", 64|log.Lshortfile|log.Ldate|log.Lmicroseconds)
-		return
-	}
-	e.logger = log.New(os.Stdout, "[ERROR] ", log.Lshortfile|log.Ldate|log.Lmicroseconds)
+	e.logger = log.New(os.Stdout, "[ERROR] >> ", log.Lmsgprefix|log.Lshortfile|log.Ldate|log.Lmicroseconds)
 }
