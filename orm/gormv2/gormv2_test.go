@@ -13,8 +13,8 @@ var (
 )
 
 type FmUser struct {
-	Id     int    `gorm:"column:id;primaryKey" xorm:"'id' pk"`
-	UName  string `gorm:"column:uname" xorm:"'uname'"`
+	Id     int    `gorm:"column:id;primaryKey"`
+	UName  string `gorm:"column:uname"`
 	Passwd string `gorm:"column:passwd"`
 	Openid string `gorm:"column:openid"`
 }
