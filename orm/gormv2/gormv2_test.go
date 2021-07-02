@@ -30,6 +30,9 @@ func TestInitGormV2(t *testing.T) {
 		MaxOpenConn:    10,
 		MaxIdleConn:    10,
 		MaxConnTimeout: xtime.Duration(10 * time.Second),
+		LogLevel:       "info",
+		Colorful:       true,
+		SlowThreshold:  xtime.Duration(5 * time.Second),
 	}
 
 	g := InitGormV2(gc1)
