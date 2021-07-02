@@ -2,55 +2,50 @@ package web
 
 import (
 	"io/ioutil"
-	"os"
-	"os/signal"
-	"syscall"
 	"testing"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gopher/limit"
-	"github.com/iGoogle-ink/gopher/trace"
 	"github.com/iGoogle-ink/gopher/xlog"
 )
 
 func TestInitServer(t *testing.T) {
 	// 需要测试请自行解开注释测试
 
-	c := &Config{
-		Port: ":2233",
-		Limit: &limit.Config{
-			Rate:       0, // 0 速率不限流
-			BucketSize: 100,
-		},
-		Trace: &trace.Config{
-			ServiceName: "trace-demo",
-			Endpoint:    "",
-		},
-	}
-
-	g := InitGin(c)
-	g.Gin.Use(g.CORS(), g.Recovery())
-
-	initRoute(g.Gin)
-
-	g.Start()
-
-	ch := make(chan os.Signal)
-	signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
-	for {
-		si := <-ch
-		switch si {
-		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
-			xlog.Warnf("get a signal %s, stop the process", si.String())
-			// todo something close
-			g.Close()
-			return
-		case syscall.SIGHUP:
-		default:
-			return
-		}
-	}
+	//c := &Config{
+	//	Port: ":2233",
+	//	Limit: &limit.Config{
+	//		Rate:       0, // 0 速率不限流
+	//		BucketSize: 100,
+	//	},
+	//	Trace: &trace.Config{
+	//		ServiceName: "trace-demo",
+	//		Endpoint:    "",
+	//	},
+	//}
+	//
+	//g := InitGin(c)
+	//g.Gin.Use(g.CORS(), g.Recovery())
+	//
+	//initRoute(g.Gin)
+	//
+	//g.Start()
+	//
+	//ch := make(chan os.Signal)
+	//signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
+	//for {
+	//	si := <-ch
+	//	switch si {
+	//	case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
+	//		xlog.Warnf("get a signal %s, stop the process", si.String())
+	//		// todo something close
+	//		g.Close()
+	//		return
+	//	case syscall.SIGHUP:
+	//	default:
+	//		return
+	//	}
+	//}
 }
 
 func initRoute(g *gin.Engine) {
