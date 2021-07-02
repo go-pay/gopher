@@ -10,13 +10,13 @@ platform:
   arch: amd64
 
 steps:
-#  - name: mysql
-#    pull: if-not-exists
-#    image: mysql:5.7
-#    environment:
-#      MYSQL_ROOT_PASSWORD: "root"
-#      MYSQL_DATABASE: "school"
-#    detach: true # 后台运行
+  - name: mysql
+    pull: if-not-exists
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_DATABASE: "school"
+    detach: true # 后台运行
 
   - name: ci_1.16
     pull: if-not-exists
@@ -27,10 +27,10 @@ steps:
       GOSUMDB: "off"
       CGO_ENABLED: "0"
       GOOS: "linux"
-#    depends_on:
-#      - mysql
+    depends_on:
+      - mysql
     commands:
-#      - sleep 15  # wait mysql server turn on
+      - sleep 15  # wait mysql server turn on
       - go version
       - go env
       - go mod tidy
