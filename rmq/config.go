@@ -1,13 +1,10 @@
-/*
-	消息并发多条推送，但commit回复一次性回复，无法对单条消息进行commit回复，暂时不推荐使用
-	阿里云官方推荐使用 v1.2.4 版本
-*/
 package rmq
 
 import (
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
+	"github.com/iGoogle-ink/gopher/limit"
 )
 
 const (
@@ -36,6 +33,8 @@ type RocketMQConfig struct {
 	ConsumerOptions []consumer.Option
 	// 自定义生产者配置
 	ProducerOptions []producer.Option
+	// currently consume limiter
+	Limit *limit.Config
 }
 
 func defaultConsumerOps(conf *RocketMQConfig) (ops []consumer.Option) {
