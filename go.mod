@@ -9,7 +9,7 @@ require (
 	github.com/asim/go-micro/v3 v3.5.2-0.20210630062103-c13bb07171bc
 	github.com/gin-gonic/gin v1.7.2
 	github.com/go-pay/gopay v1.5.49
-	github.com/go-redis/redis/v8 v8.11.0
+	github.com/go-redis/redis/v8 v8.11.1
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang/protobuf v1.5.2
 	github.com/google/uuid v1.2.0
