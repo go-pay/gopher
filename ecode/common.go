@@ -1,9 +1,6 @@
 package ecode
 
-import "sync"
-
 var (
-	errorMap = new(sync.Map)
 	// base error
 	OK              = New(0, "success")
 	RequestErr      = New(10400, "request error")

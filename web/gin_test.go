@@ -3,10 +3,10 @@ package web
 import (
 	"io/ioutil"
 	"testing"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopay/wechat/v3"
+	"github.com/iGoogle-ink/gopher/ecode"
 	"github.com/iGoogle-ink/gopher/xlog"
 )
 
@@ -60,8 +60,7 @@ func initRoute(g *gin.Engine) {
 		JSON(c, rsp, nil)
 	})
 	g.GET("/b", func(c *gin.Context) {
-		time.Sleep(1 * time.Second)
-		JSON(c, "b", nil)
+		JSON(c, nil, ecode.InvalidTokenErr)
 	})
 	g.POST("/c", func(c *gin.Context) {
 		all, _ := ioutil.ReadAll(c.Request.Body)
