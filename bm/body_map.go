@@ -144,22 +144,20 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err err
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeSortParams() string {
-	return bm.EncodeAliPaySignParams()
+	return bm.EncodeURLParams()
 }
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 	var (
-		buf     strings.Builder
-		keyList []string
+		buf  strings.Builder
+		keys []string
 	)
-	mu.RLock()
 	for k := range bm {
-		keyList = append(keyList, k)
+		keys = append(keys, k)
 	}
-	sort.Strings(keyList)
-	mu.RUnlock()
-	for _, k := range keyList {
+	sort.Strings(keys)
+	for _, k := range keys {
 		if v := bm.GetString(k); v != util.NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
@@ -176,16 +174,14 @@ func (bm BodyMap) EncodeWeChatSignParams(apiKey string) string {
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeAliPaySignParams() string {
 	var (
-		buf     strings.Builder
-		keyList []string
+		buf  strings.Builder
+		keys []string
 	)
-	mu.RLock()
 	for k := range bm {
-		keyList = append(keyList, k)
+		keys = append(keys, k)
 	}
-	sort.Strings(keyList)
-	mu.RUnlock()
-	for _, k := range keyList {
+	sort.Strings(keys)
+	for _, k := range keys {
 		if v := bm.GetString(k); v != util.NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
@@ -199,12 +195,17 @@ func (bm BodyMap) EncodeAliPaySignParams() string {
 	return buf.String()[:buf.Len()-1]
 }
 
-// ("bar=baz&foo=quux")
-func (bm BodyMap) EncodeGetParams() string {
+// ("bar=baz&foo=quux") sorted by key.
+func (bm BodyMap) EncodeURLParams() string {
 	var (
-		buf strings.Builder
+		buf  strings.Builder
+		keys []string
 	)
-	for k, _ := range bm {
+	for k := range bm {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
 		if v := bm.GetString(k); v != util.NULL {
 			buf.WriteString(k)
 			buf.WriteByte('=')
