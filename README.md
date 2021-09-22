@@ -9,7 +9,6 @@
 [![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/iGoogle-ink/gopher)
 [![Drone CI](https://cloud.drone.io/api/badges/iGoogle-ink/gopher/status.svg)](https://cloud.drone.io/iGoogle-ink/gopher)
 [![GitHub Release](https://img.shields.io/github/v/release/iGoogle-ink/gopher)](https://github.com/iGoogle-ink/gopher/releases)
-[![License](https://img.shields.io/github/license/iGoogle-ink/gopay)](https://www.apache.org/licenses/LICENSE-2.0)
 
 ### Install
 

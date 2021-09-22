@@ -214,13 +214,12 @@ func (c *Client) SendStruct(v interface{}) (client *Client) {
 		if err := json.Unmarshal(bs, &body); err != nil {
 			return c
 		}
-		c.FormString = util.FormatURLParam(body)
+		c.FormString = body.EncodeURLParams()
 	}
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
-func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
+func (c *Client) SendBodyMap(bm bm.BodyMap) (client *Client) {
 	if bm == nil {
 		return c
 	}
@@ -233,13 +232,12 @@ func (c *Client) SendBodyMap(bm map[string]interface{}) (client *Client) {
 		}
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = util.FormatURLParam(bm)
+		c.FormString = bm.EncodeURLParams()
 	}
 	return c
 }
 
-// 参数可直接传 gopay.BodyMap
-func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client) {
+func (c *Client) SendMultipartBodyMap(bm bm.BodyMap) (client *Client) {
 	if bm == nil {
 		return c
 	}
@@ -253,7 +251,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]interface{}) (client *Client
 		}
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
-		c.FormString = util.FormatURLParam(bm)
+		c.FormString = bm.EncodeURLParams()
 	case TypeMultipartFormData:
 		c.multipartBodyMap = bm
 	}

@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pay/gopay/wechat/v3"
 	"github.com/iGoogle-ink/gopher/ecode"
 	"github.com/iGoogle-ink/gopher/xlog"
 )
@@ -71,16 +70,16 @@ func initRoute(g *gin.Engine) {
 		JSON(c, Pager{PageNo: 1, PageSize: 15}.Apply(30, "我是15条数据"), nil)
 	})
 	g.POST("/wechatCallback", func(c *gin.Context) {
-		notify, err := wechat.V3ParseNotify(c.Request)
-		if err != nil {
-			xlog.Errorf("wechat.V3ParseNotify(),err:%+v", err)
-			return
-		}
-		xlog.Debug("Id:", notify.Id)
-		xlog.Debug("EventType:", notify.EventType)
-		xlog.Debug("ResourceType:", notify.ResourceType)
-		xlog.Debug("Resource:", notify.Resource)
-		xlog.Debug("CreateTime:", notify.CreateTime)
-		xlog.Debug("Summary:", notify.Summary)
+		//notify, err := wechat.V3ParseNotify(c.Request)
+		//if err != nil {
+		//	xlog.Errorf("wechat.V3ParseNotify(),err:%+v", err)
+		//	return
+		//}
+		//xlog.Debug("Id:", notify.Id)
+		//xlog.Debug("EventType:", notify.EventType)
+		//xlog.Debug("ResourceType:", notify.ResourceType)
+		//xlog.Debug("Resource:", notify.Resource)
+		//xlog.Debug("CreateTime:", notify.CreateTime)
+		//xlog.Debug("Summary:", notify.Summary)
 	})
 }
