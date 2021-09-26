@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/iGoogle-ink/gopher/limit/group"
 	"github.com/iGoogle-ink/gopher/limit/rate"
-	xrate "github.com/iGoogle-ink/gopher/rate"
 )
 
 var (
@@ -27,7 +27,7 @@ type Config struct {
 // 速率限制器
 type RateLimiter struct {
 	C            *Config
-	LimiterGroup *xrate.RateGroup
+	LimiterGroup *group.RateGroup
 }
 
 func NewLimiter(c *Config) (rl *RateLimiter) {
@@ -36,7 +36,7 @@ func NewLimiter(c *Config) (rl *RateLimiter) {
 	}
 	rl = &RateLimiter{
 		C: c,
-		LimiterGroup: xrate.NewRateGroup(func() interface{} {
+		LimiterGroup: group.NewRateGroup(func() interface{} {
 			return newLimiter(c)
 		}),
 	}
@@ -62,27 +62,6 @@ func (r *RateLimiter) GinLimit() gin.HandlerFunc {
 		c.Next()
 	}
 }
-
-//func (r *RateLimiter) EchoLimit() echo.MiddlewareFunc {
-//	return func(next echo.HandlerFunc) echo.HandlerFunc {
-//		return func(c echo.Context) error {
-//			path := strings.Split(c.Request().RequestURI, "?")[0]
-//			// log.Warning("key:", path[1:])
-//			limiter := r.LimiterGroup.Get(path[1:]).(*rate.Limiter)
-//			if allow := limiter.Allow(); !allow {
-//				rsp := struct {
-//					Code    int    `json:"code"`
-//					Message string `json:"message"`
-//				}{
-//					Code:    10503,
-//					Message: "服务器忙，请稍后重试...",
-//				}
-//				return c.JSON(http.StatusOK, rsp)
-//			}
-//			return next(c)
-//		}
-//	}
-//}
 
 func newLimiter(c *Config) *rate.Limiter {
 	return rate.NewLimiter(rate.Limit(c.Rate), c.BucketSize)

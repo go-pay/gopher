@@ -1,10 +1,10 @@
-package rate
+package group
 
 import (
 	"sync"
 )
 
-// RateGroup 速率Group，懒加载
+// RateGroup 速率Group
 type RateGroup struct {
 	new func() interface{}
 	rgs sync.Map
@@ -25,7 +25,7 @@ func (r *RateGroup) Get(key string) interface{} {
 	if !ok {
 		r.RLock()
 		newRg := r.new
-		r.RLock()
+		r.RUnlock()
 		rg = newRg()
 		r.rgs.Store(key, rg)
 	}
