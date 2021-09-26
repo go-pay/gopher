@@ -1,6 +1,7 @@
 package bm
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"testing"
 
@@ -112,13 +113,14 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 		Description: "分到个人",
 	}
 	rs = append(rs, item2)
+	bs, _ := json.Marshal(rs)
 
 	bm := make(BodyMap)
 	bm.Set("nonce_str", "abc123").
 		Set("transaction_id", "4208450740201411110007820472").
 		Set("out_order_no", "P20150806125346")
 
-	bm.SetSlice("receivers", rs)
+	bm.Set("receivers", string(bs))
 
 	xlog.Debug("JsonBody:", bm.JsonBody())
 	//receiver := make(BodyMap)

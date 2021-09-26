@@ -50,14 +50,6 @@ func (bm BodyMap) SetBodyMap(key string, value func(bm BodyMap)) BodyMap {
 	return bm
 }
 
-func (bm BodyMap) SetSlice(key string, slice interface{}) BodyMap {
-	bs, _ := json.Marshal(slice)
-	mu.Lock()
-	bm[key] = string(bs)
-	mu.Unlock()
-	return bm
-}
-
 // 设置 FormFile
 func (bm BodyMap) SetFormFile(key string, file *File) BodyMap {
 	mu.Lock()
@@ -153,6 +145,9 @@ func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err err
 
 // ("bar=baz&foo=quux") sorted by key.
 func (bm BodyMap) EncodeURLParams() string {
+	if bm == nil {
+		return util.NULL
+	}
 	var (
 		buf  strings.Builder
 		keys []string
