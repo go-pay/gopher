@@ -2,7 +2,7 @@ package ecode
 
 var (
 	// base error
-	OK              = New(0, "success")
+	Success         = New(0, "success")
 	RequestErr      = New(10400, "request error")
 	InvalidSignErr  = New(10401, "invalid sign")
 	InvalidAppidErr = New(10402, "invalid appid")
