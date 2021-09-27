@@ -13,14 +13,11 @@ func TestInitServer(t *testing.T) {
 	// 需要测试请自行解开注释测试
 
 	//c := &Config{
-	//	Port: ":2233",
+	//	Addr:  ":2233",
+	//	Debug: true,
 	//	Limit: &limit.Config{
 	//		Rate:       0, // 0 速率不限流
 	//		BucketSize: 100,
-	//	},
-	//	Trace: &trace.Config{
-	//		ServiceName: "trace-demo",
-	//		Endpoint:    "",
 	//	},
 	//}
 	//
@@ -40,12 +37,14 @@ func TestInitServer(t *testing.T) {
 	//		xlog.Warnf("get a signal %s, stop the process", si.String())
 	//		// todo something close
 	//		g.Close()
+	//		time.Sleep(time.Second)
 	//		return
 	//	case syscall.SIGHUP:
 	//	default:
 	//		return
 	//	}
 	//}
+
 }
 
 func initRoute(g *gin.Engine) {
