@@ -3,7 +3,6 @@ package web
 import (
 	"context"
 	"fmt"
-	"net"
 	"net/http"
 	"time"
 
@@ -53,14 +52,14 @@ func InitGin(c *Config) *GinEngine {
 }
 
 func (g *GinEngine) Start() {
-	ln, err := net.Listen("tcp", g.addr)
-	if err != nil {
-		panic(fmt.Sprintf("net.Listen(tcp, %s), error(%+v).", g.addr, err))
-	}
 	go func() {
-		xlog.Info("Listening and serving HTTP on %s", g.addr)
-		if err := g.server.Serve(ln); err != nil {
-			panic(fmt.Sprintf("web server.Serve(), error(%+v).", err))
+		xlog.Infof("Listening and serving HTTP on %s", g.addr)
+		if err := g.server.ListenAndServe(); err != nil {
+			if err == http.ErrServerClosed {
+				xlog.Info("http: Server closed")
+				return
+			}
+			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
 		}
 	}()
 }
