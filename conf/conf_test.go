@@ -10,11 +10,11 @@ import (
 )
 
 type Config struct {
-	Name   string
-	Number int
-	Web    *web.Config
-	MySQL  *orm.MySQLConfig
-	Redis  *orm.RedisConfig
+	Name   string           `json:"name" yaml:"name" toml:"name"`
+	Number int              `json:"number" yaml:"number" toml:"number"`
+	Web    *web.Config      `json:"web" yaml:"web" toml:"web"`
+	MySQL  *orm.MySQLConfig `json:"mysql" yaml:"mysql" toml:"mysql"`
+	Redis  *orm.RedisConfig `json:"redis" yaml:"redis" toml:"redis"`
 }
 
 func TestParseYaml(t *testing.T) {

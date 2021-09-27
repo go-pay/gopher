@@ -19,9 +19,9 @@ const (
 
 // 配置文件
 type Config struct {
-	ProxySchema SchemaType // SchemaHTTP or SchemaHTTPS
-	ProxyHost   string     // 转发到的接口 Host
-	ProxyPort   string     // 转发到的接口 Port
-	ServerPort  string     // 代理转发服务启动的端口
-	Key         string     // 简单的校验Key
+	ProxySchema SchemaType `json:"proxy_schema" yaml:"proxy_schema" toml:"proxy_schema"` // SchemaHTTP or SchemaHTTPS
+	ProxyHost   string     `json:"proxy_host" yaml:"proxy_host" toml:"proxy_host"`       // 转发到的接口 Host
+	ProxyPort   string     `json:"proxy_port" yaml:"proxy_port" toml:"proxy_port"`       // 转发到的接口 Port
+	ServerPort  string     `json:"server_port" yaml:"server_port" toml:"server_port"`    // 代理转发服务启动的端口
+	Key         string     `json:"key" yaml:"key" toml:"key"`                            // 简单的校验Key
 }

@@ -6,15 +6,16 @@ import (
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/iGoogle-ink/gopher/xtime"
 )
 
 // RedisConfig redis config.
 type RedisConfig struct {
-	Addrs        []string
-	Password     string
-	DB           int
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
+	Addrs        []string       `json:"addrs" yaml:"addrs" toml:"addrs"`
+	Password     string         `json:"password" yaml:"password" toml:"password"`
+	DB           int            `json:"db" yaml:"db" toml:"db"`
+	ReadTimeout  xtime.Duration `json:"read_timeout" yaml:"read_timeout" toml:"read_timeout"`
+	WriteTimeout xtime.Duration `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"`
 }
 
 type RedisCluster struct {
@@ -27,10 +28,10 @@ func InitRedisCluster(c *RedisConfig) (rc *RedisCluster) {
 		Password: c.Password,
 	}
 	if c.ReadTimeout != 0 {
-		opts.ReadTimeout = c.ReadTimeout
+		opts.ReadTimeout = time.Duration(c.ReadTimeout)
 	}
 	if c.WriteTimeout != 0 {
-		opts.WriteTimeout = c.WriteTimeout
+		opts.WriteTimeout = time.Duration(c.WriteTimeout)
 	}
 	rd := redis.NewClusterClient(opts)
 	_, err := rd.Ping(context.Background()).Result()
@@ -52,10 +53,10 @@ func InitRedis(c *RedisConfig) (r *Redis) {
 		DB:       c.DB,
 	}
 	if c.ReadTimeout != 0 {
-		opts.ReadTimeout = c.ReadTimeout
+		opts.ReadTimeout = time.Duration(c.ReadTimeout)
 	}
 	if c.WriteTimeout != 0 {
-		opts.WriteTimeout = c.WriteTimeout
+		opts.WriteTimeout = time.Duration(c.WriteTimeout)
 	}
 	rd := redis.NewClient(opts)
 	_, err := rd.Ping(context.Background()).Result()

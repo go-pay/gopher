@@ -1,20 +1,24 @@
-Name = "gotil"
-Number = 1024
+name = "gopher"
+number = 1024
 
-[Web]
-Port = ":2233"
-[Web.Limit]
-Rate = 100
-BucketSize = 100
+[web]
+port = ":2233"
+[web.limit]
+rate = 100
+bucket_size = 100
 
-[Redis]
-Addrs = ["127.0.0.1:6379"]
-Password = "abc"
-DB = 10
+[redis]
+addrs = ["127.0.0.1:6379"]
+password = "abc"
+db = 10
+read_timeout = "5s"
+write_timeout = "6s"
 
-[MySQL]
-DSN = "uname:password@tcp(127.0.0.1:3306)/test?timeout=10s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4,utf8"
-Active = 1200
-Idle = 200
-IdleTimeout = 10
-ShowSQL = true
+[mysql]
+dsn = "uname:password@tcp(127.0.0.1:3306)/test?timeout=10s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4,utf8"
+max_open_conn = 20
+max_idle_conn = 20
+max_conn_timeout = "10s"
+log_level = "warn"     # silent、error、warn、info
+colorful = true
+slow_threshold = "200ms"

@@ -1,18 +1,22 @@
-Name: gopher
-Number: 1024
-Web:
-  Port: :2233
-  Limit:
-    Rate: 100
-    BucketSize: 100
-Redis:
-  Addrs:
-    - 127.0.0.1:6379
-  Password: abc
-  DB: 1
-MySQL:
-  DSN: uname:password@tcp(127.0.0.1:3306)/test?timeout=10s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4,utf8
-  Active: 2000
-  Idle: 200
-  IdleTimeout: 60
-  ShowSQL: true
+name: gopher
+number: 1024
+web:
+  port: ":2233"
+  limit:
+    rate: 100
+    bucket_size: 100
+redis:
+  addrs:
+    - "127.0.0.1:6379"
+  password: "abc"
+  db: 1
+  read_timeout: "5s"
+  write_timeout: "6s"
+mysql:
+  dsn: "uname:password@tcp(127.0.0.1:3306)/test?timeout=10s&readTimeout=5s&writeTimeout=5s&parseTime=true&loc=Local&charset=utf8mb4"
+  max_open_conn: 2000
+  max_idle_conn: 200
+  max_conn_timeout: "10s"
+  log_level: "warn"
+  colorful: true
+  slow_threshold: "200ms"

@@ -28,7 +28,7 @@ const (
 )
 
 type Config struct {
-	ServiceName string
-	Endpoint    string
-	TraceOpts   []jaeger.TracerOption
+	ServiceName string                `json:"service_name" yaml:"service_name" toml:"service_name"`
+	Endpoint    string                `json:"endpoint" yaml:"endpoint" toml:"endpoint"`
+	TraceOpts   []jaeger.TracerOption `json:"trace_opts" yaml:"trace_opts" toml:"trace_opts"`
 }

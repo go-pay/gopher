@@ -18,10 +18,10 @@ var (
 
 type Config struct {
 	// per second request，0 不限流
-	Rate int
+	Rate int `json:"rate" yaml:"rate" toml:"rate"`
 
 	// max size，桶内最大量
-	BucketSize int
+	BucketSize int `json:"bucket_size" yaml:"bucket_size" toml:"bucket_size"`
 }
 
 // 速率限制器

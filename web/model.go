@@ -7,16 +7,16 @@ import (
 
 type Config struct {
 	// http host
-	Host string
+	Host string `json:"host" yaml:"host" toml:"host"`
 
 	// http export port. :8080
-	Port string
+	Port string `json:"port" yaml:"port" toml:"port"`
 
 	// interface limit
-	Limit *limit.Config
+	Limit *limit.Config `json:"limit" yaml:"limit" toml:"limit"`
 
 	// jaeger trace config
-	Trace *trace.Config
+	Trace *trace.Config `json:"trace" yaml:"trace" toml:"trace"`
 }
 
 type RecoverInfo struct {

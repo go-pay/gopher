@@ -38,7 +38,7 @@ func (e *eError) GRPCStatus() *status.Status {
 // analyse error info
 func AnalyseError(err error) *eError {
 	if err == nil {
-		return OK
+		return Success
 	}
 	if e, ok := err.(*eError); ok {
 		return e
@@ -48,7 +48,7 @@ func AnalyseError(err error) *eError {
 
 func errStringToError(e string) *eError {
 	if e == "" {
-		return OK
+		return Success
 	}
 	i, err := strconv.Atoi(e)
 	if err != nil {
