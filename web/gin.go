@@ -42,8 +42,8 @@ func InitGin(c *Config) *GinEngine {
 		engine.Tracer = trace.NewTracer(c.Trace)
 		g.Use(engine.Tracer.GinTrace())
 	}
-	if c.Limit != nil && c.Limit.Rate != 0 {
-		g.Use(limit.NewLimiter(c.Limit).GinLimit())
+	if c.Limiter != nil && c.Limiter.Rate != 0 {
+		g.Use(limit.NewLimiter(c.Limiter).GinLimit())
 	}
 	if !c.Debug {
 		gin.SetMode(gin.ReleaseMode)

@@ -27,7 +27,7 @@ func TestParseYaml(t *testing.T) {
 	xlog.Debug(c.Name)
 	xlog.Debug(c.Number)
 	xlog.Debug(c.Web)
-	xlog.Debug(c.Web.Limit)
+	xlog.Debug(c.Web.Limiter)
 	xlog.Debug(c.MySQL)
 	xlog.Debug(c.Redis)
 }
@@ -42,7 +42,7 @@ func TestParseJson(t *testing.T) {
 	xlog.Debug(c.Name)
 	xlog.Debug(c.Number)
 	xlog.Debug(c.Web)
-	xlog.Debug(c.Web.Limit)
+	xlog.Debug(c.Web.Limiter)
 	xlog.Debug(c.MySQL)
 	xlog.Debug(c.Redis)
 }
@@ -57,7 +57,7 @@ func TestParseToml(t *testing.T) {
 	xlog.Debug(c.Name)
 	xlog.Debug(c.Number)
 	xlog.Debug(c.Web)
-	xlog.Debug(c.Web.Limit)
+	xlog.Debug(c.Web.Limiter)
 	xlog.Debug(c.MySQL)
 	xlog.Debug(c.Redis)
 }

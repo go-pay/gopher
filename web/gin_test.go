@@ -15,7 +15,7 @@ func TestInitServer(t *testing.T) {
 	//c := &Config{
 	//	Addr:  ":2233",
 	//	Debug: true,
-	//	Limit: &limit.Config{
+	//	Limiter: &limit.Config{
 	//		Rate:       0, // 0 速率不限流
 	//		BucketSize: 100,
 	//	},
