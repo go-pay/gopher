@@ -3,8 +3,7 @@ package main
 import (
 	"time"
 
-	orm2 "github.com/iGoogle-ink/gopher/orm"
-	"github.com/iGoogle-ink/gopher/orm/xorm"
+	"github.com/iGoogle-ink/gopher/orm"
 	"github.com/iGoogle-ink/gopher/xlog"
 	"github.com/iGoogle-ink/gopher/xtime"
 )
@@ -17,7 +16,7 @@ type MxCity struct {
 
 func main() {
 
-	c := &xorm.MySQLConfig{
+	c := &orm.MySQLConfig{
 		DSN:            "uname:password@tcp(host:3306)/db_name?timeout=10s&readTimeout=10s&writeTimeout=10s&parseTime=true&loc=Local&charset=utf8mb4",
 		MaxOpenConn:    10,
 		MaxIdleConn:    10,
@@ -25,7 +24,7 @@ func main() {
 		//LogLevel:       logger.Error,
 		SlowThreshold: xtime.Duration(200 * time.Millisecond),
 	}
-	db := orm2.InitGormV2(c)
+	db := orm.InitGorm(c)
 
 	var mcs []*MxCity
 
