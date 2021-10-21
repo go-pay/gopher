@@ -49,7 +49,7 @@ func (g *GinEngine) Recovery() gin.HandlerFunc {
 				stack := make([]byte, size)
 				stack = stack[:runtime.Stack(stack, false)]
 				if c.Request != nil {
-					rawReq, _ = httputil.DumpRequest(c.Request, false)
+					rawReq, _ = httputil.DumpRequest(c.Request, true)
 				}
 				xlog.Errorf("[GinPanic] %s \n[Error] %v \n[Stack] %s", string(rawReq), err, string(stack))
 				c.AbortWithError(http.StatusInternalServerError, ecode.ServerErr)
