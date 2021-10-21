@@ -1,7 +1,6 @@
 package web
 
 import (
-	"io/ioutil"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -61,9 +60,18 @@ func initRoute(g *gin.Engine) {
 		JSON(c, nil, ecode.InvalidTokenErr)
 	})
 	g.POST("/c", func(c *gin.Context) {
-		all, _ := ioutil.ReadAll(c.Request.Body)
-		defer c.Request.Body.Close()
-		JSON(c, string(all), nil)
+		body, err := ReadRequestBody(c.Request)
+		if err != nil {
+			xlog.Error(err)
+			JSON(c, nil, err)
+			return
+		}
+		xlog.Debugf("body:%s", body)
+		var ss = struct {
+			Name string `json:"name"`
+		}{}
+		_ = c.ShouldBindJSON(&ss)
+		JSON(c, ss, nil)
 	})
 	g.GET("/d", func(c *gin.Context) {
 		JSON(c, Pager{PageNo: 1, PageSize: 15}.Apply(30, "我是15条数据"), nil)

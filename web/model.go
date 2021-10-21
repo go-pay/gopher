@@ -1,6 +1,10 @@
 package web
 
 import (
+	"bytes"
+	"io"
+	"net/http"
+
 	"github.com/iGoogle-ink/gopher/limit"
 	"github.com/iGoogle-ink/gopher/trace"
 	"github.com/iGoogle-ink/gopher/xtime"
@@ -16,15 +20,30 @@ type Config struct {
 }
 
 type RecoverInfo struct {
-	Time  string      `json:"time"`
-	Url   string      `json:"url"`
-	Err   string      `json:"error"`
-	Query interface{} `json:"query"`
-	Stack string      `json:"stack"`
+	Time        string      `json:"time"`
+	RequestURI  string      `json:"request_uri"`
+	Body        string      `json:"body"`
+	RequestInfo string      `json:"request_info"`
+	Err         interface{} `json:"error"`
+	Stack       string      `json:"stack"`
 }
 
 type CommonRsp struct {
 	Code    int         `json:"code"`
 	Message string      `json:"message"`
 	Data    interface{} `json:"data,omitempty"`
+}
+
+func ReadRequestBody(req *http.Request) (bs []byte, err error) {
+	var (
+		buf bytes.Buffer
+	)
+	if _, err = buf.ReadFrom(req.Body); err != nil {
+		return nil, err
+	}
+	if err = req.Body.Close(); err != nil {
+		return nil, err
+	}
+	req.Body = io.NopCloser(bytes.NewReader(buf.Bytes()))
+	return buf.Bytes(), nil
 }
