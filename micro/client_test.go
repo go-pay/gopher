@@ -1,14 +1,17 @@
 package micro
 
 import (
+	"context"
 	"testing"
 )
+
+var ctx = context.Background()
 
 func TestClient(t *testing.T) {
 	// 解开注释测试
 
 	//var c proto.GreeterService
-	//rg := &EtcdRegistry{Addrs: []string{"api.fumm.cc:2379"}}
+	//rg := &EtcdRegistry{Addrs: []string{"api.fmm.ink:2379"}}
 	//
 	//InitClient("service.client.clientName", "latest", rg, func(client client.Client) {
 	//	c = proto.NewGreeterService("service.server.serverName", client)
@@ -20,7 +23,7 @@ func TestClient(t *testing.T) {
 	//	}
 	//	time.Sleep(time.Second * 2)
 	//	in := &proto.Request{Name: "Jerry"}
-	//	rsp, err := c.Hello(context.Background(), in)
+	//	rsp, err := c.Hello(ctx, in)
 	//	if err != nil {
 	//		xlog.Error(err)
 	//		continue

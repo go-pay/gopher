@@ -3,9 +3,9 @@ package micro
 import (
 	"context"
 
-	"github.com/asim/go-micro/v3/client"
-	"github.com/asim/go-micro/v3/server"
 	"github.com/iGoogle-ink/gopher/xlog"
+	"go-micro.dev/v4/client"
+	"go-micro.dev/v4/server"
 )
 
 func LogWrapper(fn server.HandlerFunc) server.HandlerFunc {

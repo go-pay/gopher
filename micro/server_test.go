@@ -17,7 +17,7 @@ func (g *Greeter) Hello(ctx context.Context, req *proto.Request, rsp *proto.Resp
 func TestServer(t *testing.T) {
 	// 解开注释测试
 
-	//rg := &EtcdRegistry{Addrs: []string{"api.fumm.cc:2379"}}
+	//rg := &EtcdRegistry{Addrs: []string{"api.fmm.ink:2379"}}
 	//
 	//InitServer("service.server.serverName", "latest", rg, func(s server.Server) {
 	//	if err := proto.RegisterGreeterHandler(s, new(Greeter)); err != nil {

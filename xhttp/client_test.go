@@ -1,6 +1,7 @@
 package xhttp
 
 import (
+	"context"
 	"io/ioutil"
 	"testing"
 	"time"
@@ -15,13 +16,15 @@ type HttpGet struct {
 	Data    interface{} `json:"data,omitempty"`
 }
 
+var ctx = context.Background()
+
 func TestHttpGet(t *testing.T) {
 	client := NewClient()
 	client.Timeout = 10 * time.Second
 	// test
-	_, bs, errs := client.Get("http://www.baidu.com").EndBytes()
-	if len(errs) > 0 {
-		xlog.Error(errs[0])
+	_, bs, err := client.Get("http://www.baidu.com").EndBytes(ctx)
+	if err != nil {
+		xlog.Error(err)
 		return
 	}
 	xlog.Debug(string(bs))
@@ -53,12 +56,12 @@ func TestHttpUploadFile(t *testing.T) {
 	client.Timeout = 10 * time.Second
 
 	rsp := new(HttpGet)
-	_, errs := client.Type(TypeMultipartFormData).
+	_, err = client.Type(TypeMultipartFormData).
 		Post("http://localhost:2233/admin/v1/oss/uploadImage").
 		SendMultipartBodyMap(bmm).
-		EndStruct(rsp)
-	if len(errs) > 0 {
-		xlog.Error(errs[0])
+		EndStruct(ctx, rsp)
+	if err != nil {
+		xlog.Error(err)
 		return
 	}
 	xlog.Debugf("%+v", rsp)

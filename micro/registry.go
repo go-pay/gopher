@@ -1,8 +1,8 @@
 package micro
 
 import (
-	"github.com/asim/go-micro/plugins/registry/etcd/v3"
-	"github.com/asim/go-micro/v3/registry"
+	"github.com/asim/go-micro/plugins/registry/etcd/v4"
+	"go-micro.dev/v4/registry"
 )
 
 //type Registry interface {
