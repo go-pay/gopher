@@ -19,7 +19,7 @@ import (
 
 func TestLimit(t *testing.T) {
 	if Limit(10) == Inf {
-		t.Errorf("Limit(10) == Inf should be false")
+		t.Errorf("Limiter(10) == Inf should be false")
 	}
 }
 
@@ -342,7 +342,7 @@ func TestReserveJumpBack(t *testing.T) {
 	lim := NewLimiter(10, 2)
 
 	runReserve(t, lim, request{t1, 2, t1, true}) // start at t1
-	runReserve(t, lim, request{t0, 1, t1, true}) // should violate Limit,Burst
+	runReserve(t, lim, request{t0, 1, t1, true}) // should violate Limiter,Burst
 	runReserve(t, lim, request{t2, 2, t3, true})
 }
 
@@ -353,7 +353,7 @@ func TestReserveJumpBackCancel(t *testing.T) {
 	r := runReserve(t, lim, request{t1, 2, t3, true})
 	runReserve(t, lim, request{t1, 1, t4, true})
 	r.CancelAt(t0)                               // cancel at t0, get 1 token back
-	runReserve(t, lim, request{t1, 2, t4, true}) // should violate Limit,Burst
+	runReserve(t, lim, request{t1, 2, t4, true}) // should violate Limiter,Burst
 }
 
 func TestReserveSetLimit(t *testing.T) {
@@ -362,7 +362,7 @@ func TestReserveSetLimit(t *testing.T) {
 	runReserve(t, lim, request{t0, 2, t0, true})
 	runReserve(t, lim, request{t0, 2, t4, true})
 	lim.SetLimitAt(t2, 10)
-	runReserve(t, lim, request{t2, 1, t4, true}) // violates Limit and Burst
+	runReserve(t, lim, request{t2, 1, t4, true}) // violates Limiter and Burst
 }
 
 func TestReserveSetBurst(t *testing.T) {
@@ -371,7 +371,7 @@ func TestReserveSetBurst(t *testing.T) {
 	runReserve(t, lim, request{t0, 2, t0, true})
 	runReserve(t, lim, request{t0, 2, t4, true})
 	lim.SetBurstAt(t3, 4)
-	runReserve(t, lim, request{t0, 4, t9, true}) // violates Limit and Burst
+	runReserve(t, lim, request{t0, 4, t9, true}) // violates Limiter and Burst
 }
 
 func TestReserveSetLimitCancel(t *testing.T) {

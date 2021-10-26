@@ -1,13 +1,16 @@
 package web
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httputil"
 	"runtime"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/iGoogle-ink/gopher/ecode"
 	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/iGoogle-ink/gopher/xtime"
 )
 
 // CORS gin middleware cors
@@ -42,16 +45,27 @@ func (g *GinEngine) CORS() gin.HandlerFunc {
 // Recovery gin middleware recovery
 func (g *GinEngine) Recovery() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		var (
+			rawReq, body []byte
+		)
+		body, _ = ReadRequestBody(c.Request)
+		if c.Request != nil {
+			rawReq, _ = httputil.DumpRequest(c.Request, true)
+		}
 		defer func() {
-			var rawReq []byte
 			if err := recover(); err != nil {
 				const size = 64 << 10
 				stack := make([]byte, size)
 				stack = stack[:runtime.Stack(stack, false)]
-				if c.Request != nil {
-					rawReq, _ = httputil.DumpRequest(c.Request, false)
-				}
-				xlog.Errorf("[GinPanic] %s \n[Error] %v \n[Stack] %s", string(rawReq), err, string(stack))
+				bs, _ := json.Marshal(RecoverInfo{
+					Time:        time.Now().Format(xtime.TimeLayout_1),
+					RequestURI:  c.Request.Host + c.Request.RequestURI,
+					Body:        string(body),
+					RequestInfo: string(rawReq),
+					Err:         err,
+					Stack:       string(stack),
+				})
+				xlog.Errorf("[GinPanic] %s", string(bs))
 				c.AbortWithError(http.StatusInternalServerError, ecode.ServerErr)
 			}
 		}()
