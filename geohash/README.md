@@ -6,11 +6,6 @@
 
 # 使用手册
 
-## 安装
-```bash
-$ go get -u github.com/iGoogle-ink/geohash
-```
-
 ## 计算geohash
 ```go
 //计算geohash

@@ -17,8 +17,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/iGoogle-ink/gopher/bm"
-	"github.com/iGoogle-ink/gopher/util"
+	"github.com/go-pay/gopher/bm"
+	"github.com/go-pay/gopher/util"
 )
 
 type Client struct {

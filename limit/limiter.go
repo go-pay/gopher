@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gopher/limit/group"
-	"github.com/iGoogle-ink/gopher/limit/rate"
+	"github.com/go-pay/gopher/limit/group"
+	"github.com/go-pay/gopher/limit/rate"
 )
 
 var (

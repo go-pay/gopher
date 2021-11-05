@@ -9,7 +9,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/iGoogle-ink/gopher/util"
+	"github.com/go-pay/gopher/util"
 )
 
 type BodyMap map[string]interface{}

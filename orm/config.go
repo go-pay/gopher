@@ -3,7 +3,7 @@ package orm
 import (
 	"database/sql"
 
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/xtime"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )

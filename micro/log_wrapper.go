@@ -3,7 +3,7 @@ package micro
 import (
 	"context"
 
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/xlog"
 	"go-micro.dev/v4/client"
 	"go-micro.dev/v4/server"
 )

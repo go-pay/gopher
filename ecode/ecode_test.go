@@ -3,7 +3,7 @@ package ecode
 import (
 	"testing"
 
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/xlog"
 )
 
 func TestEcode(t *testing.T) {

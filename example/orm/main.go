@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	"github.com/iGoogle-ink/gopher/orm"
-	"github.com/iGoogle-ink/gopher/xlog"
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/orm"
+	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopher/xtime"
 )
 
 type MxCity struct {

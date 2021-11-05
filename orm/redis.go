@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/go-pay/gopher/xtime"
 	"github.com/go-redis/redis/v8"
-	"github.com/iGoogle-ink/gopher/xtime"
 )
 
 // RedisConfig redis config.

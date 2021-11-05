@@ -3,7 +3,7 @@ package lru
 import (
 	"testing"
 
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/xlog"
 )
 
 func TestNewCache(t *testing.T) {

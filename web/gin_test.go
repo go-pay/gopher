@@ -4,8 +4,8 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gopher/ecode"
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/ecode"
+	"github.com/go-pay/gopher/xlog"
 )
 
 func TestInitServer(t *testing.T) {

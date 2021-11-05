@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/iGoogle-ink/gopher/errgroup"
+	"github.com/go-pay/gopher/errgroup"
 )
 
 func TestLog(t *testing.T) {

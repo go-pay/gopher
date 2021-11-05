@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iGoogle-ink/gopher/bm"
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/bm"
+	"github.com/go-pay/gopher/xlog"
 )
 
 type HttpGet struct {

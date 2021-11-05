@@ -1,7 +1,7 @@
 package orm
 
 import (
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/xtime"
 )
 
 // MySQLConfig mysql config.

@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/iGoogle-ink/gopher/xlog"
+	"github.com/go-pay/gopher/xlog"
 )
 
 type Service struct {

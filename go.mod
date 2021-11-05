@@ -1,4 +1,4 @@
-module github.com/iGoogle-ink/gopher
+module github.com/go-pay/gopher
 
 go 1.16
 

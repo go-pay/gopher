@@ -4,7 +4,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
-	"github.com/iGoogle-ink/gopher/limit"
+	"github.com/go-pay/gopher/limit"
 )
 
 const (

@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gopher/ecode"
-	"github.com/iGoogle-ink/gopher/xlog"
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/ecode"
+	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopher/xtime"
 )
 
 // CORS gin middleware cors

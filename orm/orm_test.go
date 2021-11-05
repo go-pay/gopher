@@ -4,8 +4,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/iGoogle-ink/gopher/xlog"
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopher/xtime"
 )
 
 var (

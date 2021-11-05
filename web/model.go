@@ -5,9 +5,9 @@ import (
 	"io"
 	"net/http"
 
-	"github.com/iGoogle-ink/gopher/limit"
-	"github.com/iGoogle-ink/gopher/trace"
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/limit"
+	"github.com/go-pay/gopher/trace"
+	"github.com/go-pay/gopher/xtime"
 )
 
 type Config struct {

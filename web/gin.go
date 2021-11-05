@@ -7,10 +7,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/iGoogle-ink/gopher/limit"
-	"github.com/iGoogle-ink/gopher/trace"
-	"github.com/iGoogle-ink/gopher/xlog"
-	"github.com/iGoogle-ink/gopher/xtime"
+	"github.com/go-pay/gopher/limit"
+	"github.com/go-pay/gopher/trace"
+	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopher/xtime"
 )
 
 type GinEngine struct {
