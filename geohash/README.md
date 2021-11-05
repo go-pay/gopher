@@ -1,11 +1,5 @@
 # geohash
 
-<a href="https://www.igoogle.ink" target="_blank"><img src="https://img.shields.io/badge/Author-Jerry-blue.svg"/></a>
-<a href="https://golang.org" target="_blank"><img src="https://img.shields.io/badge/Golang-1.11+-brightgreen.svg"/></a>
-<img src="https://img.shields.io/badge/Build-passing-brightgreen.svg"/>
-
-# 使用手册
-
 ## 计算geohash
 ```go
 //计算geohash
@@ -49,4 +43,4 @@ geohash基本原理是将地球理解为一个二维平面，将平面递归分�
 
 ### geohash长度和精度对照表
 
-<img src="https://raw.githubusercontent.com/iGoogle-ink/gotil/main/geohash/table.jpg"/>
+<img src="https://raw.githubusercontent.com/go-pay/gopher/main/geohash/table.jpg"/>
