@@ -285,7 +285,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return errors.New("Only support GET and POST and PUT and DELETE ")
 		}
 
-		req, err := http.NewRequest(c.method, c.url, body)
+		req, err := http.NewRequestWithContext(ctx, c.method, c.url, body)
 		if err != nil {
 			return err
 		}
@@ -297,7 +297,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		if c.Host != "" {
 			req.Host = c.Host
 		}
-		if c.Timeout != time.Duration(0) {
+		if c.Timeout > 0 {
 			c.HttpClient.Timeout = c.Timeout
 		}
 		res, err = c.HttpClient.Do(req)
@@ -312,27 +312,10 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		return nil
 	}
 
-	done := ctx.Done()
-	if done == nil {
-		if err = reqFunc(); err != nil {
-			return nil, nil, err
-		}
-		return res, bs, nil
+	if err = reqFunc(); err != nil {
+		return nil, nil, err
 	}
-
-	errc := make(chan error, 1)
-	go func() {
-		errc <- reqFunc()
-	}()
-	select {
-	case <-done:
-		return nil, nil, ctx.Err()
-	case err = <-errc:
-		if err != nil {
-			return nil, nil, err
-		}
-		return res, bs, nil
-	}
+	return res, bs, nil
 }
 
 func FormatURLParam(body map[string]interface{}) (urlParam string) {
