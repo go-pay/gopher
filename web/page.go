@@ -11,12 +11,12 @@ type pageRsp struct {
 }
 
 type page struct {
-	Total    int `json:"total"`
-	PageNo   int `json:"page_no"`
-	PageSize int `json:"page_size"`
+	Total    int64 `json:"total"`
+	PageNo   int   `json:"page_no"`
+	PageSize int   `json:"page_size"`
 }
 
-func (p Pager) Apply(total int, data interface{}) interface{} {
+func (p Pager) Apply(total int64, data interface{}) interface{} {
 	if data == nil {
 		return nil
 	}

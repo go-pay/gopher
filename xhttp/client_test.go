@@ -28,7 +28,6 @@ func TestHttpGet(t *testing.T) {
 		return
 	}
 	xlog.Debug(string(bs))
-
 	//rsp := new(HttpGet)
 	//_, errs := client.Type(TypeJSON).Get("http://api.igoogle.ink/app/v1/ping").EndStruct(rsp)
 	//if len(errs) > 0 {
