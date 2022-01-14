@@ -28,10 +28,14 @@ func TestProducer(t *testing.T) {
 	//for i := 0; i < 1; i++ {
 	//	message := &primitive.Message{
 	//		Topic: "topic",
-	//		Body:          []byte("12346"),
+	//		Body:  []byte("12346"),
 	//	}
-	//	message.WithTag("tag").WithKeys([]string{"key"})
-	//	/*res,*/ err = conn.SendAsyncSingle(ctx, nil, message)
+	//	message.WithTag("tag").
+	//		WithKeys([]string{"key"}).
+	//		WithProperty("__STARTDELIVERTIME", "1642150538000") // 阿里云 定时消息 属性，value 为 毫秒时间戳
+	//
+	//	/*res,*/
+	//	err = conn.SendAsyncSingle(ctx, nil, message)
 	//	if err != nil {
 	//		xlog.Errorf("%v", err)
 	//		return
