@@ -30,7 +30,7 @@ func InitGorm(c *MySQLConfig) (db *gorm.DB) {
 		log.New(os.Stdout, "[GORM] >> ", log.Lmsgprefix|log.Ldate|log.Lmicroseconds), // io writer
 		lc,
 	)
-	db, err := gorm.Open(mysql.Open(c.DSN), &gorm.Config{Logger: newLogger})
+	db, err := gorm.Open(mysql.Open(c.DSN), &gorm.Config{Logger: newLogger, SkipDefaultTransaction: true})
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect database error:%+v", err))
 	}
