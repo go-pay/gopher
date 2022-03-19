@@ -11,7 +11,7 @@ func Retry(callback func() error, maxRetries int, interval time.Duration) error 
 	var err error
 	for i := 1; i <= maxRetries; i++ {
 		if err = callback(); err != nil {
-			xlog.Warnf("Retry(%d) error(%+v)", i, err)
+			xlog.Warnf("Retry(%d) err(%+v)", i, err)
 			time.Sleep(interval)
 			continue
 		}
