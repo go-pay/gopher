@@ -3,7 +3,13 @@ package micro
 import (
 	"context"
 	"testing"
+
+	"github.com/go-pay/gopher/xlog"
 )
+
+func init() {
+	xlog.Level = xlog.DebugLevel
+}
 
 var ctx = context.Background()
 
@@ -28,7 +34,7 @@ func TestClient(t *testing.T) {
 	//		xlog.Error(err)
 	//		continue
 	//	}
-	//	xlog.Debug("rsp:", rsp.Msg)
+	//	xlog.Info("rsp:", rsp.Msg)
 	//	count++
 	//}
 }

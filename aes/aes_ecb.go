@@ -6,12 +6,12 @@ import (
 	"errors"
 )
 
-// 加密数据
+// AES-ECB 加密数据
 func ECBEncrypt(originData, key []byte) ([]byte, error) {
 	return ecbEncrypt(originData, key)
 }
 
-// 解密数据
+// AES-ECB 解密数据
 func ECBDecrypt(secretData, key []byte) ([]byte, error) {
 	return ecbDecrypt(secretData, key)
 }

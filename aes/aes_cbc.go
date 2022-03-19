@@ -6,12 +6,12 @@ import (
 	"errors"
 )
 
-// 加密数据
+// AES-CBC 加密数据
 func CBCEncrypt(originData, key, iv []byte) ([]byte, error) {
 	return cbcEncrypt(originData, key, iv)
 }
 
-// 解密数据
+// AES-CBC 解密数据
 func CBCDecrypt(secretData, key, iv []byte) ([]byte, error) {
 	return cbcDecrypt(secretData, key, iv)
 }

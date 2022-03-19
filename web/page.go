@@ -7,7 +7,7 @@ type Pager struct {
 
 type pageRsp struct {
 	List interface{} `json:"list"`
-	Page *page       `json:"page"`
+	Page page        `json:"page"`
 }
 
 type page struct {
@@ -22,7 +22,7 @@ func (p Pager) Apply(total int64, data interface{}) interface{} {
 	}
 	res := &pageRsp{
 		List: data,
-		Page: &page{
+		Page: page{
 			Total:    total,
 			PageNo:   p.PageNo,
 			PageSize: p.PageSize,

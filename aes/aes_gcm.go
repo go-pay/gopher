@@ -8,12 +8,12 @@ import (
 	"github.com/go-pay/gopher/util"
 )
 
-// 加密数据
+// AES-GCM 加密数据
 func GCMEncrypt(originText, additional, key []byte) (nonce []byte, cipherText []byte, err error) {
 	return gcmEncrypt(originText, additional, key)
 }
 
-// 解密数据
+// AES-GCM 解密数据
 func GCMDecrypt(cipherText, nonce, additional, key []byte) ([]byte, error) {
 	return gcmDecrypt(cipherText, nonce, additional, key)
 }

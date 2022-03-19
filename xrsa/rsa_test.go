@@ -54,28 +54,28 @@ bdz/NH6klplarq02xmXk6pwxd11bfq3AvckrUdjywiRfGw6C1+bO+w==
 	label = "www.igoogle.ink"
 )
 
-func TestRsaEncryptAndDecryptData(t *testing.T) {
+func TestRsaEncryptAndDecrypt(t *testing.T) {
 	originData := "https://www.fumm.cc"
 	xlog.Debug("数据：", originData)
-	encryptData, err := RsaEncryptData(PKCS8, []byte(originData), FormatAlipayPublicKey(aliPubKeyPKCS8))
+	encryptData, err := RsaEncrypt(PKCS8, []byte(originData), FormatAlipayPublicKey(aliPubKeyPKCS8))
 	if err != nil {
-		xlog.Error("RsaEncryptData:", err)
+		xlog.Error("RsaEncrypt:", err)
 		return
 	}
-	origin, err := RsaDecryptData(PKCS8, encryptData, FormatAlipayPrivateKey(aliPriKeyPKCS8))
+	origin, err := RsaDecrypt(PKCS8, encryptData, FormatAlipayPrivateKey(aliPriKeyPKCS8))
 	if err != nil {
-		xlog.Error("RsaDecryptData:", err)
+		xlog.Error("RsaDecrypt:", err)
 		return
 	}
 	xlog.Debug("decrypt:", string(origin))
 }
 
-func TestRsaEncryptOAEPAndDecryptOAEPData(t *testing.T) {
+func TestRsaEncryptOAEPAndDecryptOAEP(t *testing.T) {
 	originData := "https://www.fumm.cc"
 	xlog.Debug("数据：", originData)
-	encryptData, err := RsaEncryptOAEPData(sha256.New(), PKCS1, publicPKCS1, []byte(originData), []byte(label))
+	encryptData, err := RsaEncryptOAEP(sha256.New(), PKCS1, publicPKCS1, []byte(originData), []byte(label))
 	if err != nil {
-		xlog.Error("RsaEncryptData:", err)
+		xlog.Error("RsaEncrypt:", err)
 		return
 	}
 	base64EncryptData := base64.StdEncoding.EncodeToString(encryptData)
@@ -85,22 +85,22 @@ func TestRsaEncryptOAEPAndDecryptOAEPData(t *testing.T) {
 		xlog.Error("base64.StdEncoding.DecodeString:", err)
 		return
 	}
-	origin, err := RsaDecryptOAEPData(sha256.New(), PKCS1, privatePKCS1, bytes, []byte(label))
+	origin, err := RsaDecryptOAEP(sha256.New(), PKCS1, privatePKCS1, bytes, []byte(label))
 	if err != nil {
-		xlog.Error("RsaDecryptData:", err)
+		xlog.Error("RsaDecrypt:", err)
 		return
 	}
 	xlog.Debug("decrypt:", string(origin))
 }
 
-func TestRsaEncryptOAEPAndDecryptOAEPDataPKCS8(t *testing.T) {
+func TestRsaEncryptOAEPAndDecryptOAEPPKCS8(t *testing.T) {
 	originData := "https://www.fumm.cc"
 	xlog.Debug("数据：", originData)
 	key := FormatAlipayPublicKey(aliPubKeyPKCS8)
 	fmt.Println(key)
-	encryptData, err := RsaEncryptOAEPData(sha256.New(), PKCS8, key, []byte(originData), []byte(label))
+	encryptData, err := RsaEncryptOAEP(sha256.New(), PKCS8, key, []byte(originData), []byte(label))
 	if err != nil {
-		xlog.Error("RsaEncryptData:", err)
+		xlog.Error("RsaEncrypt:", err)
 		return
 	}
 	base64EncryptData := base64.StdEncoding.EncodeToString(encryptData)
@@ -112,9 +112,9 @@ func TestRsaEncryptOAEPAndDecryptOAEPDataPKCS8(t *testing.T) {
 	}
 	privateKey := FormatAlipayPrivateKey(aliPriKeyPKCS8)
 	fmt.Println(privateKey)
-	origin, err := RsaDecryptOAEPData(sha256.New(), PKCS8, privateKey, bytes, []byte(label))
+	origin, err := RsaDecryptOAEP(sha256.New(), PKCS8, privateKey, bytes, []byte(label))
 	if err != nil {
-		xlog.Error("RsaDecryptData:", err)
+		xlog.Error("RsaDecrypt:", err)
 		return
 	}
 	xlog.Debug("decrypt:", string(origin))

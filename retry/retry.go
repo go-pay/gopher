@@ -7,15 +7,14 @@ import (
 )
 
 // Retry 重试 func 最大次数，间隔
-func Retry(callback func() error, maxRetries int, interval time.Duration) error {
-	var err error
+func Retry(callback func() error, maxRetries int, interval time.Duration) (err error) {
 	for i := 1; i <= maxRetries; i++ {
 		if err = callback(); err != nil {
 			xlog.Warnf("Retry(%d) err(%+v)", i, err)
 			time.Sleep(interval)
 			continue
 		}
-		return nil
+		return
 	}
-	return err
+	return
 }

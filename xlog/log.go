@@ -1,10 +1,21 @@
 package xlog
 
+const (
+	ErrorLevel LogLevel = iota + 1
+	WarnLevel
+	InfoLevel
+	DebugLevel
+)
+
+type LogLevel int
+
 var (
 	debugLog XLogger = &DebugLogger{}
 	infoLog  XLogger = &InfoLogger{}
 	warnLog  XLogger = &WarnLogger{}
 	errLog   XLogger = &ErrorLogger{}
+
+	Level LogLevel
 )
 
 type XLogger interface {

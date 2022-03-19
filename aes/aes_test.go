@@ -12,6 +12,10 @@ var (
 	iv        = "JR3unO2glQuMhUx3"
 )
 
+func init() {
+	xlog.Level = xlog.DebugLevel
+}
+
 func TestAesECBEncryptDecrypt(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)

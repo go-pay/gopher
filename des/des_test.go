@@ -14,16 +14,20 @@ var (
 	iv        = "JR3unO2glQuMhUx3"
 )
 
-func TestDesCBCEncryptDecrypt(t *testing.T) {
+func init() {
+	xlog.Level = xlog.DebugLevel
+}
+
+func TestDesCBCEncrypt_Decrypt(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCEncryptData([]byte(originData), []byte(secretKey1))
+	encryptData, err := CBCEncrypt([]byte(originData), []byte(secretKey1))
 	if err != nil {
 		xlog.Error("DesCBCEncryptData:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCDecryptData(encryptData, []byte(secretKey1))
+	origin, err := CBCDecrypt(encryptData, []byte(secretKey1))
 	if err != nil {
 		xlog.Error("DesCBCDecryptData:", err)
 		return
@@ -31,16 +35,16 @@ func TestDesCBCEncryptDecrypt(t *testing.T) {
 	xlog.Debug("origin:", string(origin))
 }
 
-func TestDesCBCEncryptDecryptIv(t *testing.T) {
+func TestDesECBEncrypt_Decrypt(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCEncryptIvData([]byte(originData), []byte(secretKey1), []byte(iv1))
+	encryptData, err := ECBEncrypt([]byte(originData), []byte(secretKey1), []byte(iv1))
 	if err != nil {
 		xlog.Error("DesCBCEncryptIvData:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCDecryptIvData(encryptData, []byte(secretKey1), []byte(iv1))
+	origin, err := ECBDecrypt(encryptData, []byte(secretKey1), []byte(iv1))
 	if err != nil {
 		xlog.Error("DesCBCDecryptIvData:", err)
 		return
@@ -48,16 +52,16 @@ func TestDesCBCEncryptDecryptIv(t *testing.T) {
 	xlog.Debug("origin:", string(origin))
 }
 
-func TestDesCBCTripleEncryptDecrypt(t *testing.T) {
+func TestDesCBCTripleEncrypt_Decrypt(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCTripleEncryptData([]byte(originData), []byte(secretKey))
+	encryptData, err := CBCTripleEncrypt([]byte(originData), []byte(secretKey))
 	if err != nil {
 		xlog.Error("DesCBCEncryptData:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCTripleDecryptData(encryptData, []byte(secretKey))
+	origin, err := CBCTripleDecrypt(encryptData, []byte(secretKey))
 	if err != nil {
 		xlog.Error("DesCBCDecryptData:", err)
 		return
@@ -65,16 +69,16 @@ func TestDesCBCTripleEncryptDecrypt(t *testing.T) {
 	xlog.Debug("origin:", string(origin))
 }
 
-func TestDesCBCTripleEncryptDecryptIv(t *testing.T) {
+func TestDesECBTripleEncrypt_Decrypt(t *testing.T) {
 	originData := "www.gopay.ink"
 	xlog.Debug("originData:", originData)
-	encryptData, err := CBCTripleEncryptIvData([]byte(originData), []byte(secretKey), []byte(iv))
+	encryptData, err := ECBTripleEncrypt([]byte(originData), []byte(secretKey), []byte(iv))
 	if err != nil {
 		xlog.Error("DesCBCEncryptIvData:", err)
 		return
 	}
 	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCTripleDecryptIvData(encryptData, []byte(secretKey), []byte(iv))
+	origin, err := ECBTripleDecrypt(encryptData, []byte(secretKey), []byte(iv))
 	if err != nil {
 		xlog.Error("DesCBCDecryptIvData:", err)
 		return

@@ -14,7 +14,7 @@ import (
 //	t：PKCS1 或 PKCS8
 //	cipherData：加密字符串byte数组
 //	privateKey：私钥
-func RsaDecryptData(t PKCSType, cipherData []byte, privateKey string) (originData []byte, err error) {
+func RsaDecrypt(t PKCSType, cipherData []byte, privateKey string) (originData []byte, err error) {
 	var (
 		key *rsa.PrivateKey
 	)
@@ -54,7 +54,7 @@ func RsaDecryptData(t PKCSType, cipherData []byte, privateKey string) (originDat
 
 // RSA解密数据
 //	OAEPWithSHA-256AndMGF1Padding
-func RsaDecryptOAEPData(h hash.Hash, t PKCSType, privateKey string, ciphertext, label []byte) (originData []byte, err error) {
+func RsaDecryptOAEP(h hash.Hash, t PKCSType, privateKey string, ciphertext, label []byte) (originData []byte, err error) {
 	var (
 		key *rsa.PrivateKey
 	)

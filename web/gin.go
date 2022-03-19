@@ -14,15 +14,15 @@ import (
 )
 
 type GinEngine struct {
-	server *http.Server
-	Gin    *gin.Engine
-	Tracer *trace.Tracer
-	addr   string
+	server   *http.Server
+	Gin      *gin.Engine
+	Tracer   *trace.Tracer
+	addrPort string
 }
 
 func InitGin(c *Config) *GinEngine {
 	g := gin.New()
-	engine := &GinEngine{Gin: g, addr: c.Addr}
+	engine := &GinEngine{Gin: g, addrPort: c.Addr}
 
 	if c.ReadTimeout == 0 {
 		c.ReadTimeout = xtime.Duration(60 * time.Second)
@@ -32,7 +32,7 @@ func InitGin(c *Config) *GinEngine {
 	}
 
 	engine.server = &http.Server{
-		Addr:         engine.addr,
+		Addr:         engine.addrPort,
 		Handler:      g,
 		ReadTimeout:  time.Duration(c.ReadTimeout),
 		WriteTimeout: time.Duration(c.WriteTimeout),
@@ -53,7 +53,7 @@ func InitGin(c *Config) *GinEngine {
 
 func (g *GinEngine) Start() {
 	go func() {
-		xlog.Infof("Listening and serving HTTP on %s", g.addr)
+		xlog.Infof("Listening and serving HTTP on %s", g.addrPort)
 		if err := g.server.ListenAndServe(); err != nil {
 			if err == http.ErrServerClosed {
 				xlog.Info("http: Server closed")
