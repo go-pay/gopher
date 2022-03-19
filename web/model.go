@@ -11,7 +11,7 @@ import (
 )
 
 type Config struct {
-	Addr         string         `json:"addrPort" yaml:"addrPort" toml:"addrPort"`                // addrPort :8080
+	Addr         string         `json:"addr" yaml:"addr" toml:"addr"`                            // addr :8080
 	ReadTimeout  xtime.Duration `json:"read_timeout" yaml:"read_timeout" toml:"read_timeout"`    // read_timeout
 	WriteTimeout xtime.Duration `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"` // write_timeout
 	Debug        bool           `json:"debug" yaml:"debug" toml:"debug"`                         // is show log

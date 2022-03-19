@@ -53,10 +53,10 @@ func InitGin(c *Config) *GinEngine {
 
 func (g *GinEngine) Start() {
 	go func() {
-		xlog.Infof("Listening and serving HTTP on %s", g.addrPort)
+		xlog.Warnf("Listening and serving HTTP on %s .", g.addrPort)
 		if err := g.server.ListenAndServe(); err != nil {
 			if err == http.ErrServerClosed {
-				xlog.Info("http: Server closed")
+				xlog.Warn("http: Server closed")
 				return
 			}
 			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
