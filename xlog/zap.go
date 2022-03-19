@@ -29,7 +29,7 @@ func (l *ZapLogger) Info(args ...interface{}) {
 		l.Sugar.Info(args...)
 		return
 	}
-	infoLog.logOut(nil, nil, args...)
+	infoLog.LogOut(nil, nil, args...)
 }
 
 func (l *ZapLogger) Infof(format string, args ...interface{}) {
@@ -37,7 +37,7 @@ func (l *ZapLogger) Infof(format string, args ...interface{}) {
 		l.Sugar.Infof(format, args...)
 		return
 	}
-	infoLog.logOut(nil, &format, args...)
+	infoLog.LogOut(nil, &format, args...)
 }
 
 func (l *ZapLogger) Debug(args ...interface{}) {
@@ -45,7 +45,7 @@ func (l *ZapLogger) Debug(args ...interface{}) {
 		l.Sugar.Debug(args...)
 		return
 	}
-	debugLog.logOut(nil, nil, args...)
+	debugLog.LogOut(nil, nil, args...)
 }
 
 func (l *ZapLogger) Debugf(format string, args ...interface{}) {
@@ -53,7 +53,7 @@ func (l *ZapLogger) Debugf(format string, args ...interface{}) {
 		l.Sugar.Debugf(format, args...)
 		return
 	}
-	debugLog.logOut(nil, &format, args...)
+	debugLog.LogOut(nil, &format, args...)
 }
 
 func (l *ZapLogger) Warn(args ...interface{}) {
@@ -61,7 +61,7 @@ func (l *ZapLogger) Warn(args ...interface{}) {
 		l.Sugar.Warn(args...)
 		return
 	}
-	warnLog.logOut(nil, nil, args...)
+	warnLog.LogOut(nil, nil, args...)
 }
 
 func (l *ZapLogger) Warnf(format string, args ...interface{}) {
@@ -69,7 +69,7 @@ func (l *ZapLogger) Warnf(format string, args ...interface{}) {
 		l.Sugar.Warnf(format, args...)
 		return
 	}
-	warnLog.logOut(nil, &format, args...)
+	warnLog.LogOut(nil, &format, args...)
 }
 
 func (l *ZapLogger) Error(args ...interface{}) {
@@ -77,7 +77,7 @@ func (l *ZapLogger) Error(args ...interface{}) {
 		l.Sugar.Error(args...)
 		return
 	}
-	errLog.logOut(nil, nil, args...)
+	errLog.LogOut(nil, nil, args...)
 }
 
 func (l *ZapLogger) Errorf(format string, args ...interface{}) {
@@ -85,7 +85,7 @@ func (l *ZapLogger) Errorf(format string, args ...interface{}) {
 		l.Sugar.Errorf(format, args...)
 		return
 	}
-	errLog.logOut(nil, &format, args...)
+	errLog.LogOut(nil, &format, args...)
 }
 
 func (l *ZapLogger) initZap() {
