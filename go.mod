@@ -20,6 +20,6 @@ require (
 	google.golang.org/protobuf v1.27.1
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.3.2
-	gorm.io/gorm v1.23.2
+	gorm.io/gorm v1.23.4-0.20220320010245-2d5cb997ed4d
 	xorm.io/xorm v1.2.5
 )
