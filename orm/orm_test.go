@@ -2,10 +2,6 @@ package orm
 
 import (
 	"testing"
-	"time"
-
-	"github.com/go-pay/gopher/xlog"
-	"github.com/go-pay/gopher/xtime"
 )
 
 var (
@@ -25,34 +21,34 @@ func (m *FmUser) TableName() string {
 
 func TestInitGorm(t *testing.T) {
 	// 初始化 Gorm
-	gc1 := &MySQLConfig{
-		DSN:            dsn,
-		MaxOpenConn:    10,
-		MaxIdleConn:    10,
-		MaxConnTimeout: xtime.Duration(10 * time.Second),
-		LogLevel:       "info",
-		Colorful:       true,
-		SlowThreshold:  xtime.Duration(5 * time.Second),
-	}
-
-	g := InitGorm(gc1)
-	u := &FmUser{
-		UName: "jerry",
-	}
-	// create
-	err := g.Create(u).Error
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	var uQs []*FmUser
-	// query
-	err = g.Table(u.TableName()).Where("uname = ?", "jerry").Find(&uQs).Error
-	if err != nil {
-		xlog.Error(err)
-		return
-	}
-	for _, v := range uQs {
-		xlog.Debugf("%+v", v)
-	}
+	//gc1 := &MySQLConfig{
+	//	DSN:            dsn,
+	//	MaxOpenConn:    10,
+	//	MaxIdleConn:    10,
+	//	MaxConnTimeout: xtime.Duration(10 * time.Second),
+	//	LogLevel:       "info",
+	//	Colorful:       true,
+	//	SlowThreshold:  xtime.Duration(5 * time.Second),
+	//}
+	//
+	//g := InitGorm(gc1)
+	//u := &FmUser{
+	//	UName: "jerry",
+	//}
+	//// create
+	//err := g.Create(u).Error
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
+	//var uQs []*FmUser
+	//// query
+	//err = g.Table(u.TableName()).Where("uname = ?", "jerry").Find(&uQs).Error
+	//if err != nil {
+	//	xlog.Error(err)
+	//	return
+	//}
+	//for _, v := range uQs {
+	//	xlog.Debugf("%+v", v)
+	//}
 }
