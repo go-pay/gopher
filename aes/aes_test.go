@@ -24,8 +24,16 @@ func TestAesECBEncryptDecrypt(t *testing.T) {
 		xlog.Error("AesCBCEncryptToString:", err)
 		return
 	}
-	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := ECBDecrypt(encryptData, []byte(secretKey))
+
+	toString := base64.StdEncoding.EncodeToString(encryptData)
+	xlog.Debug("encryptData_EncodeToString:", toString)
+	bs, err := base64.StdEncoding.DecodeString(toString)
+	if err != nil {
+		xlog.Error("base64.StdEncoding.DecodeString:", err)
+		return
+	}
+
+	origin, err := ECBDecrypt(bs, []byte(secretKey))
 	if err != nil {
 		xlog.Error("AesDecryptToBytes:", err)
 		return
@@ -41,8 +49,16 @@ func TestAesCBCEncryptDecrypt(t *testing.T) {
 		xlog.Error("CBCEncrypt:", err)
 		return
 	}
-	xlog.Debug("encryptData:", string(encryptData))
-	origin, err := CBCDecrypt(encryptData, []byte(secretKey), []byte(iv))
+
+	toString := base64.StdEncoding.EncodeToString(encryptData)
+	xlog.Debug("encryptData_EncodeToString:", toString)
+	bs, err := base64.StdEncoding.DecodeString(toString)
+	if err != nil {
+		xlog.Error("base64.StdEncoding.DecodeString:", err)
+		return
+	}
+
+	origin, err := CBCDecrypt(bs, []byte(secretKey), []byte(iv))
 	if err != nil {
 		xlog.Error("CBCDecrypt:", err)
 		return
