@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	secretKey = "JYRn4wbCy8KgVIZJaPhYTcTn2zixVC4Y"
+	secretKey = "JYRn4wbCy8KgVIZJ"
 	iv        = "JR3unO2glQuMhUx3"
 )
 
