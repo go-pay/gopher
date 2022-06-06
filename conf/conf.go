@@ -9,7 +9,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/pkg/errors"
-	"gopkg.in/yaml.v2"
+	"gopkg.in/yaml.v3"
 )
 
 const (
