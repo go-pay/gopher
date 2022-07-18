@@ -18,6 +18,7 @@ func TestConsumer(t *testing.T) {
 	//	//	consumer.WithConsumeMessageBatchMaxSize(1),
 	//	//	consumer.WithPullInterval(time.Millisecond),
 	//	//	consumer.WithPullBatchSize(10),
+	//	//	consumer.WithConsumerModel(consumer.BroadCasting),
 	//	//},
 	//}
 	//conn, err := NewConsumer(conf).Conn()

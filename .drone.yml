@@ -18,9 +18,9 @@ steps:
       MYSQL_DATABASE: "school"
     detach: true # 后台运行
 
-  - name: ci_1.17
+  - name: ci_1.16
     pull: if-not-exists
-    image: golang:1.17
+    image: golang:1.16
     environment:
       GO111MODULE: "on"
       GOPROXY: "https://goproxy.cn,direct"
