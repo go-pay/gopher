@@ -14,6 +14,20 @@ func MergeSliceRemoveDuplicate(slice1, slice2 []int) (merged []int) {
 	return merged
 }
 
+// string 数组合并，去重复
+func MergeStringSliceRemoveDuplicate(slice1, slice2 []string) (merged []string) {
+	var dupMap = make(map[string]struct{})
+	slice1 = append(slice1, slice2...)
+	for _, v := range slice1 {
+		length := len(dupMap)
+		dupMap[v] = struct{}{}
+		if len(dupMap) != length {
+			merged = append(merged, v)
+		}
+	}
+	return merged
+}
+
 // Deprecated
 func FilterSlice(src []int, dst []int) (result []int) {
 	aMap := make(map[int]struct{})
