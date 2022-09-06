@@ -13,9 +13,10 @@ import (
 
 func InitGorm(c *MySQLConfig) (db *gorm.DB) {
 	lc := logger.Config{
-		SlowThreshold: 200 * time.Millisecond, // 慢 SQL 阈值
-		LogLevel:      logger.Warn,            // Log level
-		Colorful:      c.Colorful,             // 日志颜色
+		SlowThreshold:             200 * time.Millisecond, // 慢 SQL 阈值
+		LogLevel:                  logger.Warn,            // Log level
+		Colorful:                  c.Colorful,             // 日志颜色
+		IgnoreRecordNotFoundError: true,                   // 忽略记录未找到错误
 	}
 	if c.LogLevel != "" {
 		if ll, ok := LogLevelMap[c.LogLevel]; ok {
