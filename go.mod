@@ -20,9 +20,9 @@ require (
 	google.golang.org/grpc v1.48.0
 	google.golang.org/protobuf v1.28.0
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/driver/mysql v1.3.5
+	gorm.io/driver/mysql v1.3.6
 	gorm.io/gorm v1.23.8
 	xorm.io/xorm v1.3.1
 )
 
-require golang.org/x/net v0.0.0-20220708220712-1185a9018129 // indirect
+require golang.org/x/net v0.0.0-20220907135653-1e95f45603a7 // indirect

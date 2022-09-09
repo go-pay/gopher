@@ -21,6 +21,7 @@ func main() {
 		MaxOpenConn:    10,
 		MaxIdleConn:    10,
 		MaxConnTimeout: xtime.Duration(10 * time.Second),
+		MaxIdleTimeout: xtime.Duration(30 * time.Second),
 		//LogLevel:       logger.Error,
 		SlowThreshold: xtime.Duration(200 * time.Millisecond),
 	}

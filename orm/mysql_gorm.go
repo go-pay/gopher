@@ -42,5 +42,6 @@ func InitGorm(c *MySQLConfig) (db *gorm.DB) {
 	sql.SetMaxIdleConns(c.MaxIdleConn)
 	sql.SetMaxOpenConns(c.MaxOpenConn)
 	sql.SetConnMaxLifetime(time.Duration(c.MaxConnTimeout))
+	sql.SetConnMaxIdleTime(time.Duration(c.MaxIdleTimeout))
 	return db
 }

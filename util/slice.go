@@ -1,5 +1,18 @@
 package util
 
+// int 数组去重复
+func MergeIntDuplicate(slice []int) (merged []int) {
+	var dupMap = make(map[int]struct{})
+	for _, v := range slice {
+		length := len(dupMap)
+		dupMap[v] = struct{}{}
+		if len(dupMap) != length {
+			merged = append(merged, v)
+		}
+	}
+	return merged
+}
+
 // int数组合并，去重复
 func MergeSliceRemoveDuplicate(slice1, slice2 []int) (merged []int) {
 	var dupMap = make(map[int]int)
@@ -7,6 +20,19 @@ func MergeSliceRemoveDuplicate(slice1, slice2 []int) (merged []int) {
 	for _, v := range slice1 {
 		length := len(dupMap)
 		dupMap[v] = 1
+		if len(dupMap) != length {
+			merged = append(merged, v)
+		}
+	}
+	return merged
+}
+
+// string 数组去重复
+func MergeStringDuplicate(slice []string) (merged []string) {
+	var dupMap = make(map[string]struct{})
+	for _, v := range slice {
+		length := len(dupMap)
+		dupMap[v] = struct{}{}
 		if len(dupMap) != length {
 			merged = append(merged, v)
 		}
