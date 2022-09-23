@@ -25,4 +25,7 @@ require (
 	xorm.io/xorm v1.3.1
 )
 
-require golang.org/x/net v0.0.0-20220907135653-1e95f45603a7 // indirect
+require (
+	golang.org/x/net v0.0.0-20220907135653-1e95f45603a7 // indirect
+	google.golang.org/genproto v0.0.0-20210602131652-f16073e35f0c
+)

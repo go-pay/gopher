@@ -1,5 +1,16 @@
 package ecode
 
+const (
+	// UnknownCode is unknown code for error info.
+	UnknownCode = 500
+	// UnknownReason is unknown reason for error info.
+	UnknownReason = ""
+	// ClientClosed is non-standard http status code,
+	// which defined by nginx.
+	// https://httpstatus.in/499/
+	ClientClosed = 499
+)
+
 var (
 	// base error
 	Success         = New(0, "success")
