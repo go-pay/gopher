@@ -6,7 +6,6 @@ import (
 	"strconv"
 
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
@@ -42,7 +41,7 @@ func (e *Error) Is(err error) bool {
 
 // GRPCStatus returns the Status represented by error.
 func (e *Error) GRPCStatus() *status.Status {
-	gs, _ := status.New(codes.Code(e.Status.Code), e.Status.Message).
+	gs, _ := status.New(DefaultConverter.ToGRPCCode(int(e.Status.Code)), e.Status.Message).
 		WithDetails(&errdetails.ErrorInfo{Reason: e.Status.Reason, Metadata: e.Metadata})
 	return gs
 }
@@ -108,7 +107,7 @@ func FromError(err error) *Error {
 	if !ok {
 		return New(UnknownCode, err.Error(), UnknownReason)
 	}
-	ret := New(int(gs.Code()), gs.Message(), UnknownReason)
+	ret := New(int(DefaultConverter.FromGRPCCode(gs.Code())), gs.Message(), UnknownReason)
 	for _, detail := range gs.Details() {
 		switch d := detail.(type) {
 		case *errdetails.ErrorInfo:
