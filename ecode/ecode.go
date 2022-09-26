@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/go-pay/gopher/xlog"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/status"
 )
@@ -100,10 +101,12 @@ func FromError(err error) *Error {
 		return nil
 	}
 	if se := new(Error); errors.As(err, &se) {
+		xlog.Warnf("as success: %+v", se)
 		return se
 	}
 	gs, ok := status.FromError(err)
 	if !ok {
+		xlog.Warnf("ok success: %+v", gs)
 		return New(UnknownCode, err.Error(), UnknownReason)
 	}
 	ret := New(
@@ -111,10 +114,12 @@ func FromError(err error) *Error {
 		UnknownReason,
 		gs.Message(),
 	)
+	xlog.Warnf("ret success: %+v", ret)
 	for _, detail := range gs.Details() {
 		switch d := detail.(type) {
 		case *errdetails.ErrorInfo:
 			ret.Reason = d.Reason
+			xlog.Warnf("赋值Reason: %+v", ret.Reason)
 			return ret.WithMetadata(d.Metadata)
 		}
 	}
