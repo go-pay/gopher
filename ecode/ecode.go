@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/go-pay/gopher/xlog"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
@@ -17,7 +17,7 @@ type Error struct {
 }
 
 func (e *Error) Error() string {
-	return fmt.Sprintf("error: code = %d reason = %s message = %s metadata = %v cause = %v", e.Status.Code, e.Reason, e.Status.Message, e.Metadata, e.cause)
+	return fmt.Sprintf("error: code = %d reason = %s message = %s metadata = %v cause = %v", e.Status.Code, e.Status.Reason, e.Status.Message, e.Metadata, e.cause)
 }
 
 // Code returns the code of the error.
@@ -26,23 +26,24 @@ func (e *Error) Code() int { return int(e.Status.Code) }
 // Message returns the message of the error.
 func (e *Error) Message() string { return e.Status.Message }
 
+// Reason returns the reason of the error.
+func (e *Error) Reason() string { return e.Status.Reason }
+
 // Unwrap provides compatibility for Go 1.13 error chains.
 func (e *Error) Unwrap() error { return e.cause }
 
 // Is matches each error in the chain with the target value.
 func (e *Error) Is(err error) bool {
 	if se := new(Error); errors.As(err, &se) {
-		return se.Status.Code == e.Status.Code && se.Reason == e.Reason
+		return se.Status.Code == e.Status.Code && se.Status.Reason == e.Status.Reason
 	}
 	return false
 }
 
 // GRPCStatus returns the Status represented by error.
 func (e *Error) GRPCStatus() *status.Status {
-	gs, _ := status.New(DefaultConverter.ToGRPCCode(int(e.Status.Code)), e.Status.Message).WithDetails(&errdetails.ErrorInfo{
-		Reason:   e.Reason,
-		Metadata: e.Metadata,
-	})
+	gs, _ := status.New(codes.Code(e.Status.Code), e.Status.Message).
+		WithDetails(&errdetails.ErrorInfo{Reason: e.Status.Reason, Metadata: e.Metadata})
 	return gs
 }
 
@@ -101,25 +102,17 @@ func FromError(err error) *Error {
 		return nil
 	}
 	if se := new(Error); errors.As(err, &se) {
-		xlog.Warnf("as success: %+v", se)
 		return se
 	}
 	gs, ok := status.FromError(err)
 	if !ok {
-		xlog.Warnf("ok success: %+v", gs)
 		return New(UnknownCode, err.Error(), UnknownReason)
 	}
-	ret := New(
-		DefaultConverter.FromGRPCCode(gs.Code()),
-		UnknownReason,
-		gs.Message(),
-	)
-	xlog.Warnf("ret success: %+v", ret)
+	ret := New(int(gs.Code()), gs.Message(), UnknownReason)
 	for _, detail := range gs.Details() {
 		switch d := detail.(type) {
 		case *errdetails.ErrorInfo:
-			ret.Reason = d.Reason
-			xlog.Warnf("赋值Reason: %+v", ret.Reason)
+			ret.Status.Reason = d.Reason
 			return ret.WithMetadata(d.Metadata)
 		}
 	}
