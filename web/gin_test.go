@@ -57,7 +57,7 @@ func initRoute(g *gin.Engine) {
 		JSON(c, rsp, nil)
 	})
 	g.GET("/b", func(c *gin.Context) {
-		JSON(c, nil, ecode.InvalidTokenErr)
+		JSON(c, nil, ecode.UnauthorizedErr)
 	})
 	g.POST("/c", func(c *gin.Context) {
 		body, err := ReadRequestBody(c.Request)

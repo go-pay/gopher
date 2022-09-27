@@ -18,12 +18,11 @@ const (
 )
 
 // VerifySign 验证Sign，签名规则，base64(md5(appid+path+ts))
-// todo: 当前支持60s验证，后续改成单次验证后即失效
 func VerifySign(c *gin.Context) {
 	ts := c.GetHeader(ts)
 	tsTime := time.Unix(util.String2Int64(ts), 0)
 	if time.Now().Sub(tsTime).Seconds() > 60 {
-		JSON(c, nil, ecode.InvalidSignErr)
+		JSON(c, nil, ecode.UnauthorizedErr)
 		c.Abort()
 		return
 	}
@@ -32,7 +31,7 @@ func VerifySign(c *gin.Context) {
 	path := c.Request.RequestURI
 	split := strings.Split(path, "?")
 	if !CheckSign(sign, appid, split[0], ts) {
-		JSON(c, nil, ecode.InvalidSignErr)
+		JSON(c, nil, ecode.UnauthorizedErr)
 		c.Abort()
 		return
 	}
