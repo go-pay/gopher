@@ -10,27 +10,31 @@ import (
 
 func TestEcode(t *testing.T) {
 	xlog.Level = xlog.DebugLevel
-	e := AnalyseError(InvalidAppidErr)
+	e := AnalyseError(ForbiddenErr)
 	xlog.Debug(e.Error())
 	xlog.Debug(e.Code())
+	xlog.Debug(e.Reason())
 	xlog.Debug(e.Message())
 	xlog.Info("============================")
 
-	e2 := AnalyseError(InvalidSignErr)
+	e2 := FromError(UnauthorizedErr)
 	xlog.Debug(e2.Error())
 	xlog.Debug(e2.Code())
+	xlog.Debug(e2.Reason())
 	xlog.Debug(e2.Message())
 	xlog.Info("============================")
 
-	sms := New(10000, "中国电信")
+	sms := New(10000, "CTCC", "中国电信")
 	xlog.Debug(sms.Error())
 	xlog.Debug(sms.Code())
+	xlog.Debug(sms.Reason())
 	xlog.Debug(sms.Message())
 	xlog.Info("============================")
 
-	mms := New(10086, "中国移动")
+	mms := New(10086, "CMCC", "中国电信")
 	xlog.Debug(mms.Error())
 	xlog.Debug(mms.Code())
+	xlog.Debug(mms.Reason())
 	xlog.Debug(mms.Message())
 }
 

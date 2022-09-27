@@ -18,7 +18,7 @@ const (
 )
 
 func JSON(c *gin.Context, data interface{}, err error) {
-	e := ecode.AnalyseError(err)
+	e := ecode.FromError(err)
 	rsp := &CommonRsp{
 		Code:    e.Code(),
 		Message: e.Message(),

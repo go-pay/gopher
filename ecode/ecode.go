@@ -63,15 +63,12 @@ func (e *Error) WithMetadata(md map[string]string) *Error {
 // ============================================================================================================
 
 // New returns an error object for the code, message.
-func New(code int, message string, reason ...string) *Error {
-	ee := &Error{Status: Status{
+func New(code int, reason string, message string) *Error {
+	return &Error{Status: Status{
 		Code:    int32(code),
+		Reason:  reason,
 		Message: message,
 	}}
-	if len(reason) > 0 {
-		ee.Status.Reason = reason[0]
-	}
-	return ee
 }
 
 // DeepClone deep clone error to a new error.
@@ -107,7 +104,7 @@ func FromError(err error) *Error {
 	if !ok {
 		return New(UnknownCode, err.Error(), UnknownReason)
 	}
-	ret := New(int(DefaultConverter.FromGRPCCode(gs.Code())), gs.Message(), UnknownReason)
+	ret := New(DefaultConverter.FromGRPCCode(gs.Code()), gs.Message(), UnknownReason)
 	for _, detail := range gs.Details() {
 		switch d := detail.(type) {
 		case *errdetails.ErrorInfo:
@@ -135,7 +132,7 @@ func errStringToError(e string) *Error {
 	}
 	i, err := strconv.Atoi(e)
 	if err != nil {
-		return New(-1, e)
+		return New(-1, UnknownReason, e)
 	}
-	return New(i, e)
+	return New(i, UnknownReason, e)
 }

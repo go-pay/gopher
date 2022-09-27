@@ -1,8 +1,10 @@
 package ecode
 
+import "net/http"
+
 const (
 	// UnknownCode is unknown code for error info.
-	UnknownCode = 500
+	UnknownCode = http.StatusInternalServerError
 	// UnknownReason is unknown reason for error info.
 	UnknownReason = ""
 	// ClientClosed is non-standard http status code,
@@ -13,11 +15,13 @@ const (
 
 var (
 	// base error
-	Success         = New(0, "success")
-	RequestErr      = New(10400, "request error")
-	InvalidSignErr  = New(10401, "invalid sign")
-	InvalidAppidErr = New(10402, "invalid appid")
-	InvalidTokenErr = New(10403, "invalid token")
-	NothingFound    = New(10404, "nothing found")
-	ServerErr       = New(10500, "server error")
+	Success               = New(http.StatusOK, "SUCCESS", "success")
+	RequestErr            = New(http.StatusBadRequest, "PARAM_ERROR", "request param error")
+	UnauthorizedErr       = New(http.StatusUnauthorized, "SIGN_ERROR", "sign error")
+	ForbiddenErr          = New(http.StatusForbidden, "NO_AUTH", "no auth")
+	NotFoundErr           = New(http.StatusNotFound, "RESOURCE_NOT_FOUND", "resource not found")
+	TooManyRequestErr     = New(http.StatusTooManyRequests, "RATELIMIT_EXCEEDED", "ratelimit exceeded")
+	ServerErr             = New(http.StatusInternalServerError, "SERVER_ERROR", "server error")
+	BadGatewayErr         = New(http.StatusBadGateway, "SERVICE_UNAVAILABLE", "service offline, unavailable")
+	ServiceUnavailableErr = New(http.StatusServiceUnavailable, "SERVICE_UNAVAILABLE", "service protected, unavailable")
 )
