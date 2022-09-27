@@ -39,8 +39,13 @@ func (c statusConverter) ToGRPCCode(code int) codes.Code {
 		return codes.DeadlineExceeded
 	case ClientClosed:
 		return codes.Canceled
+	default:
+		if (code > 0 && code <= 99) || code >= 599 {
+			// code not http status code
+			return codes.Code(code)
+		}
+		return codes.Unknown
 	}
-	return codes.Unknown
 }
 
 // FromGRPCCode converts a gRPC error code into the corresponding HTTP response status.
@@ -81,6 +86,11 @@ func (c statusConverter) FromGRPCCode(code codes.Code) int {
 		return http.StatusServiceUnavailable
 	case codes.DataLoss:
 		return http.StatusInternalServerError
+	default:
+		if (code > 0 && code <= 99) || code >= 599 {
+			// code not http status code
+			return int(code)
+		}
+		return http.StatusInternalServerError
 	}
-	return http.StatusInternalServerError
 }
