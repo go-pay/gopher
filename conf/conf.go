@@ -2,13 +2,13 @@ package conf
 
 import (
 	"encoding/json"
+	"errors"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"reflect"
 
 	"github.com/BurntSushi/toml"
-	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
 
