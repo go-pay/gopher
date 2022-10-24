@@ -95,7 +95,7 @@ func DeepClone(err *ErrorV2) *ErrorV2 {
 // It supports wrapped errors.
 func FromError(err error) *ErrorV2 {
 	if err == nil {
-		return nil
+		return Success
 	}
 	if se := new(ErrorV2); errors.As(err, &se) {
 		return se

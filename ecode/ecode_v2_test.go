@@ -16,7 +16,9 @@ func TestEcodeWithReason(t *testing.T) {
 	xlog.Debug(e.Message())
 	xlog.Info("============================")
 
-	e2 := FromError(UnauthorizedErr)
+	Success = NewV2(1, "SUCCESS", "success")
+
+	e2 := FromError(nil)
 	xlog.Debug(e2.Error())
 	xlog.Debug(e2.Code())
 	xlog.Debug(e2.Reason())
