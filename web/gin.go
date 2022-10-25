@@ -14,10 +14,11 @@ import (
 )
 
 type GinEngine struct {
-	server   *http.Server
-	Gin      *gin.Engine
-	Tracer   *trace.Tracer
-	addrPort string
+	server           *http.Server
+	Gin              *gin.Engine
+	Tracer           *trace.Tracer
+	addrPort         string
+	IgnoreReleaseLog bool
 }
 
 func InitGin(c *Config) *GinEngine {
@@ -37,7 +38,7 @@ func InitGin(c *Config) *GinEngine {
 		ReadTimeout:  time.Duration(c.ReadTimeout),
 		WriteTimeout: time.Duration(c.WriteTimeout),
 	}
-	g.Use(engine.Recovery())
+	g.Use(engine.Logger(false), engine.Recovery())
 	if c.Trace != nil {
 		engine.Tracer = trace.NewTracer(c.Trace)
 		g.Use(engine.Tracer.GinTrace())

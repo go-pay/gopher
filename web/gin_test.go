@@ -23,6 +23,8 @@ func TestInitServer(t *testing.T) {
 	//g := InitGin(c)
 	//g.Gin.Use(g.CORS(), g.Recovery())
 	//
+	//g.IgnoreReleaseLog = true
+	//
 	//initRoute(g.Gin)
 	//
 	//g.Start()
