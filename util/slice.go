@@ -1,6 +1,8 @@
 package util
 
-import "sort"
+import (
+	"sort"
+)
 
 // recommend use IntDeduplicate
 // Deprecated
@@ -56,6 +58,82 @@ func IntMergeSortDeduplicate(slice1, slice2 []int) (result []int) {
 	return IntSortDeduplicate(slice1)
 }
 
+// int 数组，slice1 和 slice2 交集
+func IntIntersect(slice1, slice2 []int) (result []int) {
+	m := make(map[int]struct{})
+	n := make(map[int]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if ok {
+			n[v] = struct{}{}
+		}
+	}
+	for k := range n {
+		result = append(result, k)
+	}
+	return
+}
+
+// int 数组，slice1 和 slice2 交集并排序
+func IntSortIntersect(slice1, slice2 []int) (result []int) {
+	m := make(map[int]struct{})
+	n := make(map[int]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if ok {
+			n[v] = struct{}{}
+		}
+	}
+	for k := range n {
+		result = append(result, k)
+	}
+	sort.Ints(result)
+	return
+}
+
+// int 数组，slice1 和 slice2 并集
+func IntUnion(slice1, slice2 []int) (result []int) {
+	m := make(map[int]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if !ok {
+			m[v] = struct{}{}
+		}
+	}
+	for k := range m {
+		result = append(result, k)
+	}
+	return
+}
+
+// int 数组，slice1 和 slice2 并集并排序
+func IntSortUnion(slice1, slice2 []int) (result []int) {
+	m := make(map[int]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if !ok {
+			m[v] = struct{}{}
+		}
+	}
+	for k := range m {
+		result = append(result, k)
+	}
+	sort.Ints(result)
+	return
+}
+
 // recommend use StringDeduplicate
 // Deprecated
 func MergeStringDuplicate(slice []string) (result []string) {
@@ -109,6 +187,82 @@ func StringMergeSortDeduplicate(slice1, slice2 []string) (result []string) {
 	return StringSortDeduplicate(slice1)
 }
 
+// string 数组，slice1 和 slice2 交集
+func StringIntersect(slice1, slice2 []string) (result []string) {
+	m := make(map[string]struct{})
+	n := make(map[string]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if ok {
+			n[v] = struct{}{}
+		}
+	}
+	for k := range n {
+		result = append(result, k)
+	}
+	return
+}
+
+// string 数组，slice1 和 slice2 交集并排序
+func StringSortIntersect(slice1, slice2 []string) (result []string) {
+	m := make(map[string]struct{})
+	n := make(map[string]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if ok {
+			n[v] = struct{}{}
+		}
+	}
+	for k := range n {
+		result = append(result, k)
+	}
+	sort.Strings(result)
+	return
+}
+
+// string 数组，slice1 和 slice2 并集
+func StringUnion(slice1, slice2 []string) (result []string) {
+	m := make(map[string]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if !ok {
+			m[v] = struct{}{}
+		}
+	}
+	for k := range m {
+		result = append(result, k)
+	}
+	return
+}
+
+// string 数组，slice1 和 slice2 并集
+func StringSortUnion(slice1, slice2 []string) (result []string) {
+	m := make(map[string]struct{})
+	for _, v := range slice1 {
+		m[v] = struct{}{}
+	}
+	for _, v := range slice2 {
+		_, ok := m[v]
+		if !ok {
+			m[v] = struct{}{}
+		}
+	}
+	for k := range m {
+		result = append(result, k)
+	}
+	sort.Strings(result)
+	return
+}
+
 // 过滤数组，去除src在dst中存在的item
 // src[1,2,3,4,5]   dst[2,4,6,8]	result[1,3,5]
 func FilterIntSlice(src []int, dst []int) (result []int) {
@@ -139,4 +293,16 @@ func FilterStringSlice(src []string, dst []string) (result []string) {
 		}
 	}
 	return result
+}
+
+func DeepCopyStringSlice(src []string) []string {
+	dst := make([]string, len(src))
+	copy(dst, src)
+	return dst
+}
+
+func DeepCopyIntSlice(src []int) []int {
+	dst := make([]int, len(src))
+	copy(dst, src)
+	return dst
 }

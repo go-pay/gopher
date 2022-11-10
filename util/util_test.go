@@ -106,3 +106,62 @@ func BenchmarkStringMergeSortDeduplicate(b *testing.B) {
 		StringMergeSortDeduplicate(ins, ins2)
 	}
 }
+
+func TestStringIntersect(t *testing.T) {
+	ins := []string{"abc", "hello", "fhgk", "jerry", "world", "jerry", "abc", "hello"}
+	ins2 := []string{"dfsf", "hello", "qwer", "jerry", "hello", "tom", "abc", "fuck"}
+	result := StringIntersect(ins, ins2)
+	t.Logf("result: %s", result) // result: [abc hello jerry]
+
+}
+
+func TestStringSortIntersect(t *testing.T) {
+	ins := []string{"abc", "hello", "fhgk", "jerry", "world", "jerry", "abc", "hello"}
+	ins2 := []string{"dfsf", "hello", "qwer", "jerry", "hello", "tom", "abc", "fuck"}
+	result := StringSortIntersect(ins, ins2)
+	t.Logf("result: %s", result) // result: [abc hello jerry]
+}
+
+func TestStringUnion(t *testing.T) {
+	ins := []string{"abc", "hello", "fhgk", "jerry", "world", "jerry", "abc", "hello"}
+	ins2 := []string{"dfsf", "hello", "qwer", "jerry", "hello", "tom", "abc", "fuck"}
+	result := StringUnion(ins, ins2)
+	t.Logf("result: %s", result) // result: [hello dfsf tom abc jerry world qwer fuck fhgk]
+
+}
+
+func TestStringSortUnion(t *testing.T) {
+	ins := []string{"abc", "hello", "fhgk", "jerry", "world", "jerry", "abc", "hello"}
+	ins2 := []string{"dfsf", "hello", "qwer", "jerry", "hello", "tom", "abc", "fuck"}
+	result := StringSortUnion(ins, ins2)
+	t.Logf("result: %s", result) // result: [abc dfsf fhgk fuck hello jerry qwer tom world]
+}
+
+func TestIntIntersect(t *testing.T) {
+	in := []int{3, 3, 5, 7, 14, 11, 13, 15, 12}  // slice1
+	in2 := []int{3, 4, 5, 7, 18, 11, 22, 15, 35} // slice2
+	result := IntIntersect(in, in2)
+	t.Logf("result: %d", result) // result: [5 7 11 15 3]
+
+}
+
+func TestIntSortIntersect(t *testing.T) {
+	in := []int{3, 3, 5, 7, 14, 11, 13, 15, 12}  // slice1
+	in2 := []int{3, 4, 5, 7, 18, 11, 22, 15, 35} // slice2
+	result := IntSortIntersect(in, in2)
+	t.Logf("result: %d", result) // result: [3 5 7 11 15]
+}
+
+func TestIntUnion(t *testing.T) {
+	in := []int{1, 2, 3, 4}  // slice1
+	in2 := []int{2, 4, 6, 8} // slice2
+	result := IntUnion(in, in2)
+	t.Logf("result: %d", result) // result: [6 8 1 2 3 4]
+}
+
+func TestIntSortUnion(t *testing.T) {
+	in := []int{1, 2, 3, 4}  // slice1
+	in2 := []int{2, 4, 6, 8} // slice2
+	result := IntSortUnion(in, in2)
+	t.Logf("result: %d", result) // result: [1 2 3 4 6 8]
+}
