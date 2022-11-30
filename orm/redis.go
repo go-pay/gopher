@@ -2,6 +2,7 @@ package orm
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"time"
 
@@ -16,6 +17,7 @@ type RedisConfig struct {
 	DB           int            `json:"db" yaml:"db" toml:"db"`
 	ReadTimeout  xtime.Duration `json:"read_timeout" yaml:"read_timeout" toml:"read_timeout"`
 	WriteTimeout xtime.Duration `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"`
+	TLSCfg       *tls.Config    `json:"-" yaml:"-" toml:"-"`
 }
 
 type RedisCluster struct {
@@ -26,6 +28,9 @@ func InitRedisCluster(c *RedisConfig) (rc *RedisCluster) {
 	opts := &redis.ClusterOptions{
 		Addrs:    c.Addrs,
 		Password: c.Password,
+	}
+	if c.TLSCfg != nil {
+		opts.TLSConfig = c.TLSCfg
 	}
 	if c.ReadTimeout != 0 {
 		opts.ReadTimeout = time.Duration(c.ReadTimeout)
@@ -51,6 +56,9 @@ func InitRedis(c *RedisConfig) (r *Redis) {
 		Addr:     c.Addrs[0],
 		Password: c.Password,
 		DB:       c.DB,
+	}
+	if c.TLSCfg != nil {
+		opts.TLSConfig = c.TLSCfg
 	}
 	if c.ReadTimeout != 0 {
 		opts.ReadTimeout = time.Duration(c.ReadTimeout)
