@@ -21,6 +21,20 @@ func NewCache(cap int) *Cache {
 	return &Cache{cache: make(map[string]*Entry), cap: cap}
 }
 
+func (c *Cache) PutHead(key string, v interface{}) {
+	c.Put(key, v)
+}
+
+// todo
+func (c *Cache) PutTail(key string, v interface{}) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	// put this key exist, update index
+	if e, has := c.cache[key]; has {
+		c.moveToTail(e)
+	}
+}
+
 func (c *Cache) Put(key string, v interface{}) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -31,7 +45,7 @@ func (c *Cache) Put(key string, v interface{}) {
 	// generate Entry
 	entry := &Entry{Key: key, Value: v, pre: nil, next: c.head}
 	// put new Entry
-	c.putNewEntry(entry)
+	c.putNewEntryHead(entry)
 	// not full
 	if len(c.cache) <= c.cap {
 		return
@@ -56,10 +70,10 @@ func (c *Cache) moveToHead(e *Entry) {
 		// already in front, return
 		return
 	}
-	// cv pre link pre next(entry or nil)
+	// e.pre link e.next(entry or nil)
 	e.pre.next = e.next
 	if e == c.tail {
-		// cv is tail, tail = cv.pre
+		// if e is tail, c.tail = e.pre
 		c.tail = e.pre
 	}
 	e.next = c.head
@@ -68,7 +82,25 @@ func (c *Cache) moveToHead(e *Entry) {
 	e.pre = nil
 }
 
-func (c *Cache) putNewEntry(e *Entry) {
+// todo
+func (c *Cache) moveToTail(e *Entry) {
+	//if e == c.tail {
+	//	// already in tail, return
+	//	return
+	//}
+	//// e.pre link e.next(entry or nil)
+	//e.pre.next = e.next
+	//if e == c.head {
+	//	// if e is head, c.head = e.next
+	//	c.head = e.next
+	//}
+	//c.tail.next = e
+	//e.pre = c.tail
+	//c.tail = e
+	//e.next = nil
+}
+
+func (c *Cache) putNewEntryHead(e *Entry) {
 	// link to head
 	if c.head != nil {
 		c.head.pre = e
@@ -82,10 +114,20 @@ func (c *Cache) putNewEntry(e *Entry) {
 	c.cache[e.Key] = e
 }
 
+// todo
+func (c *Cache) putNewEntryTail(e *Entry) {
+
+}
+
 func (c *Cache) removeTail() {
 	removeEntry := c.tail
 	c.tail = c.tail.pre
 	removeEntry.pre = nil
 	c.tail.next = nil
 	delete(c.cache, removeEntry.Key)
+}
+
+// todo
+func (c *Cache) removeHead() {
+
 }

@@ -7,6 +7,7 @@ import (
 )
 
 func TestNewCache(t *testing.T) {
+	xlog.Level = xlog.InfoLevel
 	cache := NewCache(2)
 
 	cache.Put("1", "one")
