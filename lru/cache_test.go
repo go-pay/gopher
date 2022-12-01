@@ -21,6 +21,7 @@ func TestNewCache(t *testing.T) {
 	cache.Put("3", "three")
 	xlog.Info(cache.Get("2"))
 	xlog.Info(cache.Get("3"))
+	cache.Put("3", "four")
 	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("1"))
 
