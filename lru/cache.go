@@ -26,7 +26,10 @@ func (c *Cache) Put(key string, v interface{}) {
 	defer c.mu.Unlock()
 	// put this key exist, update index hot
 	if e, has := c.cache[key]; has {
+		e.Key = key
+		e.Value = v
 		c.moveToHead(e)
+		return
 	}
 	// generate Entry
 	entry := &Entry{Key: key, Value: v, pre: nil, next: c.head}
@@ -56,16 +59,19 @@ func (c *Cache) moveToHead(e *Entry) {
 		// already in front, return
 		return
 	}
+	// 将 e 自身从链表中当前位置摘除
 	// e.pre link e.next(entry or nil)
 	e.pre.next = e.next
 	if e == c.tail {
 		// if e is tail, c.tail = e.pre
 		c.tail = e.pre
 	}
-	e.next = c.head
-	c.head.pre = e
-	c.head = e
-	e.pre = nil
+
+	// 将 e 自身放入链表头部
+	c.head.pre = e  // 原头部节点的前指针指向新节点
+	c.head = e      // 原头部节点替换成新节点
+	e.next = c.head // 新节点的后指针指向头部节点
+	e.pre = nil     // 新节点的前指针置空
 }
 
 func (c *Cache) putNewEntryHead(e *Entry) {

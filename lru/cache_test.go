@@ -16,17 +16,23 @@ func TestNewCache(t *testing.T) {
 	xlog.Warn("===============")
 	cache.Put("2", "two")
 	xlog.Info(cache.Get("1"))
+	xlog.Info(cache.Get("2"))
 
 	xlog.Warn("===============")
 	cache.Put("3", "three")
+	xlog.Info(cache.Get("1")) // nil
 	xlog.Info(cache.Get("2"))
 	xlog.Info(cache.Get("3"))
-	cache.Put("3", "four")
+
+	xlog.Warn("===============")
+	cache.Put("1", "one")
+	xlog.Info(cache.Get("2")) // nil
 	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("1"))
 
 	xlog.Warn("===============")
 	cache.Put("2", "two")
-	xlog.Info(cache.Get("3"))
 	xlog.Info(cache.Get("1"))
+	xlog.Info(cache.Get("2"))
+	xlog.Info(cache.Get("3")) // nil
 }
