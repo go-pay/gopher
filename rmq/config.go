@@ -43,15 +43,7 @@ func defaultConsumerOps(conf *RocketMQConfig) (ops []consumer.Option) {
 		consumer.WithGroupName(conf.GroupName),
 		consumer.WithNameServer(primitive.NamesrvAddr{conf.EndPoint}),
 		consumer.WithCredentials(primitive.Credentials{AccessKey: conf.AccessKey, SecretKey: conf.SecretKey}),
-		consumer.WithConsumerModel(consumer.Clustering),
-		consumer.WithRetry(2),
-		consumer.WithTrace(&primitive.TraceConfig{
-			//TraceTopic:  conf.TraceTopic, // 此处不能设置，否则消息消费commit会失效
-			GroupName:   conf.GroupName,
-			Access:      primitive.Cloud,
-			Resolver:    primitive.NewPassthroughResolver(primitive.NamesrvAddr{conf.EndPoint}),
-			Credentials: primitive.Credentials{AccessKey: conf.AccessKey, SecretKey: conf.SecretKey},
-		}),
+		consumer.WithRetry(3),
 	}
 	return ops
 }
@@ -61,7 +53,7 @@ func defaultProducerOps(conf *RocketMQConfig) (ops []producer.Option) {
 		producer.WithNamespace(conf.Namespace),
 		producer.WithNameServer(primitive.NamesrvAddr{conf.EndPoint}),
 		producer.WithCredentials(primitive.Credentials{AccessKey: conf.AccessKey, SecretKey: conf.SecretKey}),
-		producer.WithRetry(2),
+		producer.WithRetry(3),
 	}
 	// GroupName is not necessary for producer
 	if conf.GroupName != "" {
