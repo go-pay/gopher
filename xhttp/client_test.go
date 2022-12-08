@@ -19,6 +19,7 @@ type HttpGet struct {
 var ctx = context.Background()
 
 func TestHttpGet(t *testing.T) {
+	xlog.Level = xlog.DebugLevel
 	client := NewClient()
 	client.Timeout = 10 * time.Second
 	// test
@@ -39,6 +40,7 @@ func TestHttpGet(t *testing.T) {
 }
 
 func TestHttpUploadFile(t *testing.T) {
+	xlog.Level = xlog.DebugLevel
 	fileContent, err := ioutil.ReadFile("logo.png")
 	if err != nil {
 		xlog.Error(err)
