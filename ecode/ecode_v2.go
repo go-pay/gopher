@@ -39,6 +39,18 @@ func (e *ErrorV2) Is(err error) bool {
 	return false
 }
 
+// Equal matches error from code and reason.
+func (e *ErrorV2) Equal(code int, reason ...string) bool {
+	se := &ErrorV2{Status: Status{
+		Code: int32(code),
+	}}
+	if len(reason) == 1 {
+		se.Status.Reason = reason[0]
+		return se.Status.Code == e.Status.Code && se.Status.Reason == e.Status.Reason
+	}
+	return se.Status.Code == e.Status.Code
+}
+
 // GRPCStatus returns the Status represented by error.
 func (e *ErrorV2) GRPCStatus() *status.Status {
 	gs, _ := status.New(DefaultConverter.ToGRPCCode(int(e.Status.Code)), e.Status.Message).
