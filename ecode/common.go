@@ -25,16 +25,3 @@ var (
 	BadGatewayErr         = NewV2(http.StatusBadGateway, "SERVICE_UNAVAILABLE", "service offline, unavailable")
 	ServiceUnavailableErr = NewV2(http.StatusServiceUnavailable, "SERVICE_UNAVAILABLE", "service protected, unavailable")
 )
-
-//var (
-//	// base error
-//	Success               = New(http.StatusOK, "success")
-//	RequestErr            = New(http.StatusBadRequest, "request param error")
-//	UnauthorizedErr       = New(http.StatusUnauthorized, "sign error")
-//	ForbiddenErr          = New(http.StatusForbidden, "no auth")
-//	NotFoundErr           = New(http.StatusNotFound, "resource not found")
-//	TooManyRequestErr     = New(http.StatusTooManyRequests, "ratelimit exceeded")
-//	ServerErr             = New(http.StatusInternalServerError, "server error")
-//	BadGatewayErr         = New(http.StatusBadGateway, "service offline, unavailable")
-//	ServiceUnavailableErr = New(http.StatusServiceUnavailable, "service protected, unavailable")
-//)

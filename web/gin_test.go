@@ -24,7 +24,7 @@ func TestInitServer(t *testing.T) {
 	//g.Gin.Use(g.CORS(), g.Recovery())
 	//
 	//g.IgnoreReleaseLog = true
-	//
+	//xlog.Level = xlog.DebugLevel
 	//initRoute(g.Gin)
 	//
 	//g.Start()
