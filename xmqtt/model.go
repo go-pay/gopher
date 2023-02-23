@@ -1,19 +1,15 @@
 package xmqtt
 
 import (
-	"errors"
 	"time"
+
+	"github.com/eclipse/paho.mqtt.golang"
 )
 
 const (
 	QosAtMostOne  QosType = 0
 	QosAtLeastOne QosType = 1
 	QosOnlyOne    QosType = 2
-)
-
-var (
-	ErrNotExists   = errors.New("mqtt not exists")
-	ErrLostConnect = errors.New("mqtt connection lost")
 )
 
 type QosType byte
@@ -26,4 +22,10 @@ type Config struct {
 	Password     string        `json:"password" yaml:"password" toml:"password"`
 	KeepAlive    time.Duration `json:"keep_alive" yaml:"keep_alive" toml:"keep_alive"` // 单位秒
 	CleanSession bool          `json:"clean_session" yaml:"clean_session" toml:"clean_session"`
+}
+
+type Consumer struct {
+	Topic    string
+	QosType  QosType
+	Callback mqtt.MessageHandler
 }

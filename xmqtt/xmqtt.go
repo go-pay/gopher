@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -88,59 +89,29 @@ func (c *Client) StartAndConnect() (err error) {
 
 // Close 主动断开连接
 func (c *Client) Close() {
+	if len(c.Topics) > 0 {
+		_ = c.UnSubscribe(c.Topics...)
+		c.Topics = nil
+	}
+	c.SubFuncs = nil
 	c.Mqtt.Disconnect(1000)
 }
 
-// Subscribe 订阅topic
-func (c *Client) Subscribe(topic string, qos QosType, callback mqtt.MessageHandler) error {
-	// callback 缓存，断开连接后，重新注册订阅
-	c.mu.Lock()
-	c.SubFuncs[subCallbackKey(topic, qos)] = callback
-	c.mu.Unlock()
-	if err := c.sub(topic, qos, callback); err != nil {
-		return err
-	}
-	return nil
-}
-
-func (c *Client) sub(topic string, qos QosType, callback mqtt.MessageHandler) error {
-	token := c.Mqtt.Subscribe(topic, byte(qos), callback)
-	if token.Wait() && token.Error() != nil {
-		return token.Error()
-	}
-	return nil
-}
-
-// UnSubscribe 取消订阅topic
-func (c *Client) UnSubscribe(topics ...string) error {
-	token := c.Mqtt.Unsubscribe(topics...)
-	if token.Wait() && token.Error() != nil {
-		return token.Error()
-	}
-	return nil
-}
-
-// Publish 推送消息
-func (c *Client) Publish(topic string, qos QosType, payload interface{}) error {
-	token := c.Mqtt.Publish(topic, byte(qos), false, payload)
-	if token.Wait() && token.Error() != nil {
-		return token.Error()
-	}
-	return nil
-}
-
-func subCallbackKey(topic string, qos QosType) string {
-	return fmt.Sprintf("%s#%v", topic, qos)
-}
-
 func (c *Client) DefaultOnConnectFunc(cli mqtt.Client) {
-	xlog.Infof("ClientId [%s] Connected", c.Ops.ClientID)
+	xlog.Infof("Clientid [%s] Connected", c.Ops.ClientID)
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	// 连接后，注册订阅
+	// 若 c.SubFuncs 不为空，连接后注册订阅
 	for key, handler := range c.SubFuncs {
 		// 协程
 		go func(k string, cb mqtt.MessageHandler) {
+			defer func() {
+				if r := recover(); r != nil {
+					buf := make([]byte, 64<<10)
+					buf = buf[:runtime.Stack(buf, false)]
+					xlog.Errorf("reSubscribe: panic recovered: %s\n%s", r, buf)
+				}
+			}()
 			split := strings.Split(k, "#")
 			if len(split) == 2 {
 				var qos QosType
