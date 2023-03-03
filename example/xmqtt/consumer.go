@@ -8,7 +8,7 @@ import (
 	"github.com/go-pay/gopher/xmqtt"
 )
 
-func main() {
+func main1() {
 	// 初始化参数和配置
 	emqx := xmqtt.New(&xmqtt.Config{
 		Broker:       "127.0.0.1",
