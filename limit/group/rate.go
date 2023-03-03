@@ -6,13 +6,13 @@ import (
 
 // RateGroup 速率Group
 type RateGroup struct {
-	new func() interface{}
+	new func() any
 	rgs sync.Map
 	sync.RWMutex
 }
 
 // NewRateGroup 新建RateGroup
-func NewRateGroup(new func() interface{}) (rg *RateGroup) {
+func NewRateGroup(new func() any) (rg *RateGroup) {
 	if new == nil {
 		panic("RateGroup: can't assign a nil to the new function")
 	}
@@ -20,7 +20,7 @@ func NewRateGroup(new func() interface{}) (rg *RateGroup) {
 }
 
 // Get 获取RateGroup，如果没有则新建
-func (r *RateGroup) Get(key string) interface{} {
+func (r *RateGroup) Get(key string) any {
 	rg, ok := r.rgs.Load(key)
 	if !ok {
 		r.RLock()

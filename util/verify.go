@@ -42,13 +42,13 @@ func VerifyIDCard(idCard string) bool {
 	for index, c := range idStr {
 		var i = 18 - index
 		if i != 1 {
-			if v, err := strconv.Atoi(string(c)); err == nil {
-				// 计算加权因子
-				var weight = int(math.Pow(2, float64(i-1))) % 11
-				sum += v * weight
-			} else {
+			v, err := strconv.Atoi(string(c))
+			if err != nil {
 				return false
 			}
+			// 计算加权因子
+			var weight = int(math.Pow(2, float64(i-1))) % 11
+			sum += v * weight
 		} else {
 			signChar = string(c)
 		}

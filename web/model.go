@@ -20,18 +20,18 @@ type Config struct {
 }
 
 type RecoverInfo struct {
-	Time        string      `json:"time"`
-	RequestURI  string      `json:"request_uri"`
-	Body        string      `json:"body"`
-	RequestInfo string      `json:"request_info"`
-	Err         interface{} `json:"error"`
-	Stack       string      `json:"stack"`
+	Time        string `json:"time"`
+	RequestURI  string `json:"request_uri"`
+	Body        string `json:"body"`
+	RequestInfo string `json:"request_info"`
+	Err         any    `json:"error"`
+	Stack       string `json:"stack"`
 }
 
 type CommonRsp struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    interface{} `json:"data,omitempty"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data,omitempty"`
 }
 
 func ReadRequestBody(req *http.Request) (bs []byte, err error) {

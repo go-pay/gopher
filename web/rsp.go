@@ -17,7 +17,7 @@ const (
 	TypePng         = "image/png"
 )
 
-func JSON(c *gin.Context, data interface{}, err error) {
+func JSON(c *gin.Context, data any, err error) {
 	e := ecode.FromError(err)
 	rsp := &CommonRsp{
 		Code:    e.Code(),

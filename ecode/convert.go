@@ -13,7 +13,7 @@ var DefaultConverter = statusConverter{}
 
 // ToGRPCCode converts an HTTP error code into the corresponding gRPC response status.
 // See: https://github.com/googleapis/googleapis/blob/master/google/rpc/code.proto
-func (c statusConverter) ToGRPCCode(code int) codes.Code {
+func (statusConverter) ToGRPCCode(code int) codes.Code {
 	switch code {
 	case http.StatusOK:
 		return codes.OK
@@ -50,7 +50,7 @@ func (c statusConverter) ToGRPCCode(code int) codes.Code {
 
 // FromGRPCCode converts a gRPC error code into the corresponding HTTP response status.
 // See: https://github.com/googleapis/googleapis/blob/master/google/rpc/code.proto
-func (c statusConverter) FromGRPCCode(code codes.Code) int {
+func (statusConverter) FromGRPCCode(code codes.Code) int {
 	switch code {
 	case codes.OK:
 		return http.StatusOK

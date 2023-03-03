@@ -11,9 +11,9 @@ import (
 )
 
 // RSA解密数据
-//	t：PKCS1 或 PKCS8
-//	cipherData：加密字符串byte数组
-//	privateKey：私钥
+// t：PKCS1 或 PKCS8
+// cipherData：加密字符串byte数组
+// privateKey：私钥
 func RsaDecrypt(t PKCSType, cipherData []byte, privateKey string) (originData []byte, err error) {
 	var (
 		key *rsa.PrivateKey
@@ -30,9 +30,9 @@ func RsaDecrypt(t PKCSType, cipherData []byte, privateKey string) (originData []
 			return nil, err
 		}
 	case PKCS8:
-		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs8Key, e := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
 		if !ok {
@@ -53,7 +53,7 @@ func RsaDecrypt(t PKCSType, cipherData []byte, privateKey string) (originData []
 }
 
 // RSA解密数据
-//	OAEPWithSHA-256AndMGF1Padding
+// OAEPWithSHA-256AndMGF1Padding
 func RsaDecryptOAEP(h hash.Hash, t PKCSType, privateKey string, ciphertext, label []byte) (originData []byte, err error) {
 	var (
 		key *rsa.PrivateKey
@@ -70,9 +70,9 @@ func RsaDecryptOAEP(h hash.Hash, t PKCSType, privateKey string, ciphertext, labe
 			return nil, err
 		}
 	case PKCS8:
-		pkcs8Key, err := x509.ParsePKCS8PrivateKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs8Key, e := x509.ParsePKCS8PrivateKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		pk8, ok := pkcs8Key.(*rsa.PrivateKey)
 		if !ok {

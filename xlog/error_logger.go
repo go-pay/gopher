@@ -12,24 +12,24 @@ type ErrorLogger struct {
 	once   sync.Once
 }
 
-func (e *ErrorLogger) LogOut(col *ColorType, format *string, v ...interface{}) {
+func (e *ErrorLogger) LogOut(col *ColorType, format *string, v ...any) {
 	e.once.Do(func() {
 		e.init()
 	})
 	if Level >= ErrorLevel {
 		if col != nil {
 			if format != nil {
-				_ = e.logger.Output(3, string(*col)+fmt.Sprintf(*format, v...)+string(Reset))
+				_ = e.logger.Output(callDepth, string(*col)+fmt.Sprintf(*format, v...)+string(Reset))
 				return
 			}
-			_ = e.logger.Output(3, string(*col)+fmt.Sprintln(v...)+string(Reset))
+			_ = e.logger.Output(callDepth, string(*col)+fmt.Sprintln(v...)+string(Reset))
 			return
 		}
 		if format != nil {
-			_ = e.logger.Output(3, fmt.Sprintf(*format, v...))
+			_ = e.logger.Output(callDepth, fmt.Sprintf(*format, v...))
 			return
 		}
-		_ = e.logger.Output(3, fmt.Sprintln(v...))
+		_ = e.logger.Output(callDepth, fmt.Sprintln(v...))
 	}
 }
 

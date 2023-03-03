@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -25,7 +24,7 @@ type Service struct {
 	log     *log.Logger
 }
 
-func NewHandler(c *Config) (handler *ProxyHandler) {
+func NewHandler(c *Config) (handler *Handler) {
 	srv = &Service{
 		httpCli: new(http.Client),
 		Schema:  c.ProxySchema,
@@ -34,7 +33,7 @@ func NewHandler(c *Config) (handler *ProxyHandler) {
 		Key:     c.Key,
 		log:     log.New(os.Stdout, string(xlog.Magenta)+" [PROXY] "+string(xlog.Reset), log.Ldate|log.Lmicroseconds),
 	}
-	return &ProxyHandler{c: c}
+	return &Handler{c: c}
 }
 
 // Proxy
@@ -54,10 +53,10 @@ func (s *Service) Proxy(c context.Context, w http.ResponseWriter, r *http.Reques
 	key := rHeader.Get(HEADER_CONTENT_KEY)
 	if s.Key != key {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, fmt.Sprintf("[%s] invalid key", key))
+		_, _ = io.WriteString(w, fmt.Sprintf("[%s] invalid key", key))
 		return
 	}
-	uri := fmt.Sprintf("%s", s.Schema) + s.Host + s.Port + rUri
+	uri := string(s.Schema) + s.Host + s.Port + rUri
 	// Request
 	m := strings.ToUpper(r.Method)
 	ct := rHeader.Get(HEADER_CONTENT_TYPE)
@@ -65,44 +64,44 @@ func (s *Service) Proxy(c context.Context, w http.ResponseWriter, r *http.Reques
 	case HTTP_METHOD_POST:
 		switch ct {
 		case CONTENT_TYPE_JSON:
-			jsbs, err := ioutil.ReadAll(io.LimitReader(rBody, int64(4<<20))) // default 4MB, change the size you want;
-			if err != nil {
+			jsbs, e := io.ReadAll(io.LimitReader(rBody, int64(4<<20))) // default 4MB, change the size you want;
+			if e != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(w, err.Error())
+				_, _ = io.WriteString(w, e.Error())
 				return
 			}
 			reader = strings.NewReader(string(jsbs))
 		case CONTENT_TYPE_FORM:
 			reader = strings.NewReader(pa)
 		case CONTENT_TYPE_XML:
-			xmlbs, err := ioutil.ReadAll(io.LimitReader(rBody, int64(4<<20)))
-			if err != nil {
+			xmlbs, e := io.ReadAll(io.LimitReader(rBody, int64(4<<20)))
+			if e != nil {
 				w.WriteHeader(http.StatusInternalServerError)
-				io.WriteString(w, err.Error())
+				_, _ = io.WriteString(w, e.Error())
 				return
 			}
 			reader = strings.NewReader(string(xmlbs))
 		default:
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, "request type error")
+			_, _ = io.WriteString(w, "request type error")
 			return
 		}
 		req, err = http.NewRequest(HTTP_METHOD_POST, uri, reader)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, err.Error())
+			_, _ = io.WriteString(w, err.Error())
 			return
 		}
 	case HTTP_METHOD_GET:
 		req, err = http.NewRequest(HTTP_METHOD_GET, uri, nil)
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
-			io.WriteString(w, err.Error())
+			_, _ = io.WriteString(w, err.Error())
 			return
 		}
 	default:
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, "only support GET and POST")
+		_, _ = io.WriteString(w, "only support GET and POST")
 		return
 	}
 
@@ -113,22 +112,22 @@ func (s *Service) Proxy(c context.Context, w http.ResponseWriter, r *http.Reques
 	resp, err := s.httpCli.Do(req)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, err.Error())
+		_, _ = io.WriteString(w, err.Error())
 		return
 	}
 	defer resp.Body.Close()
-	s.log.Println(fmt.Sprintf("| %d | %s | %s      %s", resp.StatusCode, s.clientIP(), rMethod, r.RequestURI))
-	rsp, err := ioutil.ReadAll(resp.Body)
+	s.log.Printf("| %d | %s | %s      %s\n", resp.StatusCode, s.clientIP(), rMethod, r.RequestURI)
+	rsp, err := io.ReadAll(resp.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, err.Error())
+		_, _ = io.WriteString(w, err.Error())
 		return
 	}
-	for k, _ := range resp.Header {
+	for k := range resp.Header {
 		w.Header().Set(k, resp.Header.Get(k))
 	}
 	w.WriteHeader(http.StatusOK)
-	w.Write(rsp)
+	_, _ = w.Write(rsp)
 }
 
 func (s *Service) clientIP() string {
@@ -145,6 +144,5 @@ func (s *Service) clientIP() string {
 	if ip, _, err := net.SplitHostPort(strings.TrimSpace(s.r.RemoteAddr)); err == nil {
 		return ip
 	}
-
 	return ""
 }

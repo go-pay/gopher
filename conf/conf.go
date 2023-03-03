@@ -25,24 +25,24 @@ func init() {
 }
 
 // 解析配置文件
-//    c: 需要解析的相对应的结构体指针，例：conf_test.go
-func ParseYaml(confPtr interface{}) error {
+// c: 需要解析的相对应的结构体指针，例：conf_test.go
+func ParseYaml(confPtr any) error {
 	return parse(_Yaml, confPtr)
 }
 
 // 解析配置文件
-//    c: 需要解析的相对应的结构体指针，例：conf_test.go
-func ParseToml(confPtr interface{}) error {
+// c: 需要解析的相对应的结构体指针，例：conf_test.go
+func ParseToml(confPtr any) error {
 	return parse(_Toml, confPtr)
 }
 
 // 解析配置文件
-//    c: 需要解析的相对应的结构体指针，例：conf_test.go
-func ParseJson(confPtr interface{}) error {
+// c: 需要解析的相对应的结构体指针，例：conf_test.go
+func ParseJson(confPtr any) error {
 	return parse(_Json, confPtr)
 }
 
-func parse(cType int, confPtr interface{}) error {
+func parse(cType int, confPtr any) error {
 	if confPtr == nil {
 		return errors.New("c struct ptr can not be nil")
 	}

@@ -13,7 +13,7 @@ const (
 
 var (
 	bfPool = sync.Pool{
-		New: func() interface{} {
+		New: func() any {
 			return &strings.Builder{}
 		},
 	}
@@ -22,28 +22,31 @@ var (
 // JoinInts format int64 slice like:n1,n2,n3.
 func JoinInts(is []int64) string {
 	if len(is) == 0 {
-		return ""
+		return NULL
 	}
 	if len(is) == 1 {
 		return strconv.FormatInt(is[0], 10)
 	}
-	buf := bfPool.Get().(*strings.Builder)
-	for _, i := range is {
-		buf.WriteString(strconv.FormatInt(i, 10))
-		buf.WriteByte(',')
+	buf, ok := bfPool.Get().(*strings.Builder)
+	if ok && buf != nil {
+		for _, i := range is {
+			buf.WriteString(strconv.FormatInt(i, 10))
+			buf.WriteByte(',')
+		}
+		s := buf.String()
+		if len(s) > 0 {
+			s = s[:len(s)-1]
+		}
+		buf.Reset()
+		bfPool.Put(buf)
+		return s
 	}
-	s := buf.String()
-	if len(s) > 0 {
-		s = s[:len(s)-1]
-	}
-	buf.Reset()
-	bfPool.Put(buf)
-	return s
+	return NULL
 }
 
 // SplitInts split string into int64 slice.
 func SplitInts(s string) ([]int64, error) {
-	if s == "" {
+	if s == NULL {
 		return nil, nil
 	}
 	sArr := strings.Split(s, ",")
@@ -58,7 +61,7 @@ func SplitInts(s string) ([]int64, error) {
 	return res, nil
 }
 
-func FormatURLParam(body map[string]interface{}) (urlParam string) {
+func FormatURLParam(body map[string]any) (urlParam string) {
 	v := url.Values{}
 	for key, value := range body {
 		v.Add(key, value.(string))

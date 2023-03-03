@@ -60,7 +60,7 @@ func (g *GinEngine) Recovery() gin.HandlerFunc {
 				stack := make([]byte, size)
 				stack = stack[:runtime.Stack(stack, false)]
 				bs, _ := json.Marshal(RecoverInfo{
-					Time:        time.Now().Format(xtime.TimeLayout_1),
+					Time:        time.Now().Format(xtime.TimeLayout1),
 					RequestURI:  c.Request.Host + c.Request.RequestURI,
 					Body:        string(body),
 					RequestInfo: string(rawReq),
@@ -68,7 +68,7 @@ func (g *GinEngine) Recovery() gin.HandlerFunc {
 					Stack:       string(stack),
 				})
 				xlog.Errorf("[GinPanic] %s", string(bs))
-				c.AbortWithError(http.StatusInternalServerError, ecode.ServerErr)
+				_ = c.AbortWithError(http.StatusInternalServerError, ecode.ServerErr)
 			}
 		}()
 		c.Next()
@@ -97,6 +97,6 @@ func (g *GinEngine) Logger(ignoreRelease bool) gin.HandlerFunc {
 
 		// End time
 		end := time.Now()
-		fmt.Fprint(os.Stdout, fmt.Sprintf("[GIN] %s | %3d | %13v | %15s | %-7s %#v\n%s", end.Format("2006/01/02 - 15:04:05"), c.Writer.Status(), end.Sub(start), c.ClientIP(), c.Request.Method, path, c.Errors.ByType(gin.ErrorTypePrivate).String()))
+		fmt.Fprintf(os.Stdout, "[GIN] %s | %3d | %13v | %15s | %-7s %#v\n%s\n", end.Format("2006/01/02 - 15:04:05"), c.Writer.Status(), end.Sub(start), c.ClientIP(), c.Request.Method, path, c.Errors.ByType(gin.ErrorTypePrivate).String())
 	}
 }

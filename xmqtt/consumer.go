@@ -43,10 +43,7 @@ func (c *Client) Subscribe(topic string, qos QosType, callback mqtt.MessageHandl
 	c.SubFuncs[subCallbackKey(topic, qos)] = callback
 	c.Topics = append(c.Topics, topic)
 	c.mu.Unlock()
-	if err := c.sub(topic, qos, callback); err != nil {
-		return err
-	}
-	return nil
+	return c.sub(topic, qos, callback)
 }
 
 // UnSubscribe 取消订阅topic

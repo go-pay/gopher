@@ -8,19 +8,19 @@ import (
 
 var srv *Service
 
-type ProxyHandler struct {
+type Handler struct {
 	c        *Config
 	handlers map[string]http.Handler
 	mu       sync.Mutex
 }
 
-func (p *ProxyHandler) Handle(path string, handler http.Handler) {
+func (p *Handler) Handle(path string, handler http.Handler) {
 	p.mu.Lock()
 	p.handlers[path] = handler
 	p.mu.Unlock()
 }
 
-func (p *ProxyHandler) ListenAndServe() error {
+func (p *Handler) ListenAndServe() error {
 	http.Handle("/", p)
 
 	if len(p.handlers) > 0 {
@@ -30,13 +30,10 @@ func (p *ProxyHandler) ListenAndServe() error {
 	}
 
 	// listen and serve
-	if err := http.ListenAndServe(p.c.ServerPort, nil); err != nil {
-		return err
-	}
-	return nil
+	return http.ListenAndServe(p.c.ServerPort, nil)
 }
 
-func (p *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (p *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	ct := r.Header.Get(HEADER_CONTENT_TYPE)
 	if ct != "" {
 		w.Header().Set(HEADER_CONTENT_TYPE, ct)
@@ -45,7 +42,7 @@ func (p *ProxyHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		io.WriteString(w, err.Error())
+		_, _ = io.WriteString(w, err.Error())
 		return
 	}
 	srv.Proxy(r.Context(), w, r)

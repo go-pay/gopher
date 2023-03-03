@@ -4,7 +4,7 @@ import "sync"
 
 type Entry struct {
 	Key   string
-	Value interface{}
+	Value any
 	pre   *Entry
 	next  *Entry
 }
@@ -21,7 +21,7 @@ func NewCache(cap int) *Cache {
 	return &Cache{cache: make(map[string]*Entry), cap: cap}
 }
 
-func (c *Cache) Put(key string, v interface{}) {
+func (c *Cache) Put(key string, v any) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	// put this key exist, update index hot
@@ -43,7 +43,7 @@ func (c *Cache) Put(key string, v interface{}) {
 	c.removeTail()
 }
 
-func (c *Cache) Get(key string) (v interface{}) {
+func (c *Cache) Get(key string) (v any) {
 	c.mu.RLock()
 	defer c.mu.RUnlock()
 	if e, has := c.cache[key]; has {

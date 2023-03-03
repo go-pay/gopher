@@ -11,9 +11,9 @@ import (
 )
 
 // RSA加密数据
-//	t：PKCS1 或 PKCS8
-//	originData：原始字符串byte数组
-//	publicKey：公钥
+// t：PKCS1 或 PKCS8
+// originData：原始字符串byte数组
+// publicKey：公钥
 func RsaEncrypt(t PKCSType, originData []byte, publicKey string) (cipherData []byte, err error) {
 	var (
 		key *rsa.PublicKey
@@ -26,15 +26,15 @@ func RsaEncrypt(t PKCSType, originData []byte, publicKey string) (cipherData []b
 
 	switch t {
 	case PKCS1:
-		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs1Key, e := x509.ParsePKCS1PublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		key = pkcs1Key
 	case PKCS8:
-		pkcs8Key, err := x509.ParsePKIXPublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs8Key, e := x509.ParsePKIXPublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		pk8, ok := pkcs8Key.(*rsa.PublicKey)
 		if !ok {
@@ -42,9 +42,9 @@ func RsaEncrypt(t PKCSType, originData []byte, publicKey string) (cipherData []b
 		}
 		key = pk8
 	default:
-		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs1Key, e := x509.ParsePKCS1PublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		key = pkcs1Key
 	}
@@ -57,7 +57,7 @@ func RsaEncrypt(t PKCSType, originData []byte, publicKey string) (cipherData []b
 }
 
 // RSA加密数据
-//	OAEPWithSHA-256AndMGF1Padding
+// OAEPWithSHA-256AndMGF1Padding
 func RsaEncryptOAEP(h hash.Hash, t PKCSType, publicKey string, originData, label []byte) (cipherData []byte, err error) {
 	var (
 		key *rsa.PublicKey
@@ -72,15 +72,15 @@ func RsaEncryptOAEP(h hash.Hash, t PKCSType, publicKey string, originData, label
 
 	switch t {
 	case PKCS1:
-		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs1Key, e := x509.ParsePKCS1PublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		key = pkcs1Key
 	case PKCS8:
-		pkcs8Key, err := x509.ParsePKIXPublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs8Key, e := x509.ParsePKIXPublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		pk8, ok := pkcs8Key.(*rsa.PublicKey)
 		if !ok {
@@ -88,9 +88,9 @@ func RsaEncryptOAEP(h hash.Hash, t PKCSType, publicKey string, originData, label
 		}
 		key = pk8
 	default:
-		pkcs1Key, err := x509.ParsePKCS1PublicKey(block.Bytes)
-		if err != nil {
-			return nil, err
+		pkcs1Key, e := x509.ParsePKCS1PublicKey(block.Bytes)
+		if e != nil {
+			return nil, e
 		}
 		key = pkcs1Key
 	}

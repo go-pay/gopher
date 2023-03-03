@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-//随机生成字符串
+// 随机生成字符串
 func RandomString(l int) string {
 	str := "0123456789AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
@@ -17,7 +17,7 @@ func RandomString(l int) string {
 	return string(result)
 }
 
-//随机生成纯字符串
+// 随机生成纯字符串
 func RandomPureString(l int) string {
 	str := "AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz"
 	bytes := []byte(str)
@@ -29,7 +29,7 @@ func RandomPureString(l int) string {
 	return string(result)
 }
 
-//随机生成数字字符串
+// 随机生成数字字符串
 func RandomNumber(l int) string {
 	str := "0123456789"
 	bytes := []byte(str)

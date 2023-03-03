@@ -75,7 +75,7 @@ func GetCurMonthDays() (curMonthDays []string) {
 	month := now.Month()
 	days := MonthDays(month, year)
 
-	monthFirstDay := time.Date(year, month, 01, 0, 0, 0, 0, time.Local)
+	monthFirstDay := time.Date(year, month, 1, 0, 0, 0, 0, time.Local)
 	for i := 0; i < days; i++ {
 		date := monthFirstDay.AddDate(0, 0, i)
 		curMonthDays = append(curMonthDays, date.Format(DateLayout))
@@ -90,7 +90,7 @@ func GetLastMonthDays() (monthDays []string) {
 	month := now.Month()
 	days := MonthDays(month-1, year)
 
-	monthFirstDay := time.Date(year, month-1, 01, 0, 0, 0, 0, time.Local)
+	monthFirstDay := time.Date(year, month-1, 1, 0, 0, 0, 0, time.Local)
 	for i := 0; i < days; i++ {
 		date := monthFirstDay.AddDate(0, 0, i)
 		monthDays = append(monthDays, date.Format(DateLayout))

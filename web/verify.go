@@ -21,7 +21,7 @@ const (
 func VerifySign(c *gin.Context) {
 	ts := c.GetHeader(ts)
 	tsTime := time.Unix(util.String2Int64(ts), 0)
-	if time.Now().Sub(tsTime).Seconds() > 60 {
+	if time.Since(tsTime).Seconds() > 60 {
 		JSON(c, nil, ecode.UnauthorizedErr)
 		c.Abort()
 		return

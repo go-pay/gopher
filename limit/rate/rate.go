@@ -179,7 +179,7 @@ func (r *Reservation) CancelAt(now time.Time) {
 	// update state
 	r.lim.last = now
 	r.lim.tokens = tokens
-	if r.timeToAct == r.lim.lastEvent {
+	if r.timeToAct.Equal(r.lim.lastEvent) {
 		prevEvent := r.timeToAct.Add(r.limit.durationFromTokens(float64(-r.tokens)))
 		if !prevEvent.Before(now) {
 			r.lim.lastEvent = prevEvent
@@ -196,13 +196,15 @@ func (lim *Limiter) Reserve() *Reservation {
 // The Limiter takes this Reservation into account when allowing future events.
 // The returned Reservation’s OK() method returns false if n exceeds the Limiter's burst size.
 // Usage example:
-//   r := lim.ReserveN(time.Now(), 1)
-//   if !r.OK() {
-//     // Not allowed to act! Did you remember to set lim.burst to be > 0 ?
-//     return
-//   }
-//   time.Sleep(r.Delay())
-//   Act()
+//
+//	r := lim.ReserveN(time.Now(), 1)
+//	if !r.OK() {
+//	  // Not allowed to act! Did you remember to set lim.burst to be > 0 ?
+//	  return
+//	}
+//	time.Sleep(r.Delay())
+//	Act()
+//
 // Use this method if you wish to wait and slow down in accordance with the rate limit without dropping events.
 // If you need to respect a deadline or cancel the delay, use Wait instead.
 // To drop or skip events exceeding rate limit, use Allow instead.

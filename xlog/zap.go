@@ -24,7 +24,7 @@ func Zap() *ZapLogger {
 	return z
 }
 
-func (l *ZapLogger) Info(args ...interface{}) {
+func (l *ZapLogger) Info(args ...any) {
 	if l.Sugar != nil && Level >= InfoLevel {
 		l.Sugar.Info(args...)
 		return
@@ -32,7 +32,7 @@ func (l *ZapLogger) Info(args ...interface{}) {
 	infoLog.LogOut(nil, nil, args...)
 }
 
-func (l *ZapLogger) Infof(format string, args ...interface{}) {
+func (l *ZapLogger) Infof(format string, args ...any) {
 	if l.Sugar != nil && Level >= InfoLevel {
 		l.Sugar.Infof(format, args...)
 		return
@@ -40,7 +40,7 @@ func (l *ZapLogger) Infof(format string, args ...interface{}) {
 	infoLog.LogOut(nil, &format, args...)
 }
 
-func (l *ZapLogger) Debug(args ...interface{}) {
+func (l *ZapLogger) Debug(args ...any) {
 	if l.Sugar != nil && Level >= DebugLevel {
 		l.Sugar.Debug(args...)
 		return
@@ -48,7 +48,7 @@ func (l *ZapLogger) Debug(args ...interface{}) {
 	debugLog.LogOut(nil, nil, args...)
 }
 
-func (l *ZapLogger) Debugf(format string, args ...interface{}) {
+func (l *ZapLogger) Debugf(format string, args ...any) {
 	if l.Sugar != nil && Level >= DebugLevel {
 		l.Sugar.Debugf(format, args...)
 		return
@@ -56,7 +56,7 @@ func (l *ZapLogger) Debugf(format string, args ...interface{}) {
 	debugLog.LogOut(nil, &format, args...)
 }
 
-func (l *ZapLogger) Warn(args ...interface{}) {
+func (l *ZapLogger) Warn(args ...any) {
 	if l.Sugar != nil && Level >= WarnLevel {
 		l.Sugar.Warn(args...)
 		return
@@ -64,7 +64,7 @@ func (l *ZapLogger) Warn(args ...interface{}) {
 	warnLog.LogOut(nil, nil, args...)
 }
 
-func (l *ZapLogger) Warnf(format string, args ...interface{}) {
+func (l *ZapLogger) Warnf(format string, args ...any) {
 	if l.Sugar != nil && Level >= WarnLevel {
 		l.Sugar.Warnf(format, args...)
 		return
@@ -72,7 +72,7 @@ func (l *ZapLogger) Warnf(format string, args ...interface{}) {
 	warnLog.LogOut(nil, &format, args...)
 }
 
-func (l *ZapLogger) Error(args ...interface{}) {
+func (l *ZapLogger) Error(args ...any) {
 	if l.Sugar != nil && Level >= ErrorLevel {
 		l.Sugar.Error(args...)
 		return
@@ -80,7 +80,7 @@ func (l *ZapLogger) Error(args ...interface{}) {
 	errLog.LogOut(nil, nil, args...)
 }
 
-func (l *ZapLogger) Errorf(format string, args ...interface{}) {
+func (l *ZapLogger) Errorf(format string, args ...any) {
 	if l.Sugar != nil && Level >= ErrorLevel {
 		l.Sugar.Errorf(format, args...)
 		return

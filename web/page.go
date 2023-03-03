@@ -6,8 +6,8 @@ type Pager struct {
 }
 
 type pageRsp struct {
-	List interface{} `json:"list"`
-	Page page        `json:"page"`
+	List any  `json:"list"`
+	Page page `json:"page"`
 }
 
 type page struct {
@@ -16,7 +16,7 @@ type page struct {
 	PageSize int   `json:"page_size"`
 }
 
-func (p Pager) Apply(total int64, data interface{}) interface{} {
+func (p Pager) Apply(total int64, data any) any {
 	if data == nil {
 		return nil
 	}

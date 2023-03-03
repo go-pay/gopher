@@ -36,7 +36,7 @@ func NewLimiter(c *Config) (rl *RateLimiter) {
 	}
 	rl = &RateLimiter{
 		C: c,
-		LimiterGroup: group.NewRateGroup(func() interface{} {
+		LimiterGroup: group.NewRateGroup(func() any {
 			return newLimiter(c)
 		}),
 	}
@@ -47,19 +47,21 @@ func (r *RateLimiter) GinLimit() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		path := strings.Split(c.Request.RequestURI, "?")[0]
 		// log.Warning("key:", path[1:])
-		limiter := r.LimiterGroup.Get(path[1:]).(*rate.Limiter)
-		if allow := limiter.Allow(); !allow {
-			rsp := struct {
-				Code    int    `json:"code"`
-				Message string `json:"message"`
-			}{
-				Code:    10503,
-				Message: "服务器忙，请稍后重试...",
+		limiter, ok := r.LimiterGroup.Get(path[1:]).(*rate.Limiter)
+		if ok && limiter != nil {
+			if allow := limiter.Allow(); !allow {
+				rsp := struct {
+					Code    int    `json:"code"`
+					Message string `json:"message"`
+				}{
+					Code:    10503,
+					Message: "服务器忙，请稍后重试...",
+				}
+				c.JSON(http.StatusOK, rsp)
+				c.Abort()
 			}
-			c.JSON(http.StatusOK, rsp)
-			c.Abort()
+			c.Next()
 		}
-		c.Next()
 	}
 }
 

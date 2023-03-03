@@ -12,11 +12,11 @@ import (
 	"github.com/go-pay/gopher/util"
 )
 
-type BodyMap map[string]interface{}
+type BodyMap map[string]any
 
 type xmlMapMarshal struct {
 	XMLName xml.Name
-	Value   interface{} `xml:",cdata"`
+	Value   any `xml:",cdata"`
 }
 
 type xmlMapUnmarshal struct {
@@ -30,7 +30,7 @@ type File struct {
 }
 
 // 设置参数
-func (bm BodyMap) Set(key string, value interface{}) BodyMap {
+func (bm BodyMap) Set(key string, value any) BodyMap {
 	bm[key] = value
 	return bm
 }
@@ -65,7 +65,7 @@ func (bm BodyMap) GetString(key string) string {
 }
 
 // 获取原始参数
-func (bm BodyMap) GetInterface(key string) interface{} {
+func (bm BodyMap) GetInterface(key string) any {
 	if bm == nil {
 		return nil
 	}
@@ -97,7 +97,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	if len(bm) == 0 {
 		return nil
 	}
-	start.Name = xml.Name{util.NULL, "xml"}
+	start.Name = xml.Name{Space: util.NULL, Local: "xml"}
 	if err = e.EncodeToken(start); err != nil {
 		return
 	}
@@ -109,7 +109,7 @@ func (bm BodyMap) MarshalXML(e *xml.Encoder, start xml.StartElement) (err error)
 	return e.EncodeToken(start.End())
 }
 
-func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, start xml.StartElement) (err error) {
+func (bm *BodyMap) UnmarshalXML(d *xml.Decoder, _ xml.StartElement) (err error) {
 	for {
 		var e xmlMapUnmarshal
 		err = d.Decode(&e)
@@ -163,7 +163,7 @@ func (bm BodyMap) CheckEmptyError(keys ...string) error {
 	return nil
 }
 
-func convertToString(v interface{}) (str string) {
+func convertToString(v any) (str string) {
 	if v == nil {
 		return util.NULL
 	}

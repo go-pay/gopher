@@ -39,8 +39,8 @@ func FormatAlipayPrivateKey(privateKey string) (pKey string) {
 
 // FormatAlipayPublicKey 格式化支付宝普通支付宝公钥
 func FormatAlipayPublicKey(publicKey string) (pKey string) {
-	var buffer strings.Builder
-	buffer.WriteString("-----BEGIN PUBLIC KEY-----\n")
+	var buf strings.Builder
+	buf.WriteString("-----BEGIN PUBLIC KEY-----\n")
 	rawLen := 64
 	keyLen := len(publicKey)
 	raws := keyLen / rawLen
@@ -52,15 +52,15 @@ func FormatAlipayPublicKey(publicKey string) (pKey string) {
 	end := start + rawLen
 	for i := 0; i < raws; i++ {
 		if i == raws-1 {
-			buffer.WriteString(publicKey[start:])
+			buf.WriteString(publicKey[start:])
 		} else {
-			buffer.WriteString(publicKey[start:end])
+			buf.WriteString(publicKey[start:end])
 		}
-		buffer.WriteByte('\n')
+		buf.WriteByte('\n')
 		start += rawLen
 		end = start + rawLen
 	}
-	buffer.WriteString("-----END PUBLIC KEY-----\n")
-	pKey = buffer.String()
+	buf.WriteString("-----END PUBLIC KEY-----\n")
+	pKey = buf.String()
 	return
 }

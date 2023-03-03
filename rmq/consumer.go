@@ -70,7 +70,7 @@ func (c *Consumer) Start() (err error) {
 // Close unsubscribe all topic
 func (c *Consumer) Close() {
 	if c.Consumer != nil && len(c.subscribeTopic) > 0 {
-		for topic, _ := range c.subscribeTopic {
+		for topic := range c.subscribeTopic {
 			_ = c.Consumer.Unsubscribe(topic)
 			delete(c.subscribeTopic, topic)
 		}
@@ -80,7 +80,7 @@ func (c *Consumer) Close() {
 
 // TopicList get topic list
 func (c *Consumer) TopicList() (ts []string) {
-	for topic, _ := range c.subscribeTopic {
+	for topic := range c.subscribeTopic {
 		ts = append(ts, topic)
 	}
 	return
