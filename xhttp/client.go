@@ -288,7 +288,6 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		if err != nil {
 			return err
 		}
-		defer req.Body.Close()
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
 		if c.Transport != nil {
