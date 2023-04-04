@@ -4,12 +4,6 @@ import (
 	"sort"
 )
 
-// recommend use IntDeduplicate
-// Deprecated
-func MergeIntDuplicate(slice []int) (merged []int) {
-	return IntDeduplicate(slice)
-}
-
 // int 数组去重
 func IntDeduplicate(slice []int) (result []int) {
 	var dupMap = make(map[int]struct{})
@@ -37,13 +31,6 @@ func IntSortDeduplicate(slice []int) (result []int) {
 		tmp[j] = tmp[i]
 	}
 	return tmp[:j+1]
-}
-
-// recommend use IntMergeDeduplicate
-// Deprecated
-func MergeSliceRemoveDuplicate(slice1, slice2 []int) (result []int) {
-	slice1 = append(slice1, slice2...)
-	return IntDeduplicate(slice1)
 }
 
 // int 数组合并+去重
@@ -134,10 +121,36 @@ func IntSortUnion(slice1, slice2 []int) (result []int) {
 	return
 }
 
-// recommend use StringDeduplicate
-// Deprecated
-func MergeStringDuplicate(slice []string) (result []string) {
-	return StringDeduplicate(slice)
+// int 数组，根据index移除元素
+// return new slice
+func IntRemoveElementByIndex(slice []int, index int) (result []int) {
+	if index < 0 || index >= len(slice) {
+		return slice
+	}
+	result = append(slice[:index], slice[index+1:]...)
+	return
+}
+
+// int 数组，移除元素
+// If n < 0, there is no limit on the number of remove.
+// return new slice
+func IntRemoveElement(slice []int, elem, n int) (result []int) {
+	if n == 0 {
+		return append(result, slice...) // 返回输入切片的复制品
+	}
+	// 复制输入切片到result中
+	result = append(result, slice...)
+	i, j := 0, 0
+	for j < len(result) {
+		if result[j] != elem || n == 0 {
+			result[i] = result[j]
+			i++
+		} else {
+			n--
+		}
+		j++
+	}
+	return result[:i]
 }
 
 // string 数组去重
@@ -167,12 +180,6 @@ func StringSortDeduplicate(slice []string) (result []string) {
 		tmp[j] = tmp[i]
 	}
 	return tmp[:j+1]
-}
-
-// recommend use StringMergeDeduplicate
-// Deprecated
-func MergeStringSliceRemoveDuplicate(slice1, slice2 []string) (result []string) {
-	return StringMergeDeduplicate(slice1, slice2)
 }
 
 // string 数组合并+去重
@@ -261,6 +268,38 @@ func StringSortUnion(slice1, slice2 []string) (result []string) {
 	}
 	sort.Strings(result)
 	return
+}
+
+// string 数组，根据index移除元素
+// return new slice
+func StringRemoveElementByIndex(slice []string, index int) (result []string) {
+	if index < 0 || index >= len(slice) {
+		return slice
+	}
+	result = append(slice[:index], slice[index+1:]...)
+	return
+}
+
+// string 数组，移除元素
+// If n < 0, there is no limit on the number of remove.
+// return new slice
+func StringRemoveElement(slice []string, elem string, n int) (result []string) {
+	if n == 0 {
+		return append(result, slice...) // 返回输入切片的复制品
+	}
+	// 复制输入切片到result中
+	result = append(result, slice...)
+	i, j := 0, 0
+	for j < len(result) {
+		if result[j] != elem || n == 0 {
+			result[i] = result[j]
+			i++
+		} else {
+			n--
+		}
+		j++
+	}
+	return result[:i]
 }
 
 // 过滤数组，去除src在dst中存在的item

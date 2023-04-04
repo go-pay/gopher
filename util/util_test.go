@@ -142,7 +142,6 @@ func TestIntIntersect(t *testing.T) {
 	in2 := []int{3, 4, 5, 7, 18, 11, 22, 15, 35} // slice2
 	result := IntIntersect(in, in2)
 	t.Logf("result: %d", result) // result: [5 7 11 15 3]
-
 }
 
 func TestIntSortIntersect(t *testing.T) {
@@ -164,4 +163,32 @@ func TestIntSortUnion(t *testing.T) {
 	in2 := []int{2, 4, 6, 8} // slice2
 	result := IntSortUnion(in, in2)
 	t.Logf("result: %d", result) // result: [1 2 3 4 6 8]
+}
+
+func TestIntRemoveElementByIndex(t *testing.T) {
+	in := []int{1, 2, 3, 4} // slice1
+	result := IntRemoveElementByIndex(in, 1)
+	t.Logf("in: %d", in)         // result: [1 2 3 4]
+	t.Logf("result: %d", result) // result: [1 3 4]
+}
+
+func TestIntRemoveElement(t *testing.T) {
+	in := []int{1, 2, 3, 4, 4, 5, 4, 4} // slice1
+	result := IntRemoveElement(in, 4, 2)
+	t.Logf("in: %d", in)         // result: [1 2 3 4 4 5 4 4]
+	t.Logf("result: %d", result) // result: [1 2 3 5 4 4]
+}
+
+func TestStringRemoveElementByIndex(t *testing.T) {
+	ins := []string{"abc", "hello", "fhgk", "jerry", "hello"}
+	result := StringRemoveElementByIndex(ins, 3)
+	t.Logf("ins: %s", ins)       // result: [abc hello fhgk jerry hello]
+	t.Logf("result: %s", result) // result: [abc hello fhgk hello]
+}
+
+func TestStringRemoveElement(t *testing.T) {
+	ins := []string{"abc", "hello", "abc", "abc", "hello", "abc"}
+	result := StringRemoveElement(ins, "abc", 3)
+	t.Logf("ins: %s", ins)       // ins: [abc hello abc abc hello abc]
+	t.Logf("result: %s", result) // result: [hello hello abc]
 }
