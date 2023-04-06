@@ -186,15 +186,16 @@ func ParseBase2(id string) (ID, error) {
 // NOTE: There are many different base32 implementations so becareful when
 // doing any interoperation.
 func (f ID) Base32() string {
-	if f < 32 {
-		return string(encodeBase32Map[f])
+	id := f
+	if id < 32 {
+		return string(encodeBase32Map[id])
 	}
 	b := make([]byte, 0, 12)
-	for f >= 32 {
-		b = append(b, encodeBase32Map[f%32])
-		f /= 32
+	for id >= 32 {
+		b = append(b, encodeBase32Map[id%32])
+		id /= 32
 	}
-	b = append(b, encodeBase32Map[f])
+	b = append(b, encodeBase32Map[id])
 	for x, y := 0, len(b)-1; x < y; x, y = x+1, y-1 {
 		b[x], b[y] = b[y], b[x]
 	}
@@ -228,15 +229,16 @@ func ParseBase36(id string) (ID, error) {
 
 // Base58 returns a base58 string of the snowflake ID
 func (f ID) Base58() string {
-	if f < 58 {
-		return string(encodeBase58Map[f])
+	id := f
+	if id < 58 {
+		return string(encodeBase58Map[id])
 	}
 	b := make([]byte, 0, 11)
-	for f >= 58 {
-		b = append(b, encodeBase58Map[f%58])
-		f /= 58
+	for id >= 58 {
+		b = append(b, encodeBase58Map[id%58])
+		id /= 58
 	}
-	b = append(b, encodeBase58Map[f])
+	b = append(b, encodeBase58Map[id])
 
 	for x, y := 0, len(b)-1; x < y; x, y = x+1, y-1 {
 		b[x], b[y] = b[y], b[x]
