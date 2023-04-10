@@ -5,7 +5,7 @@
 [![Github](https://img.shields.io/github/followers/iGoogle-ink?label=Follow&style=social)](https://github.com/iGoogle-ink)
 [![Github](https://img.shields.io/github/forks/go-pay/gopher?label=Fork&style=social)](https://github.com/go-pay/gopher/fork)
 
-[![Golang](https://img.shields.io/badge/golang-1.18+-brightgreen.svg)](https://golang.google.cn)
+[![Golang](https://img.shields.io/badge/golang-1.19+-brightgreen.svg)](https://golang.google.cn)
 [![GoDoc](https://img.shields.io/badge/doc-go.dev-informational.svg)](https://pkg.go.dev/github.com/go-pay/gopher)
 [![Run Tests](https://github.com/go-pay/gopher/actions/workflows/go.yml/badge.svg)](https://github.com/go-pay/gopher/actions/workflows/go.yml)
 [![GitHub Release](https://img.shields.io/github/v/release/go-pay/gopher)](https://github.com/go-pay/gopher/releases)
@@ -16,7 +16,11 @@
 - 限流器 Middleware
 - ErrorCode (HTTP+GRPC 通用)
 - Errgroup (基于 golang.org 改造优化)
+- geohash
+- iterator
 - LRU
+- SyncMap（基于 sync.Map 增加泛型优化）
+- snowflake
 - RocketMQ Client
 - MQTT Client
 - Trace Middleware
@@ -32,3 +36,15 @@
 ```bash
 go get -u github.com/go-pay/gopher
 ```
+
+---
+<br>
+
+## 鸣谢
+
+> [GoLand](https://www.jetbrains.com/go/?from=gopher) A Go IDE with extended support for JavaScript, TypeScript, and
+> databases。
+
+特别感谢 [JetBrains](https://www.jetbrains.com/?from=gopher)
+为开源项目提供免费的 [GoLand](https://www.jetbrains.com/go/?from=gopher) 等 IDE 的授权  
+[<img src=".github/jetbrains-variant-3.png" width="200"/>](https://www.jetbrains.com/?from=gopher)
