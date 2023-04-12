@@ -361,6 +361,34 @@ func (m *Map[K, V]) Range(f func(key K, value V) bool) {
 	}
 }
 
+// Len returns the number of elements in the map.
+func (m *Map[K, V]) Len() (len int64) {
+	read := m.loadReadOnly()
+	if read.amended {
+		// m.dirty contains keys not in read.m. Fortunately, Range is already O(N)
+		// (assuming the caller does not break out early), so a call to Range
+		// amortizes an entire copy of the map: we can promote the dirty copy
+		// immediately!
+		m.mu.Lock()
+		read = m.loadReadOnly()
+		if read.amended {
+			read = readOnly[K]{m: m.dirty}
+			m.read.Store(&read)
+			m.dirty = nil
+			m.misses = 0
+		}
+		m.mu.Unlock()
+	}
+	for _, e := range read.m {
+		_, ok := entryLoad[V](e)
+		if !ok {
+			continue
+		}
+		len++
+	}
+	return
+}
+
 func (m *Map[K, V]) missLocked() {
 	m.misses++
 	if m.misses < len(m.dirty) {

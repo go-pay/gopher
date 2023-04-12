@@ -25,6 +25,12 @@ func TestSmap(t *testing.T) {
 		xlog.Errorf("Load not have")
 	}
 	xlog.Infof("value: %v", value)
+	sm.Store("test2", &SmapTest{Name: "test2", Age: 11})
+	l := sm.Len()
+	xlog.Infof("len = 2 ?: %d", l)
+	sm.Store("test2", &SmapTest{Name: "test2", Age: 12})
+	l = sm.Len()
+	xlog.Infof("len = 2 ?: %d", l)
 
 	// ==================================
 
@@ -34,7 +40,11 @@ func TestSmap(t *testing.T) {
 		return
 	}
 	xlog.Infof("andDelete: %v", andDelete)
-
+	l = sm.Len()
+	xlog.Infof("len = 1 ?: %d", l)
+	sm.Store("test3", &SmapTest{Name: "test3", Age: 13})
+	l = sm.Len()
+	xlog.Infof("len = 2 ?: %d", l)
 	_, ok = sm.Load("test")
 	xlog.Infof("after load and delete load sm[test] is %v", ok)
 
@@ -46,4 +56,13 @@ func TestSmap(t *testing.T) {
 		return
 	}
 	xlog.Infof("sm[test2] value: %v", v2)
+	l = sm.Len()
+	xlog.Infof("len = 2 ?: %d", l)
+	sm.Delete("test2")
+	l = sm.Len()
+	xlog.Infof("len = 1 ?: %d", l)
+	sm.Delete("test3")
+	l = sm.Len()
+	xlog.Infof("len = 0 ?: %d", l)
+
 }
