@@ -47,3 +47,9 @@ func ReadRequestBody(req *http.Request) (bs []byte, err error) {
 	req.Body = io.NopCloser(bytes.NewReader(buf.Bytes()))
 	return buf.Bytes(), nil
 }
+
+type HttpRsp[V any] struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    V      `json:"data,omitempty"`
+}
