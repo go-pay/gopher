@@ -18,7 +18,7 @@ import (
 
 var (
 	httpCli = new(http.Client)
-	pLog    = log.New(os.Stdout, "[PROXY] ", log.Ldate|log.Lmicroseconds)
+	pLog    = log.New(os.Stdout, "[PROXY] ", log.Ldate|log.Ltime)
 )
 
 // GinProxy gin request proxy
@@ -60,15 +60,20 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		case proxy.CONTENT_TYPE_FORM:
 			reader = strings.NewReader(pa)
 		}
+		req, err = http.NewRequestWithContext(c, rMethod, uri, reader)
+		if err != nil {
+			return
+		}
 	case proxy.HTTP_METHOD_GET:
+		req, err = http.NewRequestWithContext(c, rMethod, uri, nil)
+		if err != nil {
+			return
+		}
 	default:
 		err = ecode.NewV2(500, "", "only support GET and POST")
 		return
 	}
-	req, err = http.NewRequestWithContext(c, rMethod, uri, reader)
-	if err != nil {
-		return
-	}
+
 	// Request Content
 	req.Header = rHeader
 	req.Header.Del("Accept-Encoding")
