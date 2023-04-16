@@ -14,12 +14,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/ecode"
 	"github.com/go-pay/gopher/proxy"
-	"github.com/go-pay/gopher/xlog"
 )
 
 var (
 	httpCli = new(http.Client)
-	pLog    = log.New(os.Stdout, string(xlog.Magenta)+" [PROXY] "+string(xlog.Reset), log.Ldate|log.Lmicroseconds)
+	pLog    = log.New(os.Stdout, "[PROXY] ", log.Ldate|log.Lmicroseconds)
 )
 
 // GinProxy gin request proxy
@@ -63,7 +62,6 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		}
 	case proxy.HTTP_METHOD_GET:
 	default:
-		xlog.Errorf("only support GET and POST")
 		err = ecode.NewV2(500, "", "only support GET and POST")
 		return
 	}
