@@ -42,7 +42,7 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		rUri = uri
 	}
 	if method != "" {
-		rMethod = method
+		rMethod = strings.ToUpper(method)
 	}
 	uri = host + rUri
 	// Request
@@ -61,23 +61,20 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		case proxy.CONTENT_TYPE_FORM:
 			reader = strings.NewReader(pa)
 		}
-		req, err = http.NewRequest(proxy.HTTP_METHOD_POST, uri, reader)
-		if err != nil {
-			return
-		}
 	case proxy.HTTP_METHOD_GET:
-		req, err = http.NewRequest(proxy.HTTP_METHOD_GET, uri, nil)
-		if err != nil {
-			return
-		}
 	default:
 		xlog.Errorf("only support GET and POST")
 		err = ecode.NewV2(500, "", "only support GET and POST")
 		return
 	}
-
+	req, err = http.NewRequestWithContext(c, rMethod, uri, reader)
+	if err != nil {
+		return
+	}
 	// Request Content
 	req.Header = rHeader
+	req.Header.Del("Accept-Encoding")
+	//xlog.Warnf("reqH: %+v", req.Header)
 	httpCli.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, DisableKeepAlives: true}
 
 	resp, e := httpCli.Do(req)
@@ -96,13 +93,13 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		err = ecode.NewV2(resp.StatusCode, "", string(rspBytes))
 		return
 	}
-	xlog.Infof("rspBytes:%v", string(rspBytes))
+	//xlog.Infof("rspBytes:%v", string(rspBytes))
 	res := &HttpRsp[Rsp]{}
 	if err = json.Unmarshal(rspBytes, res); err != nil {
 		return
 	}
 	rspParam = res.Data
-	xlog.Infof("rspParam: %+v", rspParam)
+	//xlog.Infof("rspParam: %+v", rspParam)
 	return rspParam, nil
 }
 
