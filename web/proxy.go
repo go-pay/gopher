@@ -21,7 +21,7 @@ var (
 	pLog    = log.New(os.Stdout, "[PROXY] ", log.Ldate|log.Ltime)
 )
 
-// GinProxy gin request proxy
+// GinProxy gin request proxy and get rsp
 func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, err error) {
 	var (
 		req     *http.Request
@@ -45,7 +45,6 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 	}
 	uri = host + rUri
 	// Request
-	cIp := clientIP(c.Request, rHeader)
 	ct := rHeader.Get(proxy.HEADER_CONTENT_TYPE)
 	switch rMethod {
 	case proxy.HTTP_METHOD_POST:
@@ -86,7 +85,7 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 		return
 	}
 	defer resp.Body.Close()
-	pLog.Printf("| %d | %s | %s      %s\n", resp.StatusCode, cIp, rMethod, uri)
+	pLog.Printf("| %d | %s      %s\n", resp.StatusCode, rMethod, uri)
 	rspBytes, e := io.ReadAll(resp.Body)
 	if e != nil {
 		err = e
@@ -106,7 +105,87 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 	return rspParam, nil
 }
 
-func clientIP(r *http.Request, rHeader http.Header) string {
+// GinPureProxy gin request proxy
+func GinPureProxy(c *gin.Context, method, host, uri string) {
+	var (
+		req     *http.Request
+		reader  *strings.Reader
+		rMethod = c.Request.Method
+		rHeader = c.Request.Header
+		rUri    = c.Request.RequestURI
+		pa      = c.Request.Form.Encode()
+		rBody   = c.Request.Body
+		err     error
+	)
+	if uri != "" {
+		rUri = uri
+	}
+	if method != "" {
+		rMethod = strings.ToUpper(method)
+	}
+	uri = host + rUri
+	// Request
+	ct := rHeader.Get(proxy.HEADER_CONTENT_TYPE)
+	switch rMethod {
+	case proxy.HTTP_METHOD_POST:
+		switch ct {
+		case proxy.CONTENT_TYPE_JSON:
+			jsbs, e := io.ReadAll(rBody)
+			if e != nil {
+				err = e
+				JSON(c, "", err)
+				return
+			}
+			reader = strings.NewReader(string(jsbs))
+		case proxy.CONTENT_TYPE_FORM:
+			reader = strings.NewReader(pa)
+		}
+		req, err = http.NewRequestWithContext(c, rMethod, uri, reader)
+		if err != nil {
+			JSON(c, "", err)
+			return
+		}
+	case proxy.HTTP_METHOD_GET:
+		req, err = http.NewRequestWithContext(c, rMethod, uri, nil)
+		if err != nil {
+			JSON(c, "", err)
+			return
+		}
+	default:
+		err = ecode.NewV2(500, "", "only support GET and POST")
+		JSON(c, "", err)
+		return
+	}
+
+	// Request Content
+	req.Header = rHeader
+	req.Header.Del("Accept-Encoding")
+	//xlog.Warnf("reqH: %+v", req.Header)
+	httpCli.Transport = &http.Transport{TLSClientConfig: &tls.Config{InsecureSkipVerify: true}, DisableKeepAlives: true}
+
+	resp, e := httpCli.Do(req)
+	if e != nil {
+		err = e
+		JSON(c, "", err)
+		return
+	}
+	defer resp.Body.Close()
+	pLog.Printf("| %d | %s      %s\n", resp.StatusCode, rMethod, uri)
+	rspBytes, e := io.ReadAll(resp.Body)
+	if e != nil {
+		err = e
+		JSON(c, "", err)
+		return
+	}
+	if resp.StatusCode != 200 {
+		err = ecode.NewV2(resp.StatusCode, "", string(rspBytes))
+		JSON(c, "", err)
+		return
+	}
+	JSON(c, rspBytes, nil)
+}
+
+func ClientIP(r *http.Request, rHeader http.Header) string {
 	cIp := rHeader.Get("X-Forwarded-For")
 	cIp = strings.TrimSpace(strings.Split(cIp, ",")[0])
 	if cIp == "" {
