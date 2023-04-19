@@ -170,7 +170,7 @@ func GinPureProxy(c *gin.Context, method, host, uri string) {
 		return
 	}
 	defer resp.Body.Close()
-	pLog.Printf("| %d | %s      %s\n", resp.StatusCode, rMethod, uri)
+	pLog.Printf(`| %d | %s    "%s"`, resp.StatusCode, rMethod, uri)
 	rspBytes, e := io.ReadAll(resp.Body)
 	if e != nil {
 		err = e
@@ -182,7 +182,8 @@ func GinPureProxy(c *gin.Context, method, host, uri string) {
 		JSON(c, "", err)
 		return
 	}
-	c.JSON(200, string(rspBytes))
+	//xlog.Warnf("proxy.rsp: %s", string(rspBytes))
+	c.Data(200, resp.Header.Get("Content-Type"), rspBytes)
 }
 
 func ClientIP(r *http.Request, rHeader http.Header) string {
