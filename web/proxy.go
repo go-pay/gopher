@@ -182,7 +182,7 @@ func GinPureProxy(c *gin.Context, method, host, uri string) {
 		JSON(c, "", err)
 		return
 	}
-	JSON(c, rspBytes, nil)
+	c.JSON(200, string(rspBytes))
 }
 
 func ClientIP(r *http.Request, rHeader http.Header) string {
