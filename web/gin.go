@@ -22,6 +22,9 @@ type GinEngine struct {
 }
 
 func InitGin(c *Config) *GinEngine {
+	if c == nil {
+		c = &Config{Addr: ":2233"}
+	}
 	g := gin.New()
 	engine := &GinEngine{Gin: g, addrPort: c.Addr}
 
