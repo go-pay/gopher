@@ -25,15 +25,7 @@ type RedisConfig struct {
 	OnConnFunc   func(ctx context.Context, cn *redis.Conn) error `json:"-" yaml:"-" toml:"-"`
 }
 
-type Redis struct {
-	Redis *redis.Client
-}
-
-type RedisCluster struct {
-	Redis *redis.ClusterClient
-}
-
-func InitRedis(c *RedisConfig) (r *Redis) {
+func InitRedis(c *RedisConfig) (rd *redis.Client) {
 	opts := &redis.Options{
 		Addr:         c.Addrs[0],
 		OnConnect:    c.OnConnFunc,
@@ -45,16 +37,15 @@ func InitRedis(c *RedisConfig) (r *Redis) {
 		WriteTimeout: time.Duration(c.WriteTimeout),
 		TLSConfig:    c.TLSCfg,
 	}
-	rd := redis.NewClient(opts)
+	rd = redis.NewClient(opts)
 	_, err := rd.Ping(context.Background()).Result()
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect redis error:%+v", err))
 	}
-	r = &Redis{Redis: rd}
-	return r
+	return rd
 }
 
-func InitRedisCluster(c *RedisConfig) (rc *RedisCluster) {
+func InitRedisCluster(c *RedisConfig) (rc *redis.ClusterClient) {
 	opts := &redis.ClusterOptions{
 		Addrs:        c.Addrs,
 		OnConnect:    c.OnConnFunc,
@@ -65,35 +56,10 @@ func InitRedisCluster(c *RedisConfig) (rc *RedisCluster) {
 		WriteTimeout: time.Duration(c.WriteTimeout),
 		TLSConfig:    c.TLSCfg,
 	}
-	rd := redis.NewClusterClient(opts)
-	_, err := rd.Ping(context.Background()).Result()
+	rc = redis.NewClusterClient(opts)
+	_, err := rc.Ping(context.Background()).Result()
 	if err != nil {
 		panic(fmt.Sprintf("failed to connect redis error:%+v", err))
 	}
-	rc = &RedisCluster{Redis: rd}
 	return rc
-}
-
-func (r *Redis) Transaction(ctx context.Context, fc func(tx redis.Pipeliner) error) error {
-	_, err := r.Redis.TxPipelined(ctx, fc)
-	//txPip := r.Redis.TxPipeline()
-	//err := fc(txPip)
-	//if err != nil {
-	//	txPip.Discard()
-	//	return err
-	//}
-	//_, err = txPip.Exec(ctx)
-	return err
-}
-
-func (r *RedisCluster) Transaction(ctx context.Context, fc func(tx redis.Pipeliner) error) error {
-	_, err := r.Redis.TxPipelined(ctx, fc)
-	//txPip := r.Redis.TxPipeline()
-	//err := fc(txPip)
-	//if err != nil {
-	//	txPip.Discard()
-	//	return err
-	//}
-	//_, err = txPip.Exec(ctx)
-	return err
 }
