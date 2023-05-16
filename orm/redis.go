@@ -20,6 +20,7 @@ type RedisConfig struct {
 	WriteTimeout xtime.Duration                                  `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"`
 	PoolSize     int                                             `json:"pool_size" yaml:"pool_size" toml:"pool_size"`
 	MaxIdleConn  int                                             `json:"max_idle_conn" yaml:"max_idle_conn" toml:"max_idle_conn"`
+	TLS          bool                                            `json:"tls" yaml:"tls" toml:"tls"`
 	TLSCfg       *tls.Config                                     `json:"-" yaml:"-" toml:"-"`
 	Limiter      redis.Limiter                                   `json:"-" yaml:"-" toml:"-"`
 	OnConnFunc   func(ctx context.Context, cn *redis.Conn) error `json:"-" yaml:"-" toml:"-"`
