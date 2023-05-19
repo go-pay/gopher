@@ -5,7 +5,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"reflect"
 
 	"github.com/BurntSushi/toml"
@@ -58,7 +58,7 @@ func parse(cType int, confPtr any) error {
 	if confPath == "" {
 		return errors.New("load config file path failed, add arguments -conf ")
 	}
-	fileBs, err := ioutil.ReadFile(confPath)
+	fileBs, err := os.ReadFile(confPath)
 	if err != nil {
 		return fmt.Errorf("read config file error: %w", err)
 	}

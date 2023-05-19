@@ -88,7 +88,6 @@ linters-settings:
       - nilness
       - printf
       - reflectvaluecompare
-      - shadow
       - shift
       - sigchanyzer
       - sortslice
