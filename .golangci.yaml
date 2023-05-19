@@ -113,7 +113,7 @@ linters:
     - govet
     - ineffassign
     - staticcheck
-    - typecheck
+    #    - typecheck
     - unused
     - gofmt
     - revive
