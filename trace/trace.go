@@ -3,7 +3,6 @@ package trace
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/http/httputil"
 
@@ -51,8 +50,8 @@ func (t *Tracer) GinTrace() gin.HandlerFunc {
 		span.SetTag(TagHTTPRaw, string(rawReq))
 		switch c.Request.Method {
 		case http.MethodPost, http.MethodDelete, http.MethodPatch, http.MethodPut:
-			bs, _ := ioutil.ReadAll(c.Request.Body)
-			c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(bs))
+			bs, _ := io.ReadAll(c.Request.Body)
+			c.Request.Body = io.NopCloser(bytes.NewBuffer(bs))
 			span.SetTag(TagHTTPBody, string(bs))
 		default:
 		}

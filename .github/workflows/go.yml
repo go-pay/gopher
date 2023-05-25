@@ -19,11 +19,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v3
         with:
-          go-version: 1.18
+          go-version: 1.19
       - name: Setup golangci-lint
         uses: golangci/golangci-lint-action@v3.4.0
         with:
-          version: v1.51.2
+          version: v1.52.2
           args: --verbose
 
   test:
@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest ]
-        go: [ '1.18', '1.19', '1.20' ]
+        go: [ '1.19', '1.20' ]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Set up Go ${{ matrix.go }}
