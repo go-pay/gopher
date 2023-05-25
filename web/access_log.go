@@ -33,7 +33,7 @@ type OutputType string
 
 type AccessConfig struct {
 	AppName      string     `json:"app_name" yaml:"app_name" toml:"app_name"`                   // app name，记录日志标识
-	OutputType   OutputType `json:"output_type" yaml:"output_type" toml:"output_type"`          // 日志输出类型：stdout、file
+	OutputType   OutputType `json:"output_type" yaml:"output_type" toml:"output_type"`          // 日志输出类型：stdout、file、sls
 	FilePath     string     `json:"file_path" yaml:"file_path" toml:"file_path"`                // 日志输出文件路径(输出类型为file时有效)
 	SlsAccessKey string     `json:"sls_access_key" yaml:"sls_access_key" toml:"sls_access_key"` // 日志输出到阿里云SLS时的access_key
 	SlsSecretKey string     `json:"sls_secret_key" yaml:"sls_secret_key" toml:"sls_secret_key"` // 日志输出到阿里云SLS时的secret_key
