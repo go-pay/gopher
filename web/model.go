@@ -1,10 +1,6 @@
 package web
 
 import (
-	"bytes"
-	"io"
-	"net/http"
-
 	"github.com/go-pay/gopher/limit"
 	"github.com/go-pay/gopher/trace"
 	"github.com/go-pay/gopher/xtime"
@@ -16,6 +12,7 @@ type Config struct {
 	WriteTimeout xtime.Duration `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"` // write_timeout
 	Debug        bool           `json:"debug" yaml:"debug" toml:"debug"`                         // is show log
 	Limiter      *limit.Config  `json:"limiter" yaml:"limiter" toml:"limiter"`                   // interface limit
+	AccessLog    *AccessConfig  `json:"access_log" yaml:"access_log" toml:"access_log"`          // access log config
 	Trace        *trace.Config  `json:"trace" yaml:"trace" toml:"trace"`                         // jaeger trace config
 }
 
@@ -32,20 +29,6 @@ type CommonRsp struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 	Data    any    `json:"data,omitempty"`
-}
-
-func ReadRequestBody(req *http.Request) (bs []byte, err error) {
-	var (
-		buf bytes.Buffer
-	)
-	if _, err = buf.ReadFrom(req.Body); err != nil {
-		return nil, err
-	}
-	if err = req.Body.Close(); err != nil {
-		return nil, err
-	}
-	req.Body = io.NopCloser(bytes.NewReader(buf.Bytes()))
-	return buf.Bytes(), nil
 }
 
 type HttpRsp[V any] struct {

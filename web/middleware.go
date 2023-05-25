@@ -1,8 +1,10 @@
 package web
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httputil"
 	"os"
@@ -14,6 +16,20 @@ import (
 	"github.com/go-pay/gopher/xlog"
 	"github.com/go-pay/gopher/xtime"
 )
+
+func ReadRequestBody(req *http.Request) (bs []byte, err error) {
+	var (
+		buf bytes.Buffer
+	)
+	if _, err = buf.ReadFrom(req.Body); err != nil {
+		return nil, err
+	}
+	if err = req.Body.Close(); err != nil {
+		return nil, err
+	}
+	req.Body = io.NopCloser(bytes.NewReader(buf.Bytes()))
+	return buf.Bytes(), nil
+}
 
 // CORS gin middleware cors
 func (g *GinEngine) CORS() gin.HandlerFunc {

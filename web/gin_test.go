@@ -36,18 +36,22 @@ func TestInitServer(t *testing.T) {
 
 	//c := &Config{
 	//	Addr:  ":2233",
-	//	Debug: true,
+	//	Debug: false,
 	//	Limiter: &limit.Config{
 	//		Rate:       0, // 0 速率不限流
 	//		BucketSize: 100,
 	//	},
+	//	AccessLog: &AccessConfig{
+	//		AppName:    "test-app",
+	//		OutputType: OutputStdout,
+	//	},
 	//}
 	//
 	//g := InitGin(c)
-	//g.Gin.Use(g.CORS(), g.Recovery())
+	//g.Gin.Use( /*g.CORS(),*/ g.Logger(true))
 	//
-	//g.IgnoreReleaseLog = true
 	//xlog.Level = xlog.DebugLevel
+	//ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
 	//initRoute(g.Gin)
 	//
 	//g.Start()
