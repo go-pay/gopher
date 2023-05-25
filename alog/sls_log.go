@@ -11,8 +11,8 @@ import (
 )
 
 type Client struct {
-	Config *Config
-	Log    *producer.Producer
+	Config   *Config
+	Producer *producer.Producer
 }
 
 // 阿里云日志配置结构体
@@ -38,20 +38,18 @@ func New(config *Config) (client *Client, err error) {
 	if err != nil {
 		return nil, err
 	}
-	client = &Client{}
 	producerConfig := producer.GetDefaultProducerConfig()
-
 	producerConfig.Endpoint = config.Endpoint
 	producerConfig.AccessKeyID = config.AccessKey
 	producerConfig.AccessKeySecret = config.SecretKey
 
-	client.Log = producer.InitProducer(producerConfig)
-	client.Config = config
-
-	client.Log.Start()
-
+	client = &Client{
+		Config:   config,
+		Producer: producer.InitProducer(producerConfig),
+	}
+	client.Producer.Start()
 	logmsg := producer.GenerateLog(uint32(time.Now().Unix()), map[string]string{"content": "log-start"})
-	err = client.Log.SendLog(config.Project, config.LogStore, "start", config.HostName, logmsg)
+	err = client.Producer.SendLog(config.Project, config.LogStore, "start", config.HostName, logmsg)
 	if err != nil {
 		return nil, err
 	}
@@ -62,16 +60,16 @@ func New(config *Config) (client *Client, err error) {
 func (c *Client) Info(topic string, logs any) error {
 	logsMap := make(map[string]string)
 	// type switch
-	switch logs.(type) {
+	switch vt := logs.(type) {
 	case map[string]string:
-		logsMap = logs.(map[string]string)
+		logsMap = vt
 	case map[string]any:
-		for i, v := range logs.(map[string]any) {
+		for i, v := range vt {
 			logsMap[i] = util.MarshalString(v)
 		}
 	case []byte:
 		logsTmp := map[string]any{}
-		err := json.Unmarshal(logs.([]byte), &logsTmp)
+		err := json.Unmarshal(vt, &logsTmp)
 		if err != nil {
 			return ErrJsonStr
 		}
@@ -88,16 +86,15 @@ func (c *Client) Record(level string, topic string, logs map[string]string) erro
 	ts := time.Now().Unix()
 	logs["level"] = level
 	logs["log_ts"] = util.Int642String(ts)
-
 	// send
 	slsLog := producer.GenerateLog(uint32(ts), logs)
-	return c.Log.SendLog(c.Config.Project, c.Config.LogStore, topic, c.Config.HostName, slsLog)
+	return c.Producer.SendLog(c.Config.Project, c.Config.LogStore, topic, c.Config.HostName, slsLog)
 }
 
 // Close 关闭日志服务
 func (c *Client) Close() {
-	if c.Log != nil {
-		c.Log.SafeClose()
+	if c.Producer != nil {
+		c.Producer.SafeClose()
 	}
 }
 
@@ -107,9 +104,4 @@ func checkConfig(conf *Config) (err error) {
 		return ErrInvalidParam
 	}
 	return
-}
-
-func int64ToUint32Ptr(v int64) *uint32 {
-	vv := uint32(v)
-	return &vv
 }

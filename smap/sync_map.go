@@ -75,7 +75,7 @@ var expunged = unsafe.Pointer(new(any))
 
 // An entry is a slot in the map corresponding to a particular key.
 type entry struct {
-	// p points to the interface{} value stored for the entry.
+	// p points to the any value stored for the entry.
 	//
 	// If p == nil, the entry has been deleted, and either m.dirty == nil or
 	// m.dirty[key] is e.

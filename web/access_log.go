@@ -3,12 +3,12 @@ package web
 import (
 	"bytes"
 	"log"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/alog"
 	"github.com/go-pay/gopher/util"
+	"github.com/go-pay/gopher/xlog"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -54,19 +54,18 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 	switch ac.OutputType {
 	case OutputSLS:
 		cfg := &alog.Config{
-			AccessKey: os.Getenv(ac.SlsAccessKey),
-			SecretKey: os.Getenv(ac.SlsSecretKey),
-			Endpoint:  os.Getenv(ac.SlsEndpoint),
-			Project:   os.Getenv(ac.SlsProject),
-			LogStore:  os.Getenv(ac.SlsLogStore),
+			AccessKey: ac.SlsAccessKey,
+			SecretKey: ac.SlsSecretKey,
+			Endpoint:  ac.SlsEndpoint,
+			Project:   ac.SlsProject,
+			LogStore:  ac.SlsLogStore,
 		}
 		alogger, err := alog.New(cfg)
-		if err == nil && alogger != nil {
-			slsLogger = alogger
-		} else {
-			log.Fatalf("alog.New(%+v),err:%v", cfg, err)
+		if err != nil || alogger == nil {
+			xlog.Warnf("init sls logger failed, err: %v", err)
 			return nil
 		}
+		slsLogger = alogger
 	case OutputStdout:
 	case OutputFile:
 		if ac.FilePath == "" {
