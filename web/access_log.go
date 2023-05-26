@@ -84,7 +84,6 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 			rMethod   = c.Request.Method
 			rHeader   = c.Request.Header.Clone()
 			rClientIP = ClientIP(c.Request, rHeader)
-			req       = map[string]any{}
 			schema    = "http"
 		)
 		if c.Request.TLS != nil {
@@ -94,7 +93,6 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 		if err != nil {
 			return
 		}
-		_ = util.UnmarshalBytes(reqBs, &req)
 		writer := responseWriter{
 			ResponseWriter: c.Writer,
 			b:              bytes.NewBuffer([]byte{}),
@@ -104,31 +102,31 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 			rbs := writer.b.Bytes()
 			rsp := &CommonRsp{}
 			_ = util.UnmarshalBytes(rbs, rsp)
-			dataMap := map[string]any{
-				"app_name":       ac.AppName,
-				"client_ip":      rClientIP,
-				"cost_ms":        time.Since(st).Milliseconds(),
-				"host":           rHost,
-				"method":         rMethod,
-				"path":           rUri,
-				"req_body":       req,
-				"req_header":     rHeader,
-				"result_code":    rsp.Code,
-				"result_message": rsp.Message,
-				"rsp_body":       rsp,
-				"rsp_header":     c.Writer.Header(),
-				"schema":         schema,
-				"status_code":    c.Writer.Status(),
-				"ts":             st.Unix(),
+			logMap := map[string]string{
+				"app_name":    ac.AppName,
+				"client_ip":   rClientIP,
+				"cost_ms":     util.Int642String(time.Since(st).Milliseconds()),
+				"host":        rHost,
+				"method":      rMethod,
+				"path":        rUri,
+				"req_body":    string(reqBs),
+				"req_header":  util.MarshalString(rHeader),
+				"res_code":    util.Int2String(rsp.Code),
+				"res_header":  util.MarshalString(c.Writer.Header()),
+				"res_msg":     rsp.Message,
+				"res_body":    util.MarshalString(rsp),
+				"schema":      schema,
+				"status_code": util.Int2String(c.Writer.Status()),
+				"ts":          util.Int642String(st.Unix()),
 			}
 			// output switch
 			switch ac.OutputType {
 			case OutputSLS:
 				if slsLogger != nil {
-					_ = slsLogger.Info(_SlsTopic, dataMap)
+					_ = slsLogger.Info(_SlsTopic, logMap)
 				}
 			case OutputStdout:
-				log.Printf("access_log: %s\n", util.MarshalBytes(dataMap))
+				log.Printf("access_log: %s\n", util.MarshalBytes(logMap))
 			case OutputFile:
 				if zipLogger != nil {
 					fields := []zapcore.Field{
@@ -138,12 +136,11 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 						zap.String("host", rHost),
 						zap.String("method", rMethod),
 						zap.String("path", rUri),
-						zap.Any("req_body", req),
-						zap.Any("req_header", rHeader),
-						zap.Int("result_code", rsp.Code),
-						zap.String("result_message", rsp.Message),
-						zap.Any("rsp_body", rsp),
-						zap.Any("rsp_header", c.Writer.Header()),
+						zap.String("req_body", string(reqBs)),
+						zap.String("req_header", util.MarshalString(rHeader)),
+						zap.Int("res_code", rsp.Code),
+						zap.String("res_msg", rsp.Message),
+						zap.String("res_body", util.MarshalString(rsp)),
 						zap.String("schema", schema),
 						zap.Int("status_code", c.Writer.Status()),
 						zap.Int64("ts", st.Unix()),

@@ -41,10 +41,7 @@ func InitGin(c *Config) *GinEngine {
 		ReadTimeout:  time.Duration(c.ReadTimeout),
 		WriteTimeout: time.Duration(c.WriteTimeout),
 	}
-	g.Use(engine.Recovery())
-	if c.AccessLog != nil {
-		g.Use(engine.AccessLog(c.AccessLog))
-	}
+	g.Use(engine.Logger(false), engine.Recovery())
 	if c.Trace != nil {
 		engine.Tracer = trace.NewTracer(c.Trace)
 		g.Use(engine.Tracer.GinTrace())
