@@ -123,10 +123,10 @@ func (g *GinEngine) AccessLog(ac *AccessConfig) gin.HandlerFunc {
 			switch ac.OutputType {
 			case OutputSLS:
 				if slsLogger != nil {
-					_ = slsLogger.Info(_SlsTopic, logMap)
+					_ = slsLogger.Record("access", _SlsTopic, logMap)
 				}
 			case OutputStdout:
-				log.Printf("access_log: %s\n", util.MarshalBytes(logMap))
+				log.Printf("access_log: %s\n", util.MarshalString(logMap))
 			case OutputFile:
 				if zipLogger != nil {
 					fields := []zapcore.Field{

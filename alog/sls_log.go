@@ -1,7 +1,6 @@
 package alog
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
 	"time"
@@ -27,7 +26,6 @@ type Config struct {
 
 var (
 	ErrInvalidParam = errors.New("config Missing parameter")
-	ErrJsonStr      = errors.New("error json string")
 )
 
 // 初始化日志
@@ -56,32 +54,7 @@ func New(config *Config) (client *Client, err error) {
 	return client, nil
 }
 
-// Info 记录info日志
-func (c *Client) Info(topic string, logs any) error {
-	logsMap := make(map[string]string)
-	// type switch
-	switch vt := logs.(type) {
-	case map[string]string:
-		logsMap = vt
-	case map[string]any:
-		for i, v := range vt {
-			logsMap[i] = util.MarshalString(v)
-		}
-	case []byte:
-		logsTmp := map[string]any{}
-		err := json.Unmarshal(vt, &logsTmp)
-		if err != nil {
-			return ErrJsonStr
-		}
-		for i, v := range logsTmp {
-			logsMap[i] = util.MarshalString(v)
-		}
-	default: // 结构体
-		logsMap["content"] = util.MarshalString(logs)
-	}
-	return c.Record("info", topic, logsMap)
-}
-
+// Record publish log to sls record
 func (c *Client) Record(level string, topic string, logs map[string]string) error {
 	ts := time.Now().Unix()
 	logs["level"] = level
