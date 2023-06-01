@@ -1,7 +1,6 @@
 package bm
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"io"
@@ -9,6 +8,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/go-pay/gopher/util"
 )
 
@@ -85,7 +85,7 @@ func (bm BodyMap) Reset() {
 }
 
 func (bm BodyMap) JsonBody() (jb string) {
-	bs, err := json.Marshal(bm)
+	bs, err := sonic.Marshal(bm)
 	if err != nil {
 		return ""
 	}
@@ -171,7 +171,7 @@ func convertToString(v any) (str string) {
 		bs  []byte
 		err error
 	)
-	if bs, err = json.Marshal(v); err != nil {
+	if bs, err = sonic.Marshal(v); err != nil {
 		return util.NULL
 	}
 	str = string(bs)

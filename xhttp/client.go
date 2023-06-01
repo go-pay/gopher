@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/tls"
-	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
@@ -16,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/go-pay/gopher/bm"
 	"github.com/go-pay/gopher/util"
 )
@@ -117,7 +117,7 @@ func (c *Client) SendStruct(v any) (client *Client) {
 	if v == nil {
 		return c
 	}
-	bs, err := json.Marshal(v)
+	bs, err := sonic.Marshal(v)
 	if err != nil {
 		c.err = fmt.Errorf("json.Marshal(%+v)：%w", v, err)
 		return c
@@ -127,7 +127,7 @@ func (c *Client) SendStruct(v any) (client *Client) {
 		c.jsonByte = bs
 	case TypeXML, TypeUrlencoded, TypeForm, TypeFormData:
 		body := make(map[string]any)
-		if err = json.Unmarshal(bs, &body); err != nil {
+		if err = sonic.Unmarshal(bs, &body); err != nil {
 			c.err = fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), body, err)
 			return c
 		}
@@ -142,7 +142,7 @@ func (c *Client) SendBodyMap(bm map[string]any) (client *Client) {
 	}
 	switch c.requestType {
 	case TypeJSON:
-		bs, err := json.Marshal(bm)
+		bs, err := sonic.Marshal(bm)
 		if err != nil {
 			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
 			return c
@@ -160,7 +160,7 @@ func (c *Client) SendMultipartBodyMap(bm map[string]any) (client *Client) {
 	}
 	switch c.requestType {
 	case TypeJSON:
-		bs, err := json.Marshal(bm)
+		bs, err := sonic.Marshal(bm)
 		if err != nil {
 			c.err = fmt.Errorf("json.Marshal(%+v)：%w", bm, err)
 			return c
@@ -196,7 +196,7 @@ func (c *Client) EndStruct(ctx context.Context, v any) (res *http.Response, err 
 
 	switch c.unmarshalType {
 	case string(TypeJSON):
-		err = json.Unmarshal(bs, &v)
+		err = sonic.Unmarshal(bs, &v)
 		if err != nil {
 			return nil, fmt.Errorf("json.Unmarshal(%s, %+v)：%w", string(bs), v, err)
 		}
@@ -352,7 +352,7 @@ func convertToString(v any) (str string) {
 		bs  []byte
 		err error
 	)
-	if bs, err = json.Marshal(v); err != nil {
+	if bs, err = sonic.Marshal(v); err != nil {
 		return ""
 	}
 	str = string(bs)

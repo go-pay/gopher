@@ -2,7 +2,6 @@ package web
 
 import (
 	"crypto/tls"
-	"encoding/json"
 	"io"
 	"log"
 	"net"
@@ -11,6 +10,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/ecode"
 	"github.com/go-pay/gopher/proxy"
@@ -97,7 +97,7 @@ func GinProxy[Rsp any](c *gin.Context, method, host, uri string) (rspParam Rsp, 
 	}
 	//xlog.Infof("rspBytes:%v", string(rspBytes))
 	res := &HttpRsp[Rsp]{}
-	if err = json.Unmarshal(rspBytes, res); err != nil {
+	if err = sonic.Unmarshal(rspBytes, res); err != nil {
 		return
 	}
 	rspParam = res.Data

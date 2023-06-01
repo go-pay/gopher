@@ -1,9 +1,11 @@
 package util
 
-import "encoding/json"
+import (
+	"github.com/bytedance/sonic"
+)
 
 func MarshalString(v any) string {
-	bs, err := json.Marshal(v)
+	bs, err := sonic.Marshal(v)
 	if err != nil {
 		return ""
 	}
@@ -11,7 +13,7 @@ func MarshalString(v any) string {
 }
 
 func MarshalBytes(v any) []byte {
-	bs, err := json.Marshal(v)
+	bs, err := sonic.Marshal(v)
 	if err != nil {
 		return nil
 	}
@@ -19,9 +21,9 @@ func MarshalBytes(v any) []byte {
 }
 
 func UnmarshalString(jsonStr string, v any) error {
-	return json.Unmarshal([]byte(jsonStr), v)
+	return sonic.Unmarshal([]byte(jsonStr), v)
 }
 
 func UnmarshalBytes(bs []byte, v any) error {
-	return json.Unmarshal(bs, v)
+	return sonic.Unmarshal(bs, v)
 }

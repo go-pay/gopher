@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -9,6 +8,7 @@ import (
 	"reflect"
 
 	"github.com/BurntSushi/toml"
+	"github.com/bytedance/sonic"
 	"gopkg.in/yaml.v3"
 )
 
@@ -64,7 +64,7 @@ func parse(cType int, confPtr any) error {
 	}
 	switch cType {
 	case _Json:
-		if err = json.Unmarshal(fileBs, confPtr); err != nil {
+		if err = sonic.Unmarshal(fileBs, confPtr); err != nil {
 			return fmt.Errorf("parse config file [%s] error: %w", string(fileBs), err)
 		}
 	case _Yaml:

@@ -1,14 +1,15 @@
 package bm
 
 import (
-	"encoding/json"
 	"encoding/xml"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/go-pay/gopher/xlog"
 )
 
 func TestBodyMapSetBodyMap(t *testing.T) {
+	xlog.Level = xlog.DebugLevel
 	bm := make(BodyMap)
 	// 1、配合map使用
 	sceneInfo := make(map[string]map[string]string)
@@ -55,6 +56,7 @@ func TestBodyMapSetBodyMap(t *testing.T) {
 }
 
 func TestBodyMapMarshal(t *testing.T) {
+	xlog.Level = xlog.DebugLevel
 	bm := make(BodyMap)
 	bm.Set("4key", "4value").
 		Set("6key", "6value").
@@ -92,6 +94,7 @@ func TestBodyMapMarshal(t *testing.T) {
 }
 
 func TestBodyMapMarshalSlice(t *testing.T) {
+	xlog.Level = xlog.DebugLevel
 	type Receiver struct {
 		Type        string `json:"type"`
 		Account     string `json:"account"`
@@ -113,7 +116,7 @@ func TestBodyMapMarshalSlice(t *testing.T) {
 		Description: "分到个人",
 	}
 	rs = append(rs, item2)
-	bs, _ := json.Marshal(rs)
+	bs, _ := sonic.Marshal(rs)
 
 	bm := make(BodyMap)
 	bm.Set("nonce_str", "abc123").

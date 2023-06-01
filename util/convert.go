@@ -1,10 +1,11 @@
 package util
 
 import (
-	"encoding/json"
 	"math"
 	"strconv"
 	"strings"
+
+	"github.com/bytedance/sonic"
 )
 
 // 字符串转Int
@@ -97,7 +98,7 @@ func ConvertToString(v any) (str string) {
 		bs  []byte
 		err error
 	)
-	if bs, err = json.Marshal(v); err != nil {
+	if bs, err = sonic.Marshal(v); err != nil {
 		return NULL
 	}
 	str = string(bs)

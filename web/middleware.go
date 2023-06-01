@@ -2,7 +2,6 @@ package web
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"runtime"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/ecode"
 	"github.com/go-pay/gopher/xlog"
@@ -75,7 +75,7 @@ func (g *GinEngine) Recovery() gin.HandlerFunc {
 				const size = 64 << 10
 				stack := make([]byte, size)
 				stack = stack[:runtime.Stack(stack, false)]
-				bs, _ := json.Marshal(RecoverInfo{
+				bs, _ := sonic.Marshal(RecoverInfo{
 					Time:        time.Now().Format(xtime.TimeLayout1),
 					RequestURI:  c.Request.Host + c.Request.RequestURI,
 					Body:        string(body),

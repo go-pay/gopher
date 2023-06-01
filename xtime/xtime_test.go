@@ -1,10 +1,10 @@
 package xtime
 
 import (
-	"encoding/json"
 	"testing"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/go-pay/gopher/xlog"
 )
 
@@ -33,7 +33,7 @@ func TestParseTime(t *testing.T) {
     "t4":"1h10m10s"
 }`
 	tp := new(TimeParser)
-	err := json.Unmarshal([]byte(parseText), tp)
+	err := sonic.Unmarshal([]byte(parseText), tp)
 	if err != nil {
 		xlog.Error(err)
 		return
