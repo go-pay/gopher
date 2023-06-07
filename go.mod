@@ -3,8 +3,8 @@ module github.com/go-pay/gopher
 go 1.19
 
 require (
-	github.com/BurntSushi/toml v1.2.1
-	github.com/aliyun/aliyun-log-go-sdk v0.1.45
+	github.com/BurntSushi/toml v1.3.1
+	github.com/aliyun/aliyun-log-go-sdk v0.1.49
 	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230518020902-2a8172bb9174
 	github.com/bytedance/sonic v1.9.1
 	github.com/eclipse/paho.mqtt.golang v1.4.2
@@ -12,10 +12,10 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
 	github.com/opentracing/opentracing-go v1.2.0
-	github.com/redis/go-redis/v9 v9.0.4
+	github.com/redis/go-redis/v9 v9.0.5
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/zap v1.24.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230525234030-28d5490b6b19
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc
 	google.golang.org/grpc v1.55.0
 	google.golang.org/protobuf v1.30.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
