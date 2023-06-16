@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
+	"time"
 )
 
 // A Group is a collection of goroutines working on subtasks that are part of
 // the same overall task.
-//
 // A zero Group is valid and does not cancel on error.
 type Group struct {
 	err     error
@@ -32,13 +32,20 @@ func WithContext(ctx context.Context) *Group {
 }
 
 // WithCancel create a new Group and an associated Context derived from ctx.
-//
 // given function from Go will receive context derived from this ctx,
 // The derived Context is canceled the first time a function passed to Go
 // returns a non-nil error or the first time Wait returns, whichever occurs
 // first.
 func WithCancel(ctx context.Context) *Group {
 	ctx, cancel := context.WithCancel(ctx)
+	return &Group{ctx: ctx, cancel: cancel}
+}
+
+// WithTimeout create a new Group and an associated Context derived from ctx.
+// given function from Go will receive context derived from this ctx,
+// The derived Context is canceled when the timeout expires
+func WithTimeout(ctx context.Context, dur time.Duration) *Group {
+	ctx, cancel := context.WithTimeout(ctx, dur)
 	return &Group{ctx: ctx, cancel: cancel}
 }
 
@@ -85,7 +92,6 @@ func (g *Group) GOMAXPROCS(n int) {
 }
 
 // Go calls the given function in a new goroutine.
-//
 // The first call to return a non-nil error cancels the group; its error will be
 // returned by Wait.
 func (g *Group) Go(f func(ctx context.Context) error) {
