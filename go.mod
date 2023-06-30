@@ -4,9 +4,9 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.3.1
-	github.com/aliyun/aliyun-log-go-sdk v0.1.49
-	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230518020902-2a8172bb9174
-	github.com/bytedance/sonic v1.9.1
+	github.com/aliyun/aliyun-log-go-sdk v0.1.50
+	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230628073434-533de03048e1
+	github.com/bytedance/sonic v1.9.2
 	github.com/eclipse/paho.mqtt.golang v1.4.2
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
@@ -15,13 +15,13 @@ require (
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/zap v1.24.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230530153820-e85fd2cbaebc
-	google.golang.org/grpc v1.55.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230629202037-9506855d4529
+	google.golang.org/grpc v1.56.1
+	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.1
+	gorm.io/gorm v1.25.2
 )
 
 require (
@@ -68,7 +68,7 @@ require (
 	golang.org/x/crypto v0.9.0 // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/sync v0.2.0 // indirect
-	golang.org/x/sys v0.8.0 // indirect
-	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/sys v0.9.0 // indirect
+	golang.org/x/text v0.10.0 // indirect
 	stathat.com/c/consistent v1.0.0 // indirect
 )
