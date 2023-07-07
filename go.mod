@@ -3,11 +3,11 @@ module github.com/go-pay/gopher
 go 1.19
 
 require (
-	github.com/BurntSushi/toml v1.3.1
+	github.com/BurntSushi/toml v1.3.2
 	github.com/aliyun/aliyun-log-go-sdk v0.1.50
 	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230628073434-533de03048e1
 	github.com/bytedance/sonic v1.9.2
-	github.com/eclipse/paho.mqtt.golang v1.4.2
+	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/websocket v1.5.0
