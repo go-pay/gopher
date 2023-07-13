@@ -73,6 +73,8 @@ func (g *GinEngine) Close() {
 		g.Tracer.Close()
 	}
 	if g.server != nil {
+		// disable keep-alives on existing connections
+		g.server.SetKeepAlivesEnabled(false)
 		_ = g.server.Shutdown(context.Background())
 	}
 }
