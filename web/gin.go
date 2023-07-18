@@ -62,9 +62,7 @@ func InitGin(c *Config) *GinEngine {
 
 // 注册GinServer关闭后的钩子函数
 func (g *GinEngine) RegCloseHooks(hooks ...func()) {
-	for _, hook := range hooks {
-		g.closeHookFunc = append(g.closeHookFunc, hook)
-	}
+	g.closeHookFunc = append(g.closeHookFunc, hooks...)
 }
 
 func (g *GinEngine) Start() {
@@ -82,9 +80,8 @@ func (g *GinEngine) Start() {
 
 // 监听信号
 func (g *GinEngine) NotifySignal() {
-	sig := []os.Signal{syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT}
-	ch := make(chan os.Signal)
-	signal.Notify(ch, sig...)
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 	for {
 		si := <-ch
 		switch si {
