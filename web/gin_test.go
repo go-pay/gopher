@@ -41,10 +41,6 @@ func TestInitServer(t *testing.T) {
 	//		Rate:       0, // 0 速率不限流
 	//		BucketSize: 100,
 	//	},
-	//	AccessLog: &AccessConfig{
-	//		AppName:    "test-app",
-	//		OutputType: OutputStdout,
-	//	},
 	//}
 	//
 	//g := InitGin(c)
@@ -54,24 +50,11 @@ func TestInitServer(t *testing.T) {
 	//ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
 	//initRoute(g.Gin)
 	//
+	//g.RegCloseHooks(func() {
+	//	fmt.Println("close hook")
+	//})
 	//g.Start()
-	//
-	//ch := make(chan os.Signal)
-	//signal.Notify(ch, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
-	//for {
-	//	si := <-ch
-	//	switch si {
-	//	case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
-	//		xlog.Warnf("get a signal %s, stop the process", si.String())
-	//		// todo something close
-	//		g.Close()
-	//		time.Sleep(time.Second)
-	//		return
-	//	case syscall.SIGHUP:
-	//	default:
-	//		return
-	//	}
-	//}
+	//g.NotifySignal()
 
 }
 

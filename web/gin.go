@@ -4,6 +4,9 @@ import (
 	"context"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -17,8 +20,10 @@ type GinEngine struct {
 	server           *http.Server
 	Gin              *gin.Engine
 	Tracer           *trace.Tracer
+	timeout          time.Duration
 	addrPort         string
 	IgnoreReleaseLog bool
+	closeHookFunc    []func()
 }
 
 func InitGin(c *Config) *GinEngine {
@@ -34,7 +39,7 @@ func InitGin(c *Config) *GinEngine {
 	if c.WriteTimeout == 0 {
 		c.WriteTimeout = xtime.Duration(60 * time.Second)
 	}
-
+	engine.timeout = time.Duration(c.ReadTimeout)
 	engine.server = &http.Server{
 		Addr:         engine.addrPort,
 		Handler:      g,
@@ -55,6 +60,13 @@ func InitGin(c *Config) *GinEngine {
 	return engine
 }
 
+// 注册GinServer关闭后的钩子函数
+func (g *GinEngine) RegCloseHooks(hooks ...func()) {
+	for _, hook := range hooks {
+		g.closeHookFunc = append(g.closeHookFunc, hook)
+	}
+}
+
 func (g *GinEngine) Start() {
 	go func() {
 		xlog.Warnf("Listening and serving HTTP on %s", g.addrPort)
@@ -66,6 +78,35 @@ func (g *GinEngine) Start() {
 			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
 		}
 	}()
+}
+
+// 监听信号
+func (g *GinEngine) NotifySignal() {
+	sig := []os.Signal{syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT}
+	ch := make(chan os.Signal)
+	signal.Notify(ch, sig...)
+	for {
+		si := <-ch
+		switch si {
+		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
+			xlog.Color(xlog.Yellow).Warnf("get a signal %s, stop the process", si.String())
+			g.Close()
+			time.Sleep(g.timeout)
+			// Close相关服务
+			for _, fn := range g.closeHookFunc {
+				fn()
+			}
+			return
+		case syscall.SIGHUP:
+		default:
+			return
+		}
+	}
+}
+
+func (g *GinEngine) StartAndNotify() {
+	g.Start()
+	g.NotifySignal()
 }
 
 func (g *GinEngine) Close() {
