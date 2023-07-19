@@ -50,8 +50,11 @@ func TestInitServer(t *testing.T) {
 	//ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
 	//initRoute(g.Gin)
 	//
-	//g.RegCloseHooks(func() {
-	//	fmt.Println("close hook")
+	//g.RegBeforeCloseHooks(func() {
+	//	fmt.Println("before close hook")
+	//})
+	//g.RegAfterCloseHooks(func() {
+	//	fmt.Println("after close hook")
 	//})
 	//g.Start()
 	//g.NotifySignal()

@@ -17,13 +17,14 @@ import (
 )
 
 type GinEngine struct {
-	server           *http.Server
-	Gin              *gin.Engine
-	Tracer           *trace.Tracer
-	timeout          time.Duration
-	addrPort         string
-	IgnoreReleaseLog bool
-	closeHookFunc    []func()
+	server              *http.Server
+	Gin                 *gin.Engine
+	Tracer              *trace.Tracer
+	timeout             time.Duration
+	addrPort            string
+	IgnoreReleaseLog    bool
+	beforeCloseHookFunc []func()
+	afterCloseHookFunc  []func()
 }
 
 func InitGin(c *Config) *GinEngine {
@@ -60,9 +61,14 @@ func InitGin(c *Config) *GinEngine {
 	return engine
 }
 
-// 注册GinServer关闭后的钩子函数
-func (g *GinEngine) RegCloseHooks(hooks ...func()) {
-	g.closeHookFunc = append(g.closeHookFunc, hooks...)
+// 注册 GinServer 关闭前的钩子函数
+func (g *GinEngine) RegBeforeCloseHooks(hooks ...func()) {
+	g.beforeCloseHookFunc = append(g.beforeCloseHookFunc, hooks...)
+}
+
+// 注册 GinServer Pod 关闭后的钩子函数
+func (g *GinEngine) RegAfterCloseHooks(hooks ...func()) {
+	g.afterCloseHookFunc = append(g.afterCloseHookFunc, hooks...)
 }
 
 func (g *GinEngine) Start() {
@@ -87,10 +93,16 @@ func (g *GinEngine) NotifySignal() {
 		switch si {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			xlog.Color(xlog.Yellow).Warnf("get a signal %s, stop the process", si.String())
+			// call before close hooks
+			for _, fn := range g.beforeCloseHookFunc {
+				fn()
+			}
+			// close gin http server
 			g.Close()
+			// wait for a second to finish processing
 			time.Sleep(g.timeout)
-			// Close相关服务
-			for _, fn := range g.closeHookFunc {
+			// call after close hooks
+			for _, fn := range g.afterCloseHookFunc {
 				fn()
 			}
 			return
