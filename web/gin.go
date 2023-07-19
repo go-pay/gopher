@@ -62,13 +62,15 @@ func InitGin(c *Config) *GinEngine {
 }
 
 // 注册 GinServer 关闭前的钩子函数
-func (g *GinEngine) RegBeforeCloseHooks(hooks ...func()) {
+func (g *GinEngine) RegBeforeCloseHooks(hooks ...func()) *GinEngine {
 	g.beforeCloseHookFunc = append(g.beforeCloseHookFunc, hooks...)
+	return g
 }
 
 // 注册 GinServer Pod 关闭后的钩子函数
-func (g *GinEngine) RegAfterCloseHooks(hooks ...func()) {
+func (g *GinEngine) RegAfterCloseHooks(hooks ...func()) *GinEngine {
 	g.afterCloseHookFunc = append(g.afterCloseHookFunc, hooks...)
+	return g
 }
 
 func (g *GinEngine) Start() {
