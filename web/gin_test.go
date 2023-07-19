@@ -37,6 +37,8 @@ func TestInitServer(t *testing.T) {
 	//c := &Config{
 	//	Addr:  ":2233",
 	//	Debug: false,
+	//	//ReadTimeout:  xtime.Duration(15 * time.Second),
+	//	//WriteTimeout: xtime.Duration(10 * time.Second),
 	//	Limiter: &limit.Config{
 	//		Rate:       0, // 0 速率不限流
 	//		BucketSize: 100,
@@ -50,14 +52,27 @@ func TestInitServer(t *testing.T) {
 	//ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
 	//initRoute(g.Gin)
 	//
-	//g.RegBeforeCloseHooks(func() {
-	//	fmt.Println("before close hook")
+	//// add hook
+	//g.AddStartHook(func(c context.Context) {
+	//	xlog.Warn("server start hook1")
+	//}, func(c context.Context) {
+	//	xlog.Warn("server start hook2")
+	//}).AddCloseHook(func(c context.Context) {
+	//	sec := 0
+	//	ticker := time.NewTicker(time.Second * 1)
+	//	defer ticker.Stop()
+	//	for {
+	//		<-ticker.C
+	//		sec++
+	//		xlog.Warnf("second: %ds", sec)
+	//	}
+	//}).AddExitHook(func(c context.Context) {
+	//	xlog.Warn("after close hook1")
+	//}, func(c context.Context) {
+	//	xlog.Warn("after close hook2")
 	//})
-	//g.RegAfterCloseHooks(func() {
-	//	fmt.Println("after close hook")
-	//})
-	//g.Start()
-	//g.NotifySignal()
+	//// start server
+	//g.StartAndNotify()
 
 }
 

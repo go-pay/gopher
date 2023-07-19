@@ -17,14 +17,13 @@ import (
 )
 
 type GinEngine struct {
-	server              *http.Server
-	Gin                 *gin.Engine
-	Tracer              *trace.Tracer
-	timeout             time.Duration
-	addrPort            string
-	IgnoreReleaseLog    bool
-	beforeCloseHookFunc []func()
-	afterCloseHookFunc  []func()
+	server           *http.Server
+	Gin              *gin.Engine
+	Tracer           *trace.Tracer
+	timeout          time.Duration
+	addrPort         string
+	IgnoreReleaseLog bool
+	hookMaps         map[hookType][]func(c context.Context)
 }
 
 func InitGin(c *Config) *GinEngine {
@@ -32,7 +31,7 @@ func InitGin(c *Config) *GinEngine {
 		c = &Config{Addr: ":2233"}
 	}
 	g := gin.New()
-	engine := &GinEngine{Gin: g, addrPort: c.Addr}
+	engine := &GinEngine{Gin: g, addrPort: c.Addr, hookMaps: make(map[hookType][]func(c context.Context))}
 
 	if c.ReadTimeout == 0 {
 		c.ReadTimeout = xtime.Duration(60 * time.Second)
@@ -61,15 +60,33 @@ func InitGin(c *Config) *GinEngine {
 	return engine
 }
 
-// 注册 GinServer 关闭前的钩子函数
-func (g *GinEngine) RegBeforeCloseHooks(hooks ...func()) *GinEngine {
-	g.beforeCloseHookFunc = append(g.beforeCloseHookFunc, hooks...)
+// 添加 GinServer 服务启动时的钩子函数
+func (g *GinEngine) AddStartHook(hooks ...HookFunc) *GinEngine {
+	for _, fn := range hooks {
+		if fn != nil {
+			g.hookMaps[_HookStart] = append(g.hookMaps[_HookStart], fn)
+		}
+	}
 	return g
 }
 
-// 注册 GinServer Pod 关闭后的钩子函数
-func (g *GinEngine) RegAfterCloseHooks(hooks ...func()) *GinEngine {
-	g.afterCloseHookFunc = append(g.afterCloseHookFunc, hooks...)
+// 添加 GinServer 服务关闭时的钩子函数
+func (g *GinEngine) AddCloseHook(hooks ...HookFunc) *GinEngine {
+	for _, fn := range hooks {
+		if fn != nil {
+			g.hookMaps[_HookClose] = append(g.hookMaps[_HookClose], fn)
+		}
+	}
+	return g
+}
+
+// 添加 GinServer 进程退出时钩子函数
+func (g *GinEngine) AddExitHook(hooks ...HookFunc) *GinEngine {
+	for _, fn := range hooks {
+		if fn != nil {
+			g.hookMaps[_HookExit] = append(g.hookMaps[_HookExit], fn)
+		}
+	}
 	return g
 }
 
@@ -84,6 +101,10 @@ func (g *GinEngine) Start() {
 			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
 		}
 	}()
+	// call when server start hooks
+	for _, fn := range g.hookMaps[_HookStart] {
+		fn(context.Background())
+	}
 }
 
 // 监听信号
@@ -95,17 +116,24 @@ func (g *GinEngine) NotifySignal() {
 		switch si {
 		case syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT:
 			xlog.Color(xlog.Yellow).Warnf("get a signal %s, stop the process", si.String())
-			// call before close hooks
-			for _, fn := range g.beforeCloseHookFunc {
-				fn()
-			}
 			// close gin http server
 			g.Close()
+			ctx, cancelFunc := context.WithTimeout(context.Background(), g.timeout)
+			// call before close hooks
+			go func() {
+				if a := recover(); a != nil {
+					xlog.Errorf("panic: %v", a)
+				}
+				for _, fn := range g.hookMaps[_HookClose] {
+					fn(ctx)
+				}
+			}()
 			// wait for a second to finish processing
 			time.Sleep(g.timeout)
+			cancelFunc()
 			// call after close hooks
-			for _, fn := range g.afterCloseHookFunc {
-				fn()
+			for _, fn := range g.hookMaps[_HookExit] {
+				fn(context.Background())
 			}
 			return
 		case syscall.SIGHUP:
