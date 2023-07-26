@@ -141,7 +141,7 @@ func TestIntIntersect(t *testing.T) {
 	in := []int{3, 3, 5, 7, 14, 11, 13, 15, 12}  // slice1
 	in2 := []int{3, 4, 5, 7, 18, 11, 22, 15, 35} // slice2
 	result := IntIntersect(in, in2)
-	t.Logf("result: %d", result) // result: [5 7 11 15 3]
+	t.Logf("result: %d", result) // result: [3 5 7 11 15]
 }
 
 func TestIntSortIntersect(t *testing.T) {

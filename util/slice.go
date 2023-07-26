@@ -48,18 +48,14 @@ func IntMergeSortDeduplicate(slice1, slice2 []int) (result []int) {
 // int 数组，slice1 和 slice2 交集
 func IntIntersect(slice1, slice2 []int) (result []int) {
 	m := make(map[int]struct{})
-	n := make(map[int]struct{})
 	for _, v := range slice1 {
 		m[v] = struct{}{}
 	}
 	for _, v := range slice2 {
 		_, ok := m[v]
 		if ok {
-			n[v] = struct{}{}
+			result = append(result, v)
 		}
-	}
-	for k := range n {
-		result = append(result, k)
 	}
 	return
 }
@@ -67,18 +63,14 @@ func IntIntersect(slice1, slice2 []int) (result []int) {
 // int 数组，slice1 和 slice2 交集并排序
 func IntSortIntersect(slice1, slice2 []int) (result []int) {
 	m := make(map[int]struct{})
-	n := make(map[int]struct{})
 	for _, v := range slice1 {
 		m[v] = struct{}{}
 	}
 	for _, v := range slice2 {
 		_, ok := m[v]
 		if ok {
-			n[v] = struct{}{}
+			result = append(result, v)
 		}
-	}
-	for k := range n {
-		result = append(result, k)
 	}
 	sort.Ints(result)
 	return
@@ -197,18 +189,14 @@ func StringMergeSortDeduplicate(slice1, slice2 []string) (result []string) {
 // string 数组，slice1 和 slice2 交集
 func StringIntersect(slice1, slice2 []string) (result []string) {
 	m := make(map[string]struct{})
-	n := make(map[string]struct{})
 	for _, v := range slice1 {
 		m[v] = struct{}{}
 	}
 	for _, v := range slice2 {
 		_, ok := m[v]
 		if ok {
-			n[v] = struct{}{}
+			result = append(result, v)
 		}
-	}
-	for k := range n {
-		result = append(result, k)
 	}
 	return
 }
@@ -216,18 +204,14 @@ func StringIntersect(slice1, slice2 []string) (result []string) {
 // string 数组，slice1 和 slice2 交集并排序
 func StringSortIntersect(slice1, slice2 []string) (result []string) {
 	m := make(map[string]struct{})
-	n := make(map[string]struct{})
 	for _, v := range slice1 {
 		m[v] = struct{}{}
 	}
 	for _, v := range slice2 {
 		_, ok := m[v]
 		if ok {
-			n[v] = struct{}{}
+			result = append(result, v)
 		}
-	}
-	for k := range n {
-		result = append(result, k)
 	}
 	sort.Strings(result)
 	return
