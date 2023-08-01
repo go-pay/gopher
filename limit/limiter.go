@@ -43,11 +43,17 @@ func NewLimiter(c *Config) (rl *RateLimiter) {
 	return rl
 }
 
-func (r *RateLimiter) GinLimit() gin.HandlerFunc {
+func (r *RateLimiter) GinLimit(appName ...string) gin.HandlerFunc {
+	var limitKey string
+	if len(appName) > 0 {
+		limitKey = appName[0]
+	}
 	return func(c *gin.Context) {
-		path := strings.Split(c.Request.RequestURI, "?")[0]
+		if limitKey == "" {
+			limitKey = strings.Split(c.Request.RequestURI, "?")[0][1:]
+		}
 		// log.Warning("key:", path[1:])
-		limiter, ok := r.LimiterGroup.Get(path[1:]).(*rate.Limiter)
+		limiter, ok := r.LimiterGroup.Get(limitKey).(*rate.Limiter)
 		if ok && limiter != nil {
 			if allow := limiter.Allow(); !allow {
 				rsp := struct {
@@ -59,6 +65,7 @@ func (r *RateLimiter) GinLimit() gin.HandlerFunc {
 				}
 				c.JSON(http.StatusOK, rsp)
 				c.Abort()
+				return
 			}
 			c.Next()
 		}
