@@ -1,14 +1,17 @@
-package web
+package main
 
 import (
+	"context"
 	"fmt"
 	"runtime"
-	"testing"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/ecode"
+	"github.com/go-pay/gopher/limit"
+	"github.com/go-pay/gopher/web"
 	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/gopher/xtime"
 )
 
 type MemStats struct {
@@ -31,43 +34,42 @@ type MemStats struct {
 	EnableGc     bool   `json:"enable_gc"`
 }
 
-func TestInitServer(t *testing.T) {
-	// 需要测试请自行解开注释测试
-	//c := &Config{
-	//	Addr:         ":2233",
-	//	Debug:        false,
-	//	ReadTimeout:  xtime.Duration(15 * time.Second),
-	//	WriteTimeout: xtime.Duration(15 * time.Second),
-	//	Limiter: &limit.Config{
-	//		Rate:       0, // 0 速率不限流
-	//		BucketSize: 100,
-	//	},
-	//}
-	//
-	//g := InitGin(c)
-	//g.Gin.Use( /*g.CORS(),*/ )
-	//
-	//xlog.Level = xlog.DebugLevel
-	//ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
-	//initRoute(g.Gin)
-	//
-	//// add hook
-	//g.AddShutdownHook(func(c context.Context) {
-	//	sec := 0
-	//	ticker := time.NewTicker(time.Second * 1)
-	//	defer ticker.Stop()
-	//	for {
-	//		<-ticker.C
-	//		sec++
-	//		xlog.Warnf("second: %ds", sec)
-	//	}
-	//}).AddExitHook(func(c context.Context) {
-	//	xlog.Warn("after close hook1")
-	//}, func(c context.Context) {
-	//	xlog.Warn("after close hook2")
-	//})
-	//// start server
-	//g.Start()
+func main1() {
+	c := &web.Config{
+		Addr:         ":2233",
+		Debug:        false,
+		ReadTimeout:  xtime.Duration(15 * time.Second),
+		WriteTimeout: xtime.Duration(15 * time.Second),
+		Limiter: &limit.Config{
+			Rate:       0, // 0 速率不限流
+			BucketSize: 100,
+		},
+	}
+
+	g := web.InitGin(c)
+	//g.Gin.Use( /*g.CORS(),*/)
+
+	xlog.Level = xlog.DebugLevel
+	ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
+	initRoute(g.Gin)
+
+	// add hook
+	g.AddShutdownHook(func(c context.Context) {
+		sec := 0
+		ticker := time.NewTicker(time.Second * 1)
+		defer ticker.Stop()
+		for {
+			<-ticker.C
+			sec++
+			xlog.Warnf("second: %ds", sec)
+		}
+	}).AddExitHook(func(c context.Context) {
+		xlog.Warn("after close hook1")
+	}, func(c context.Context) {
+		xlog.Warn("after close hook2")
+	})
+	// start server
+	g.Start()
 }
 
 func initRoute(g *gin.Engine) {
@@ -78,16 +80,16 @@ func initRoute(g *gin.Engine) {
 			Param string `json:"param"`
 			Path  string `json:"path"`
 		}{Param: c.Param("abc"), Path: c.Request.RequestURI}
-		JSON(c, rsp, nil)
+		web.JSON(c, rsp, nil)
 	})
 	g.GET("/b", func(c *gin.Context) {
-		JSON(c, nil, ecode.UnauthorizedErr)
+		web.JSON(c, nil, ecode.UnauthorizedErr)
 	})
 	g.POST("/c", func(c *gin.Context) {
-		body, err := ReadRequestBody(c.Request)
+		body, err := web.ReadRequestBody(c.Request)
 		if err != nil {
 			xlog.Error(err)
-			JSON(c, nil, err)
+			web.JSON(c, nil, err)
 			return
 		}
 		xlog.Debugf("body:%s", body)
@@ -95,10 +97,10 @@ func initRoute(g *gin.Engine) {
 			Name string `json:"name"`
 		}{}
 		_ = c.ShouldBindJSON(&ss)
-		JSON(c, ss, nil)
+		web.JSON(c, ss, nil)
 	})
 	g.GET("/d", func(c *gin.Context) {
-		JSON(c, Pager{PageNo: 1, PageSize: 15}.Apply(30, "我是15条数据"), nil)
+		web.JSON(c, web.Pager{PageNo: 1, PageSize: 15}.Apply(30, "我是15条数据"), nil)
 	})
 	g.POST("/wechatCallback", func(c *gin.Context) {
 		//notify, err := wechat.V3ParseNotify(c.Request)
@@ -119,24 +121,13 @@ func initRoute(g *gin.Engine) {
 
 	// postman request: GET http://localhost:2233/proxy/a
 	g.GET("/proxy/a", func(c *gin.Context) {
-		rsp, err := GinProxy[*MemStats](c, "", "http://localhost:2233", "/gopher/web/memStats")
+		rsp, err := web.GinProxy[*MemStats](c, "", "http://localhost:2233", "/gopher/web/memStats")
 		if err != nil {
 			xlog.Errorf("GinProxy err: %v", err)
-			JSON(c, nil, err)
+			web.JSON(c, nil, err)
 			return
 		}
-		JSON(c, rsp, nil)
-	})
-
-	// postman request: POST http://localhost:2233/gopher/web/memStats
-	g.POST("/gopher/web/memStats", func(c *gin.Context) {
-		rsp, err := GinProxy[*MemStats](c, "GET", "http://localhost:2233", "")
-		if err != nil {
-			xlog.Errorf("GinProxy err: %v", err)
-			JSON(c, nil, err)
-			return
-		}
-		JSON(c, rsp, nil)
+		web.JSON(c, rsp, nil)
 	})
 }
 
@@ -168,5 +159,5 @@ func memStats(c *gin.Context) {
 		NumForcedGC:  ms.NumForcedGC,
 		EnableGC:     ms.EnableGC,
 	}
-	JSON(c, rsp, nil)
+	web.JSON(c, rsp, nil)
 }

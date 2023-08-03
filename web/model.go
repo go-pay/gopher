@@ -9,9 +9,8 @@ import (
 )
 
 const (
-	_HookStart hookType = "server_start"
-	_HookClose hookType = "server_close"
-	_HookExit  hookType = "sys_exit"
+	_HookShutdown hookType = "shutdown"
+	_HookExit     hookType = "exit"
 )
 
 type hookType string

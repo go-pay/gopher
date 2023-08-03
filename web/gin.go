@@ -2,10 +2,13 @@ package web
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime"
+	"sync"
 	"syscall"
 	"time"
 
@@ -21,6 +24,7 @@ type GinEngine struct {
 	Gin              *gin.Engine
 	Tracer           *trace.Tracer
 	timeout          time.Duration
+	wg               sync.WaitGroup
 	addrPort         string
 	IgnoreReleaseLog bool
 	hookMaps         map[hookType][]func(c context.Context)
@@ -31,7 +35,7 @@ func InitGin(c *Config) *GinEngine {
 		c = &Config{Addr: ":2233"}
 	}
 	g := gin.New()
-	engine := &GinEngine{Gin: g, addrPort: c.Addr, hookMaps: make(map[hookType][]func(c context.Context))}
+	engine := &GinEngine{Gin: g, wg: sync.WaitGroup{}, addrPort: c.Addr, hookMaps: make(map[hookType][]func(c context.Context))}
 
 	if c.ReadTimeout == 0 {
 		c.ReadTimeout = xtime.Duration(60 * time.Second)
@@ -60,21 +64,11 @@ func InitGin(c *Config) *GinEngine {
 	return engine
 }
 
-// 添加 GinServer 服务启动时的钩子函数
-func (g *GinEngine) AddStartHook(hooks ...HookFunc) *GinEngine {
-	for _, fn := range hooks {
-		if fn != nil {
-			g.hookMaps[_HookStart] = append(g.hookMaps[_HookStart], fn)
-		}
-	}
-	return g
-}
-
 // 添加 GinServer 服务关闭时的钩子函数
-func (g *GinEngine) AddCloseHook(hooks ...HookFunc) *GinEngine {
+func (g *GinEngine) AddShutdownHook(hooks ...HookFunc) *GinEngine {
 	for _, fn := range hooks {
 		if fn != nil {
-			g.hookMaps[_HookClose] = append(g.hookMaps[_HookClose], fn)
+			g.hookMaps[_HookShutdown] = append(g.hookMaps[_HookShutdown], fn)
 		}
 	}
 	return g
@@ -91,24 +85,27 @@ func (g *GinEngine) AddExitHook(hooks ...HookFunc) *GinEngine {
 }
 
 func (g *GinEngine) Start() {
-	go func() {
-		xlog.Warnf("Listening and serving HTTP on %s", g.addrPort)
-		if err := g.server.ListenAndServe(); err != nil {
-			if err == http.ErrServerClosed {
-				xlog.Warn("http: Server closed")
-				return
-			}
+	// monitoring signal
+	go g.goNotifySignal()
+
+	// start gin http server
+	xlog.Warnf("Listening and serving HTTP on %s", g.addrPort)
+	if err := g.server.ListenAndServe(); err != nil {
+		if errors.Is(err, http.ErrServerClosed) {
+			xlog.Warn("http: Server closed")
+		} else {
 			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
 		}
-	}()
-	// call when server start hooks
-	for _, fn := range g.hookMaps[_HookStart] {
-		fn(context.Background())
 	}
+	xlog.Color(xlog.Green).Warnf("wait for process working finished")
+	// wait for process finished
+	g.wg.Wait()
+	xlog.Color(xlog.Green).Warnf("process exit")
 }
 
 // 监听信号
-func (g *GinEngine) NotifySignal() {
+func (g *GinEngine) goNotifySignal() {
+	g.wg.Add(1)
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, syscall.SIGHUP, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
 	for {
@@ -124,28 +121,27 @@ func (g *GinEngine) NotifySignal() {
 				if a := recover(); a != nil {
 					xlog.Errorf("panic: %v", a)
 				}
-				for _, fn := range g.hookMaps[_HookClose] {
+				for _, fn := range g.hookMaps[_HookShutdown] {
 					fn(ctx)
 				}
 			}()
-			// wait for a second to finish processing
+			// wait for program finish processing
+			xlog.Warnf("waiting for the process to finish %v", g.timeout)
 			time.Sleep(g.timeout)
 			cancelFunc()
 			// call after close hooks
 			for _, fn := range g.hookMaps[_HookExit] {
 				fn(context.Background())
 			}
+			// notify process exit
+			g.wg.Done()
+			runtime.Gosched()
 			return
 		case syscall.SIGHUP:
 		default:
 			return
 		}
 	}
-}
-
-func (g *GinEngine) StartAndNotify() {
-	g.Start()
-	g.NotifySignal()
 }
 
 func (g *GinEngine) Close() {
