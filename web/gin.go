@@ -91,11 +91,10 @@ func (g *GinEngine) Start() {
 	// start gin http server
 	xlog.Warnf("Listening and serving HTTP on %s", g.addrPort)
 	if err := g.server.ListenAndServe(); err != nil {
-		if errors.Is(err, http.ErrServerClosed) {
-			xlog.Warn("http: Server closed")
-		} else {
+		if !errors.Is(err, http.ErrServerClosed) {
 			panic(fmt.Sprintf("server.ListenAndServe(), error(%+v).", err))
 		}
+		xlog.Warn("http: Server closed")
 	}
 	xlog.Color(xlog.Green).Warnf("wait for process working finished")
 	// wait for process finished
