@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/BurntSushi/toml v1.3.2
-	github.com/aliyun/aliyun-log-go-sdk v0.1.50
+	github.com/aliyun/aliyun-log-go-sdk v0.1.51
 	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230628073434-533de03048e1
 	github.com/bytedance/sonic v1.9.2
 	github.com/eclipse/paho.mqtt.golang v1.4.3
@@ -14,9 +14,9 @@ require (
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/redis/go-redis/v9 v9.0.5
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
-	go.uber.org/zap v1.24.0
+	go.uber.org/zap v1.25.0
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230711160842-782d3b101e98
-	google.golang.org/grpc v1.56.2
+	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
