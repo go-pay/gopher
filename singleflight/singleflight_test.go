@@ -16,7 +16,7 @@ func TestDo(t *testing.T) {
 	// 启动10个协程去请求数据，最终执行的只有1个，输出一次 I am return Single
 	for i := 0; i < 10; i++ {
 		go func() {
-			v, err := g.Do("key", func() (*Single, error) {
+			v, _,err := g.Do("key", func() (*Single, error) {
 				xlog.Warn("working produce Single")
 				s := &Single{
 					Name: "lady",
