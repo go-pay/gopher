@@ -8,11 +8,17 @@ package singleflight // import "golang.org/x/sync/singleflight"
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"fmt"
 	"runtime"
 	"runtime/debug"
 	"sync"
+	"time"
+
+	"github.com/go-pay/gopher/redislock"
+	"github.com/go-pay/gopher/util"
+	"github.com/redis/go-redis/v9"
 )
 
 // errGoexit indicates the runtime.Goexit was called in
@@ -62,8 +68,9 @@ type call[V any] struct {
 // Group represents a class of work and forms a namespace in
 // which units of work can be executed with duplicate suppression.
 type Group[V any] struct {
-	mu sync.Mutex          // protects m
-	m  map[string]*call[V] // lazily initialized
+	rdsClient *redislock.Client   // redis lock client
+	mu        sync.Mutex          // protects m
+	m         map[string]*call[V] // lazily initialized
 }
 
 // Result holds the results of Do, so they can be passed
@@ -202,4 +209,57 @@ func (g *Group[V]) Forget(key string) {
 	g.mu.Lock()
 	delete(g.m, key)
 	g.mu.Unlock()
+}
+
+// --------------------------------------------------------------------
+
+type RedisGroup[V any] struct {
+	rdsClient *redislock.Client // redis lock client
+	//mu        sync.Mutex        // protects m
+	//m         map[string]*call[V] // lazily initialized
+}
+
+func WithRedisLock[V any](rd redis.Scripter) (g RedisGroup[V]) {
+	return RedisGroup[V]{rdsClient: redislock.New(rd)}
+}
+
+func (g *RedisGroup[V]) Do(ctx context.Context, key string, ttl time.Duration, fn func() (V, error)) (v V, err error) {
+	obtain, err := g.rdsClient.Obtain(ctx, key, ttl)
+	if err != nil && !errors.Is(err, redislock.ErrNotObtained) {
+		return
+	}
+	dataKey := key + "_data"
+	// not obtain locker, is doing
+	if obtain == nil {
+		times := 10
+		interval := ttl / time.Duration(times)
+		//xlog.Warn("没抢到锁, 等待中... %v", interval)
+		// 最多循环10次获取数据
+		for times > 0 {
+			value, err := g.rdsClient.GetData(ctx, dataKey)
+			if err != nil {
+				if err == redis.Nil {
+					time.Sleep(interval)
+					times--
+					continue
+				}
+				return v, err
+			}
+			d := new(redislock.Data)
+			if err = util.UnmarshalString(util.MarshalString(value), d); err != nil {
+				return v, err
+			}
+			if err = util.UnmarshalString(d.Data, &v); err != nil {
+				return v, err
+			}
+			return v, nil
+		}
+		return v, errors.New("redis lock timeout")
+	}
+
+	// obtain locker, do function
+	v, err = fn()
+	err = g.rdsClient.SetData(ctx, dataKey, v, err, ttl)
+	_ = obtain.Release(ctx)
+	return
 }
