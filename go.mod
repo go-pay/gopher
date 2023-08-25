@@ -4,18 +4,18 @@ go 1.20
 
 require (
 	github.com/BurntSushi/toml v1.3.2
-	github.com/aliyun/aliyun-log-go-sdk v0.1.53
+	github.com/aliyun/aliyun-log-go-sdk v0.1.54
 	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230803074138-7eedaf948c60
 	github.com/bytedance/sonic v1.10.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/gin-gonic/gin v1.9.1
-	github.com/google/uuid v1.3.0
+	github.com/google/uuid v1.3.1
 	github.com/gorilla/websocket v1.5.0
 	github.com/opentracing/opentracing-go v1.2.0
 	github.com/redis/go-redis/v9 v9.1.0
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/zap v1.25.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230815205213-6bfd019c3878
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d
 	google.golang.org/grpc v1.57.0
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
