@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/BurntSushi/toml v1.3.2
-	github.com/aliyun/aliyun-log-go-sdk v0.1.54
+	github.com/aliyun/aliyun-log-go-sdk v0.1.55
 	github.com/apache/rocketmq-client-go/v2 v2.1.2-0.20230803074138-7eedaf948c60
 	github.com/bytedance/sonic v1.10.0
 	github.com/eclipse/paho.mqtt.golang v1.4.3
@@ -33,12 +33,12 @@ require (
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/go-kit/kit v0.12.0 // indirect
+	github.com/go-kit/kit v0.13.0 // indirect
 	github.com/go-kit/log v0.2.1 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.15.1 // indirect
+	github.com/go-playground/validator/v10 v10.15.2 // indirect
 	github.com/go-sql-driver/mysql v1.7.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
