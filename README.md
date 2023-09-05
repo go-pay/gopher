@@ -43,8 +43,8 @@ go get -u github.com/go-pay/gopher
 ## 鸣谢
 
 > [GoLand](https://www.jetbrains.com/go/?from=gopher) A Go IDE with extended support for JavaScript, TypeScript, and
-> databases。
+> Databases。
 
 特别感谢 [JetBrains](https://www.jetbrains.com/?from=gopher)
 为开源项目提供免费的 [GoLand](https://www.jetbrains.com/go/?from=gopher) 等 IDE 的授权  
-[<img src=".github/jetbrains-variant-3.png" width="200"/>](https://www.jetbrains.com/?from=gopher)
+[<img src=".github/jetbrains-main-logo.png" width="200"/>](https://www.jetbrains.com/?from=gopher)
