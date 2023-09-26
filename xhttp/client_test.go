@@ -2,18 +2,17 @@ package xhttp
 
 import (
 	"context"
-	"io/ioutil"
+	"os"
 	"testing"
-	"time"
 
 	"github.com/go-pay/gopher/bm"
 	"github.com/go-pay/gopher/xlog"
 )
 
 type HttpGet struct {
-	Code    int         `json:"code"`
-	Message string      `json:"message"`
-	Data    any `json:"data,omitempty"`
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Data    any    `json:"data,omitempty"`
 }
 
 var ctx = context.Background()
@@ -21,9 +20,8 @@ var ctx = context.Background()
 func TestHttpGet(t *testing.T) {
 	xlog.Level = xlog.DebugLevel
 	client := NewClient()
-	client.Timeout = 10 * time.Second
 	// test
-	_, bs, err := client.Get("http://www.baidu.com").EndBytes(ctx)
+	_, bs, err := client.Req().Get("http://www.baidu.com").EndBytes(ctx)
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -41,7 +39,7 @@ func TestHttpGet(t *testing.T) {
 
 func TestHttpUploadFile(t *testing.T) {
 	xlog.Level = xlog.DebugLevel
-	fileContent, err := ioutil.ReadFile("logo.png")
+	fileContent, err := os.ReadFile("logo.png")
 	if err != nil {
 		xlog.Error(err)
 		return
@@ -55,10 +53,9 @@ func TestHttpUploadFile(t *testing.T) {
 	}).SetFormFile("image", &bm.File{Name: "logo.png", Content: fileContent})
 
 	client := NewClient()
-	client.Timeout = 10 * time.Second
 
 	rsp := new(HttpGet)
-	_, err = client.Type(TypeMultipartFormData).
+	_, err = client.Req(TypeMultipartFormData).
 		Post("http://localhost:2233/admin/v1/oss/uploadImage").
 		SendMultipartBodyMap(bmm).
 		EndStruct(ctx, rsp)
