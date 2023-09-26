@@ -24,7 +24,6 @@ import (
 type Client struct {
 	HttpClient       *http.Client
 	Header           http.Header
-	Timeout          time.Duration
 	Host             string
 	bodySize         int // body size limit(MB), default is 10MB
 	url              string
@@ -78,7 +77,7 @@ func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
 }
 
 func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
-	c.Timeout = timeout
+	c.HttpClient.Timeout = timeout
 	return c
 }
 
@@ -309,9 +308,6 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		req.Header.Set("Content-Type", c.ContentType)
 		if c.Host != "" {
 			req.Host = c.Host
-		}
-		if c.Timeout > 0 {
-			c.HttpClient.Timeout = c.Timeout
 		}
 		res, err = c.HttpClient.Do(req)
 		if err != nil {
