@@ -9,7 +9,6 @@ import (
 
 type Client struct {
 	HttpClient *http.Client
-	req        *Request
 	bodySize   int // body size limit(MB), default is 10MB
 	err        error
 }
