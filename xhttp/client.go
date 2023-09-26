@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net"
 	"net/http"
 	"net/url"
 	"sort"
@@ -22,11 +23,11 @@ import (
 
 type Client struct {
 	HttpClient       *http.Client
-	Transport        *http.Transport
 	Header           http.Header
 	Timeout          time.Duration
-	url              string
 	Host             string
+	bodySize         int // body size limit(MB), default is 10MB
+	url              string
 	method           string
 	requestType      RequestType
 	FormString       string
@@ -43,13 +44,23 @@ func NewClient() (client *Client) {
 		HttpClient: &http.Client{
 			Timeout: 60 * time.Second,
 			Transport: &http.Transport{
-				TLSClientConfig:   &tls.Config{InsecureSkipVerify: true},
-				DisableKeepAlives: true,
-				Proxy:             http.ProxyFromEnvironment,
+				Proxy: http.ProxyFromEnvironment,
+				DialContext: defaultTransportDialContext(&net.Dialer{
+					Timeout:   30 * time.Second,
+					KeepAlive: 30 * time.Second,
+					DualStack: true,
+				}),
+				TLSClientConfig:       &tls.Config{InsecureSkipVerify: true},
+				MaxIdleConns:          100,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
+				DisableKeepAlives:     true,
+				ForceAttemptHTTP2:     true,
 			},
 		},
-		Transport:     nil,
 		Header:        make(http.Header),
+		bodySize:      10, // default is 10MB
 		requestType:   TypeJSON,
 		unmarshalType: string(TypeJSON),
 	}
@@ -57,12 +68,12 @@ func NewClient() (client *Client) {
 }
 
 func (c *Client) SetTransport(transport *http.Transport) (client *Client) {
-	c.Transport = transport
+	c.HttpClient.Transport = transport
 	return c
 }
 
 func (c *Client) SetTLSConfig(tlsCfg *tls.Config) (client *Client) {
-	c.Transport = &http.Transport{TLSClientConfig: tlsCfg, DisableKeepAlives: true, Proxy: http.ProxyFromEnvironment}
+	c.HttpClient.Transport.(*http.Transport).TLSClientConfig = tlsCfg
 	return c
 }
 
@@ -73,6 +84,12 @@ func (c *Client) SetTimeout(timeout time.Duration) (client *Client) {
 
 func (c *Client) SetHost(host string) (client *Client) {
 	c.Host = host
+	return c
+}
+
+// set body size (MB), default is 10MB
+func (c *Client) SetBodySize(sizeMB int) (client *Client) {
+	c.bodySize = sizeMB
 	return c
 }
 
@@ -290,9 +307,6 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 		}
 		req.Header = c.Header
 		req.Header.Set("Content-Type", c.ContentType)
-		if c.Transport != nil {
-			c.HttpClient.Transport = c.Transport
-		}
 		if c.Host != "" {
 			req.Host = c.Host
 		}
@@ -304,7 +318,7 @@ func (c *Client) EndBytes(ctx context.Context) (res *http.Response, bs []byte, e
 			return err
 		}
 		defer res.Body.Close()
-		bs, err = io.ReadAll(io.LimitReader(res.Body, int64(5<<20))) // default 5MB change the size you want
+		bs, err = io.ReadAll(io.LimitReader(res.Body, int64(c.bodySize<<20))) // default 10MB change the size you want
 		if err != nil {
 			return err
 		}
