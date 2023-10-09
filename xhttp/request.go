@@ -24,9 +24,9 @@ type Request struct {
 	formString       string
 	jsonByte         []byte
 	url              string
-	method           string
-	requestType      RequestType
-	unmarshalType    string
+	method        string
+	requestType   RequestType
+	unmarshalType string
 	multipartBodyMap map[string]any
 	err              error
 }
