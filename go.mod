@@ -6,7 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/aliyun/aliyun-log-go-sdk v0.1.60
 	github.com/apache/rocketmq-client-go/v2 v2.1.2
-	github.com/bytedance/sonic v1.10.1
+	github.com/bytedance/sonic v1.10.2
 	github.com/eclipse/paho.mqtt.golang v1.4.3
 	github.com/gin-gonic/gin v1.9.1
 	github.com/google/uuid v1.3.1
