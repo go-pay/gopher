@@ -15,13 +15,13 @@ require (
 	github.com/redis/go-redis/v9 v9.2.1
 	github.com/uber/jaeger-client-go v2.30.0+incompatible
 	go.uber.org/zap v1.26.0
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20231002182017-d307bd883b97
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20231009173412-8bfb1ae86b6c
 	google.golang.org/grpc v1.58.2
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gopkg.in/yaml.v3 v3.0.1
-	gorm.io/driver/mysql v1.5.1
-	gorm.io/gorm v1.25.4
+	gorm.io/driver/mysql v1.5.2
+	gorm.io/gorm v1.25.5
 )
 
 require (
