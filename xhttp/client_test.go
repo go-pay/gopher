@@ -19,7 +19,7 @@ var ctx = context.Background()
 
 func TestHttpGet(t *testing.T) {
 	xlog.Level = xlog.DebugLevel
-	client := NewClient()
+	var client *Client
 	// test
 	_, bs, err := client.Req().Get("http://www.baidu.com").EndBytes(ctx)
 	if err != nil {
