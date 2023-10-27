@@ -128,12 +128,12 @@ func FromError(err error) *ErrorV2 {
 }
 
 // analyse error info
-func AnalyseErrorV2(err error) *ErrorV2 {
+func AnalyseErrorV2(err error) (e2 *ErrorV2) {
 	if err == nil {
 		return Success
 	}
-	if e, ok := err.(*ErrorV2); ok {
-		return e
+	if errors.As(err, &e2) {
+		return e2
 	}
 	return errStringToErrorV2(err.Error())
 }

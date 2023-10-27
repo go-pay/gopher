@@ -1,8 +1,8 @@
 package ecode
 
 import (
+	"errors"
 	"math"
-	"net/http"
 	"strconv"
 
 	"google.golang.org/grpc/codes"
@@ -37,11 +37,11 @@ func (e *Error) GRPCStatus() *status.Status {
 }
 
 // analyse error info
-func AnalyseError(err error) *Error {
+func AnalyseError(err error) (e *Error) {
 	if err == nil {
-		return New(http.StatusOK, "success")
+		return SuccessV1
 	}
-	if e, ok := err.(*Error); ok {
+	if errors.As(err, &e) {
 		return e
 	}
 	return errStringToError(err.Error())
@@ -49,7 +49,7 @@ func AnalyseError(err error) *Error {
 
 func errStringToError(e string) *Error {
 	if e == "" {
-		return New(http.StatusOK, "success")
+		return SuccessV1
 	}
 	i, err := strconv.Atoi(e)
 	if err != nil {
