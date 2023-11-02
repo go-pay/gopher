@@ -10,7 +10,6 @@ import (
 type Client struct {
 	HttpClient *http.Client
 	bodySize   int // body size limit(MB), default is 10MB
-	err        error
 }
 
 func defaultClient() *Client {
@@ -67,29 +66,27 @@ func (c *Client) SetBodySize(sizeMB int) (client *Client) {
 // default is TypeJSON
 // first param is request type
 // second param is response data type
-func (c *Client) Req(typeStr ...RequestType) *Request {
+func (c *Client) Req(typeStr ...string) *Request {
 	var (
-		reqTp = TypeJSON // default
-		resTp = TypeJSON // default
+		reqTp = TypeJSON    // default
+		resTp = ResTypeJSON // default
 		tLen  = len(typeStr)
 	)
 	switch {
 	case tLen == 1:
 		tpp := typeStr[0]
-		if _, ok := types[tpp]; ok {
+		if _, ok := _ReqContentTypeMap[tpp]; ok {
 			reqTp = tpp
-			// default resTp = reqTp
-			resTp = tpp
 		}
 	case tLen > 1:
 		// first param is request type
 		tpp := typeStr[0]
-		if _, ok := types[tpp]; ok {
+		if _, ok := _ReqContentTypeMap[tpp]; ok {
 			reqTp = tpp
 		}
 		// second param is response data type
 		stpp := typeStr[1]
-		if _, ok := types[stpp]; ok {
+		if _, ok := _ResTypeMap[stpp]; ok {
 			resTp = stpp
 		}
 	}
@@ -97,11 +94,11 @@ func (c *Client) Req(typeStr ...RequestType) *Request {
 		c = defaultClient()
 	}
 	r := &Request{
-		client:        c,
-		Header:        make(http.Header),
-		requestType:   reqTp,
-		unmarshalType: string(resTp),
+		client:       c,
+		Header:       make(http.Header),
+		requestType:  reqTp,
+		responseType: resTp,
 	}
-	r.Header.Set("Content-Type", types[reqTp])
+	r.Header.Set("Content-Type", _ReqContentTypeMap[reqTp])
 	return r
 }
