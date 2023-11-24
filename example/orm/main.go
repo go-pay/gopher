@@ -4,8 +4,8 @@ import (
 	"time"
 
 	"github.com/go-pay/gopher/orm"
-	"github.com/go-pay/gopher/xlog"
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 type MxCity struct {

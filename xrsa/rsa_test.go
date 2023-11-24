@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 var (

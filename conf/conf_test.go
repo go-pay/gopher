@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-pay/gopher/orm"
 	"github.com/go-pay/gopher/web"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 type Config struct {

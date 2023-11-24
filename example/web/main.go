@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pay/gopher/ecode"
-	"github.com/go-pay/gopher/limit"
+	"github.com/go-pay/ecode"
+	"github.com/go-pay/limiter"
 	"github.com/go-pay/gopher/web"
-	"github.com/go-pay/gopher/xlog"
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 type MemStats struct {

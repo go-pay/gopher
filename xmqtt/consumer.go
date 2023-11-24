@@ -5,7 +5,7 @@ import (
 	"runtime"
 
 	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func subCallbackKey(topic string, qos QosType) string {

@@ -13,16 +13,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-pay/gopher/limit"
-	"github.com/go-pay/gopher/trace"
-	"github.com/go-pay/gopher/xlog"
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/limiter"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 type GinEngine struct {
 	server           *http.Server
 	Gin              *gin.Engine
-	Tracer           *trace.Tracer
 	timeout          time.Duration
 	wg               sync.WaitGroup
 	addrPort         string
@@ -51,10 +49,6 @@ func InitGin(c *Config) *GinEngine {
 		WriteTimeout: time.Duration(c.WriteTimeout),
 	}
 	g.Use(engine.Logger(false), engine.Recovery())
-	if c.Trace != nil {
-		engine.Tracer = trace.NewTracer(c.Trace)
-		g.Use(engine.Tracer.GinTrace())
-	}
 	if c.Limiter != nil && c.Limiter.Rate != 0 {
 		g.Use(limit.NewLimiter(c.Limiter).GinLimit())
 	}
@@ -144,9 +138,6 @@ func (g *GinEngine) goNotifySignal() {
 }
 
 func (g *GinEngine) Close() {
-	if g.Tracer != nil {
-		g.Tracer.Close()
-	}
 	if g.server != nil {
 		// disable keep-alives on existing connections
 		g.server.SetKeepAlivesEnabled(false)

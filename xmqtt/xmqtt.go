@@ -11,7 +11,7 @@ import (
 
 	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/go-pay/gopher/retry"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 	"github.com/google/uuid"
 )
 

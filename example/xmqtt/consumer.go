@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 	"github.com/go-pay/gopher/xmqtt"
 )
 

@@ -3,7 +3,7 @@ package iterator
 import (
 	"testing"
 
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestSteps(t *testing.T) {

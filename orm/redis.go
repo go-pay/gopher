@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/xtime"
 	"github.com/redis/go-redis/v9"
 )
 

@@ -8,13 +8,15 @@ import (
 	"net/http/httputil"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/bytedance/sonic"
 	"github.com/gin-gonic/gin"
-	"github.com/go-pay/gopher/ecode"
-	"github.com/go-pay/gopher/xlog"
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/ecode"
+	"github.com/go-pay/limiter"
+	"github.com/go-pay/xlog"
+	"github.com/go-pay/xtime"
 )
 
 func ReadRequestBody(req *http.Request) (bs []byte, err error) {
@@ -114,5 +116,22 @@ func (g *GinEngine) Logger(ignoreRelease bool) gin.HandlerFunc {
 		// End time
 		end := time.Now()
 		fmt.Fprintf(os.Stdout, "[GIN] %s | %3d | %13v | %15s | %-7s %#v\n%s", end.Format("2006/01/02 - 15:04:05"), c.Writer.Status(), end.Sub(start), c.ClientIP(), c.Request.Method, path, c.Errors.ByType(gin.ErrorTypePrivate).String())
+	}
+}
+
+func (g *GinEngine) Limiter(appName string, rl *limiter.RateLimiter) gin.HandlerFunc {
+	limitKey := appName
+	return func(c *gin.Context) {
+		if limitKey == "" {
+			limitKey = strings.Split(c.Request.RequestURI, "?")[0][1:]
+		}
+		// log.Warning("key:", path[1:])
+		l := rl.LimiterGroup.Get(limitKey)
+		if !l.Allow() {
+			c.JSON(http.StatusOK, CommonRsp{Code: 503, Message: "服务器忙，请稍后重试..."})
+			c.Abort()
+			return
+		}
+		c.Next()
 	}
 }

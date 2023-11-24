@@ -9,9 +9,8 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/rlog"
-	"github.com/go-pay/gopher/limit"
-	"github.com/go-pay/gopher/limit/rate"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/limiter"
+	"github.com/go-pay/xlog"
 )
 
 type Consumer struct {
@@ -20,7 +19,7 @@ type Consumer struct {
 	messageBatchMaxSize int // default 1
 	subscribeTopic      map[string]struct{}
 	conf                *RocketMQConfig
-	limit               *limit.RateLimiter
+	limiter             *limiter.RateLimiter
 	ops                 []consumer.Option
 	mu                  sync.RWMutex
 }
@@ -39,7 +38,7 @@ func NewConsumer(conf *RocketMQConfig) (c *Consumer) {
 		ops:            ops,
 	}
 	if conf.Limit != nil && conf.Limit.Rate != 0 {
-		c.limit = limit.NewLimiter(conf.Limit)
+		c.limiter = limiter.NewLimiter(conf.Limit)
 	}
 	return c
 }
@@ -96,18 +95,16 @@ func (c *Consumer) SubscribeSingle(topic, expression string, callback func(ctx c
 		// 单条消息
 		if c.messageBatchMaxSize == 1 {
 			// 限流
-			if c.limit != nil {
-				limitTopic, ok := c.limit.LimiterGroup.Get(topic).(*rate.Limiter)
-				if ok {
-					if allow := limitTopic.Allow(); !allow {
-						// 超出速率，直接返回重试
-						return consumer.ConsumeRetryLater, fmt.Errorf("[%d] rate limit, consume retry later", c.conf.Limit.Rate)
-					}
-					if err = callback(ctx, ext[0]); err != nil {
-						return consumer.ConsumeRetryLater, err
-					}
-					return consumer.ConsumeSuccess, nil
+			if c.limiter != nil {
+				limitTopic := c.limiter.LimiterGroup.Get(topic)
+				if !limitTopic.Allow() {
+					// 超出速率，直接返回重试
+					return consumer.ConsumeRetryLater, fmt.Errorf("[%d] rate limiter, consume retry later", c.conf.Limit.Rate)
 				}
+				if err = callback(ctx, ext[0]); err != nil {
+					return consumer.ConsumeRetryLater, err
+				}
+				return consumer.ConsumeSuccess, nil
 			}
 			// 无限流
 			if err = callback(ctx, ext[0]); err != nil {
@@ -135,15 +132,15 @@ func (c *Consumer) SubscribeMulti(topic, expression string, callback func(ctx co
 	err = c.Consumer.Subscribe(topic, selector, func(ctx context.Context, ext ...*primitive.MessageExt) (consumer.ConsumeResult, error) {
 		// 多条消息
 		// 限流
-		if c.limit != nil {
+		if c.limiter != nil {
 			// 限流
-			limitTopic, ok := c.limit.LimiterGroup.Get(topic).(*rate.Limiter)
-			if ok {
-				if allow := limitTopic.Allow(); !allow {
+			if c.limiter != nil {
+				limitTopic := c.limiter.LimiterGroup.Get(topic)
+				if !limitTopic.Allow() {
 					// 超出速率，直接返回重试
-					return consumer.ConsumeRetryLater, fmt.Errorf("[%d] rate limit, consume retry later", c.conf.Limit.Rate)
+					return consumer.ConsumeRetryLater, fmt.Errorf("[%d] rate limiter, consume retry later", c.conf.Limit.Rate)
 				}
-				if err = callback(ctx, ext...); err != nil {
+				if err = callback(ctx, ext[0]); err != nil {
 					return consumer.ConsumeRetryLater, err
 				}
 				return consumer.ConsumeSuccess, nil

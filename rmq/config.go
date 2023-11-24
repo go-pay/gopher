@@ -4,7 +4,7 @@ import (
 	"github.com/apache/rocketmq-client-go/v2/consumer"
 	"github.com/apache/rocketmq-client-go/v2/primitive"
 	"github.com/apache/rocketmq-client-go/v2/producer"
-	"github.com/go-pay/gopher/limit"
+	"github.com/go-pay/limiter"
 )
 
 const (
@@ -34,7 +34,7 @@ type RocketMQConfig struct {
 	// 自定义生产者配置
 	ProducerOptions []producer.Option
 	// currently consume limiter
-	Limit *limit.Config
+	Limit *limiter.Config
 }
 
 func defaultConsumerOps(conf *RocketMQConfig) (ops []consumer.Option) {

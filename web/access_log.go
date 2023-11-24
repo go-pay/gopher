@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/gopher/alog"
 	"github.com/go-pay/gopher/util"
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"

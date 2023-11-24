@@ -2,6 +2,7 @@ package alog
 
 import (
 	"errors"
+	sls "github.com/aliyun/aliyun-log-go-sdk"
 	"os"
 	"time"
 
@@ -38,8 +39,7 @@ func New(config *Config) (client *Client, err error) {
 	}
 	producerConfig := producer.GetDefaultProducerConfig()
 	producerConfig.Endpoint = config.Endpoint
-	producerConfig.AccessKeyID = config.AccessKey
-	producerConfig.AccessKeySecret = config.SecretKey
+	producerConfig.CredentialsProvider = sls.NewStaticCredentialsProvider(config.AccessKey, config.SecretKey, "")
 
 	client = &Client{
 		Config:   config,

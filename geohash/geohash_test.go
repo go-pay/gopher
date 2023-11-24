@@ -3,7 +3,7 @@ package geohash
 import (
 	"testing"
 
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 func TestEncode(t *testing.T) {

@@ -3,9 +3,9 @@ package web
 import (
 	"context"
 
-	"github.com/go-pay/gopher/limit"
 	"github.com/go-pay/gopher/trace"
-	"github.com/go-pay/gopher/xtime"
+	"github.com/go-pay/limiter"
+	"github.com/go-pay/xtime"
 )
 
 const (
@@ -18,12 +18,12 @@ type hookType string
 type HookFunc func(c context.Context)
 
 type Config struct {
-	Addr         string         `json:"addr" yaml:"addr" toml:"addr"`                            // addr, default :2233
-	ReadTimeout  xtime.Duration `json:"read_timeout" yaml:"read_timeout" toml:"read_timeout"`    // read_timeout, default 60s
-	WriteTimeout xtime.Duration `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"` // write_timeout, default 60s
-	Debug        bool           `json:"debug" yaml:"debug" toml:"debug"`                         // is show log
-	Limiter      *limit.Config  `json:"limiter" yaml:"limiter" toml:"limiter"`                   // interface limit
-	Trace        *trace.Config  `json:"trace" yaml:"trace" toml:"trace"`                         // jaeger trace config
+	Addr         string          `json:"addr" yaml:"addr" toml:"addr"`                            // addr, default :2233
+	ReadTimeout  xtime.Duration  `json:"read_timeout" yaml:"read_timeout" toml:"read_timeout"`    // read_timeout, default 60s
+	WriteTimeout xtime.Duration  `json:"write_timeout" yaml:"write_timeout" toml:"write_timeout"` // write_timeout, default 60s
+	Debug        bool            `json:"debug" yaml:"debug" toml:"debug"`                         // is show log
+	Limiter      *limiter.Config `json:"limiter" yaml:"limiter" toml:"limiter"`                   // interface limit
+	Trace        *trace.Config   `json:"trace" yaml:"trace" toml:"trace"`                         // jaeger trace config
 }
 
 type RecoverInfo struct {

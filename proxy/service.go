@@ -11,7 +11,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/go-pay/gopher/xlog"
+	"github.com/go-pay/xlog"
 )
 
 type Service struct {
