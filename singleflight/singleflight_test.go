@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-pay/gopher/orm"
+	"github.com/go-pay/orm"
 	"github.com/go-pay/xlog"
 )
 

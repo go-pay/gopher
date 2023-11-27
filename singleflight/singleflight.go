@@ -28,7 +28,7 @@ var errGoexit = errors.New("runtime.Goexit was called")
 // A panicError is an arbitrary value recovered from a panic
 // with the stack trace during the execution of given function.
 type panicError struct {
-	value interface{}
+	value any
 	stack []byte
 }
 
@@ -37,7 +37,7 @@ func (p *panicError) Error() string {
 	return fmt.Sprintf("%v\n\n%s", p.value, p.stack)
 }
 
-func newPanicError(v interface{}) error {
+func newPanicError(v any) error {
 	stack := debug.Stack()
 
 	// The first line of the stack trace is of the form "goroutine N [status]:"
@@ -68,9 +68,9 @@ type call[V any] struct {
 // Group represents a class of work and forms a namespace in
 // which units of work can be executed with duplicate suppression.
 type Group[V any] struct {
-	rdsClient *redislock.Client   // redis lock client
-	mu        sync.Mutex          // protects m
-	m         map[string]*call[V] // lazily initialized
+	//rdsClient *redislock.Client   // redis lock client
+	mu sync.Mutex          // protects m
+	m  map[string]*call[V] // lazily initialized
 }
 
 // Result holds the results of Do, so they can be passed
@@ -161,15 +161,12 @@ func (g *Group[V]) doCall(c *call[V], key string, fn func() (v V, err error)) {
 		if e, ok := c.err.(*panicError); ok {
 			// In order to prevent the waiting channels from being blocked forever,
 			// needs to ensure that this panic cannot be recovered.
-			if len(c.chans) > 0 {
-				go panic(e)
-				select {} // Keep this goroutine around so that it will appear in the crash dump.
-			} else {
+			if len(c.chans) == 0 {
 				panic(e)
 			}
-		} else if c.err == errGoexit {
-			// Already in the process of goexit, no need to call again
-		} else {
+			go panic(e)
+			select {} // Keep this goroutine around so that it will appear in the crash dump.
+		} else if c.err != errGoexit {
 			// Normal return
 			for _, ch := range c.chans {
 				ch <- Result[V]{c.val, c.dups > 0, c.err}

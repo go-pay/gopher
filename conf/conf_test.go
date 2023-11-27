@@ -4,8 +4,8 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/go-pay/gopher/orm"
-	"github.com/go-pay/gopher/web"
+	"github.com/go-pay/orm"
+	"github.com/go-pay/web"
 	"github.com/go-pay/xlog"
 )
 

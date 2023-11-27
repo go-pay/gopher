@@ -5,7 +5,6 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/go-pay/gopher/util"
@@ -33,8 +32,8 @@ var (
 // Client wraps a redis client.
 type Client struct {
 	client redis.Scripter
-	tmp    []byte
-	tmpMu  sync.Mutex
+	//tmp    []byte
+	//tmpMu  sync.Mutex
 }
 
 // New creates a new Client instance with a custom namespace.
@@ -59,7 +58,7 @@ func (c *Client) GetData(ctx context.Context, key string) (*Data, error) {
 	return d, nil
 }
 
-func (c *Client) SetData(ctx context.Context, key string, data interface{}, err error, ttl time.Duration) error {
+func (c *Client) SetData(ctx context.Context, key string, data any, err error, ttl time.Duration) error {
 	ttlVal := strconv.FormatInt(int64(ttl/time.Millisecond), 10)
 	mm := Data{
 		Data: util.MarshalString(data),
@@ -127,7 +126,7 @@ func (l *Lock) TTL(ctx context.Context) (time.Duration, error) {
 		}
 		return 0, err
 	}
-	if num := res.(int64); num > 0 {
+	if num, ok := res.(int64); ok && num > 0 {
 		return time.Duration(num) * time.Millisecond, nil
 	}
 	return 0, nil

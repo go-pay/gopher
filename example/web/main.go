@@ -9,7 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-pay/ecode"
 	"github.com/go-pay/limiter"
-	"github.com/go-pay/gopher/web"
+	"github.com/go-pay/web"
+	"github.com/go-pay/web/metadata"
+	"github.com/go-pay/web/middleware"
 	"github.com/go-pay/xlog"
 	"github.com/go-pay/xtime"
 )
@@ -40,7 +42,7 @@ func main1() {
 		Debug:        false,
 		ReadTimeout:  xtime.Duration(15 * time.Second),
 		WriteTimeout: xtime.Duration(15 * time.Second),
-		Limiter: &limit.Config{
+		Limiter: &limiter.Config{
 			Rate:       0, // 0 速率不限流
 			BucketSize: 100,
 		},
@@ -50,7 +52,7 @@ func main1() {
 	//g.Gin.Use( /*g.CORS(),*/)
 
 	xlog.Level = xlog.DebugLevel
-	ecode.Success = ecode.NewV2(0, "SUCCESS", "成功")
+	ecode.Success = ecode.New(0, "SUCCESS", "成功")
 	initRoute(g.Gin)
 
 	// add hook
@@ -86,7 +88,7 @@ func initRoute(g *gin.Engine) {
 		web.JSON(c, nil, ecode.UnauthorizedErr)
 	})
 	g.POST("/c", func(c *gin.Context) {
-		body, err := web.ReadRequestBody(c.Request)
+		body, err := metadata.RequestBody(c.Request)
 		if err != nil {
 			xlog.Error(err)
 			web.JSON(c, nil, err)
@@ -121,7 +123,7 @@ func initRoute(g *gin.Engine) {
 
 	// postman request: GET http://localhost:2233/proxy/a
 	g.GET("/proxy/a", func(c *gin.Context) {
-		rsp, err := web.GinProxy[*MemStats](c, "", "http://localhost:2233", "/gopher/web/memStats")
+		rsp, err := middleware.GinProxy[*MemStats](c, "", "http://localhost:2233", "/gopher/web/memStats")
 		if err != nil {
 			xlog.Errorf("GinProxy err: %v", err)
 			web.JSON(c, nil, err)
