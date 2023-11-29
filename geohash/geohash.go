@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"strings"
 
-	"github.com/go-pay/gopher/util"
+	"github.com/go-pay/util/convert"
 )
 
 // geohash精度的设定参考 http://en.wikipedia.org/wiki/Geohash
@@ -84,7 +84,7 @@ func Encode(lat, lng float64, precision int) (geohashCode string) {
 			bit++
 		} else {
 			bitNum := strings.Join(tempBits, "")
-			num := util.BinaryToDecimal(bitNum)
+			num := convert.BinaryToDecimal(bitNum)
 			//fmt.Printf("%v => %v => %v\n", tempBits, num, Base32[num])
 			buffer.WriteString(Base32[num])
 			preLen++

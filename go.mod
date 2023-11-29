@@ -11,6 +11,7 @@ require (
 	github.com/go-pay/ecode v0.0.3
 	github.com/go-pay/limiter v0.0.1
 	github.com/go-pay/orm v0.0.1
+	github.com/go-pay/util v0.0.1
 	github.com/go-pay/web v0.0.1
 	github.com/go-pay/xlog v0.0.1
 	github.com/go-pay/xtime v0.0.2

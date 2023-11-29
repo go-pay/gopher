@@ -17,7 +17,7 @@ import (
 	"time"
 
 	"github.com/go-pay/gopher/redislock"
-	"github.com/go-pay/gopher/util"
+	"github.com/go-pay/util/js"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -243,10 +243,10 @@ func (g *RedisGroup[V]) Do(ctx context.Context, key string, ttl time.Duration, f
 				return v, err
 			}
 			d := new(redislock.Data)
-			if err = util.UnmarshalString(util.MarshalString(value), d); err != nil {
+			if err = js.UnmarshalString(js.MarshalString(value), d); err != nil {
 				return v, err
 			}
-			if err = util.UnmarshalString(d.Data, &v); err != nil {
+			if err = js.UnmarshalString(d.Data, &v); err != nil {
 				return v, err
 			}
 			return v, nil

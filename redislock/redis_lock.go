@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-pay/gopher/util"
+	"github.com/go-pay/util/js"
 	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
@@ -52,7 +52,7 @@ func (c *Client) GetData(ctx context.Context, key string) (*Data, error) {
 		return nil, err
 	}
 	d := new(Data)
-	if err = util.UnmarshalString(result.(string), d); err != nil {
+	if err = js.UnmarshalString(result.(string), d); err != nil {
 		return nil, err
 	}
 	return d, nil
@@ -61,12 +61,12 @@ func (c *Client) GetData(ctx context.Context, key string) (*Data, error) {
 func (c *Client) SetData(ctx context.Context, key string, data any, err error, ttl time.Duration) error {
 	ttlVal := strconv.FormatInt(int64(ttl/time.Millisecond), 10)
 	mm := Data{
-		Data: util.MarshalString(data),
+		Data: js.MarshalString(data),
 	}
 	if err != nil {
 		mm.Err = err.Error()
 	}
-	jsonStr := util.MarshalString(mm)
+	jsonStr := js.MarshalString(mm)
 	return luaSet.Run(ctx, c.client, []string{key}, jsonStr, ttlVal).Err()
 }
 
