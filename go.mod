@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/BurntSushi/toml v1.3.2
 	github.com/go-pay/orm v0.0.1
-	github.com/go-pay/util v0.0.1
+	github.com/go-pay/util v0.0.2
 	github.com/go-pay/web v0.0.3
 	github.com/go-pay/xlog v0.0.1
 	github.com/google/uuid v1.4.0

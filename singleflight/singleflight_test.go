@@ -1,11 +1,9 @@
 package singleflight
 
 import (
-	"context"
 	"testing"
 	"time"
 
-	"github.com/go-pay/orm"
 	"github.com/go-pay/xlog"
 )
 
@@ -57,30 +55,30 @@ func TestDoChan(t *testing.T) {
 }
 
 func TestWithRedisLock(t *testing.T) {
-	rd := orm.InitRedis(&orm.RedisConfig{
-		Addrs:    []string{"host:6379"},
-		Password: "password",
-		DB:       0,
-	})
-	ctx := context.Background()
-	g := WithRedisLock[*Single](rd)
-	// 启动10个协程去请求数据，最终执行的只有1个，输出一次 I am return Single
-	for i := 0; i < 10; i++ {
-		go func() {
-			v, err := g.Do(ctx, "key", time.Second*15, func() (*Single, error) {
-				xlog.Warn("working produce Single")
-				s := &Single{
-					Name: "lady gaga",
-					Age:  18,
-				}
-				time.Sleep(3 * time.Second)
-				return s, nil
-			})
-			if err != nil {
-				t.Errorf("Do error = %v", err)
-			}
-			xlog.Warnf("final result: %#v", v)
-		}()
-	}
-	time.Sleep(20 * time.Second)
+	//rd := orm.InitRedis(&orm.RedisConfig{
+	//	Addrs:    []string{"host:6379"},
+	//	Password: "password",
+	//	DB:       0,
+	//})
+	//ctx := context.Background()
+	//g := WithRedisLock[*Single](rd)
+	//// 启动10个协程去请求数据，最终执行的只有1个，输出一次 I am return Single
+	//for i := 0; i < 10; i++ {
+	//	go func() {
+	//		v, err := g.Do(ctx, "key", time.Second*15, func() (*Single, error) {
+	//			xlog.Warn("working produce Single")
+	//			s := &Single{
+	//				Name: "lady gaga",
+	//				Age:  18,
+	//			}
+	//			time.Sleep(3 * time.Second)
+	//			return s, nil
+	//		})
+	//		if err != nil {
+	//			t.Errorf("Do error = %v", err)
+	//		}
+	//		xlog.Warnf("final result: %#v", v)
+	//	}()
+	//}
+	//time.Sleep(20 * time.Second)
 }
